@@ -37,9 +37,7 @@ Before you begin, ensure you have completed the following configuration and prep
 
 ### Phase 2: Basic Authentication
 
-The first step in your implementation is get the authentication flow working. This will prove connectivity and
-your applications ability to send requests to the ScotAccount serveice and handle the redirects to enable the
-user to complete the login steps necessary to complete authentication.
+The first step in your implementation is get the authentication flow working. This will prove connectivity and your applications ability to send requests to the ScotAccount serveice and handle the redirects to enable the user to complete the login steps necessary to complete authentication.
 
 1. **Implement discovery endpoint** - Retrieve current configuration automatically
 2. **Build PKCE parameters** - Generate code verifier and challenge
@@ -65,19 +63,23 @@ user to complete the login steps necessary to complete authentication.
 
 ## Core Authentication Flow
 
+![ScotAccount High-Level Architecture]({{ '/assets/diagrams/auth-flow.png' | url }})
+
+_Figure: Illustration of authentication flow._
+
 The ScotAccount authentication process follows these key steps:
 
-### 1. Discovery Configuration
-
-First, retrieve the current configuration:
+Before you begin, retrieve the current configuration to ensure you have the latest url's scopes etc. This provides all endpoint URLs and supported features. Ensure your application leverages
 
 ```http
 GET https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration
 ```
 
-This provides all endpoint URLs and supported features. Ensure your application leverages
+### 1. User attempts to login
 
-### 2. Generate Security Parameters
+User accesses your service and you determine the user needs to authenticate using ScotAccount.
+
+### 2 & 3 Generate Security Parameters
 
 During the first call to scotaccount, your application is responsible for implementing the PKCE client data and security required to succesfully implement an OIDC client.
 
@@ -88,9 +90,9 @@ Your application must generate:
 - **State parameter** - Unique value to prevent CSRF attacks
 - **Nonce** - Random value for replay protection
 
-### 3. Redirect to ScotAccount
+### 4, 5 & 6 Redirect to ScotAccount
 
-Build the authorization URL and redirect users:
+Build the authorization URL and redirect users to ScotAccount using a redirect like the one shown below
 
 ```
 https://authz.integration.scotaccount.service.gov.scot/authorize?
@@ -104,9 +106,9 @@ https://authz.integration.scotaccount.service.gov.scot/authorize?
     code_challenge_method=S256
 ```
 
-### 4. Handle Callback
+### 6 & 7. Handle Callback
 
-Users authenticate at ScotAccount and return to your callback URL:
+The user will then authenticate at ScotAccount and return to your callback URL using a redirect we send to the users browser
 
 ```
 https://yourservice.gov.scot/auth/callback?
@@ -118,7 +120,7 @@ https://yourservice.gov.scot/auth/callback?
 
 ### 5. Exchange Code for Tokens
 
-Create a JWT client assertion and exchange the authorization code:
+Once you receive this callback you then must create a JWT client assertion and exchange the authorization code:
 
 ```http
 POST https://authz.integration.scotaccount.service.gov.scot/token
@@ -188,10 +190,6 @@ const userSession = {
   expiresAt: Date.now() + 60 * 60 * 1000, // 1 hour
 };
 ```
-
-![ScotAccount High-Level Architecture]({{ '/assets/diagrams/auth-flow.png' | url }})
-
-_Figure: Illustration of authentication flow._
 
 ### Logout Implementation
 

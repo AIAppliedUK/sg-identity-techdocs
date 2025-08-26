@@ -1,0 +1,267 @@
+@startuml
+title Complete OIDC Authentication Flow with ScotAccount
+skinparam backgroundColor #FEFEFE
+skinparam participant {
+    BackgroundColor #E8F4F8
+    BorderColor #1E90FF
+}
+skinparam sequence {
+    ArrowColor #1E90FF
+    LifeLineBorderColor #1E90FF
+    LifeLineBackgroundColor #E8F4F8
+}
+skinparam note {
+    BackgroundColor #FFFACD
+    BorderColor #FFD700
+}
+
+participant "Browser" as Browser #FFE4B5
+participant "Relying Party\n" as RP #E8F4F8
+participant "ScotAccount AuthZ\n" as AuthZ #D8E8F8
+participant "ScotAccount AuthN\n" as AuthN #D8E8F8
+participant "ScotAccount Attributes\n(MySafe)" as Attr #D8E8F8
+
+== Initial Login Request ==
+Browser -> RP: 1. GET /oauth2/authorization/scotaccount
+activate RP
+note right of RP
+  Session: <SESSION ID>
+  Client ID: <CLIENT_ID>
+end note
+
+RP -> RP: 2. Generate PKCE parameters
+note right of RP
+  code_challenge_method: S256
+  code_challenge: <hash>
+  code_verifier: <stored in session>
+  state: <STATE_PARAMETER>...
+  nonce: <NONCE>...
+end note
+
+RP --> Browser: 3. HTTP 302 Redirect
+note left of Browser
+  Location: https://authz.integration.scotaccount.service.gov.scot/authorize
+  ?response_type=code
+  &client_id=<>
+  &scope=openid+scotaccount.address+scotaccount.email+scotaccount.GPG45.medium
+  &state=<>...
+  &redirect_uri=https://<CALLBACK URL>
+  &nonce=<>
+  &code_challenge=<hash>
+  &code_challenge_method=S256
+end note
+deactivate RP
+
+== ScotAccount Authentication ==
+Browser -> AuthZ: 4. GET /authorize (with parameters)
+activate AuthZ
+AuthZ -> AuthZ: 5. Validate request
+AuthZ --> Browser: 6. HTTP 302 Redirect to login
+note left of Browser
+  Location: https://authn.integration.scotaccount.service.gov.scot/sign-in/login
+  With session context
+end note
+deactivate AuthZ
+
+Browser -> AuthN: 7. GET /sign-in/login
+activate AuthN
+AuthN --> Browser: 8. Login page HTML
+deactivate AuthN
+
+Browser -> AuthN: 9. POST /sign-in/login
+activate AuthN
+note right of Browser
+  User credentials submitted
+end note
+AuthN -> AuthN: 10. Authenticate user
+AuthN --> Browser: 11. HTTP 302 Redirect
+note left of Browser
+  Authentication successful
+  Redirect back to AuthZ
+end note
+deactivate AuthN
+
+Browser -> AuthZ: 12. GET /authorize/continue
+activate AuthZ
+AuthZ -> AuthZ: 13. Generate authorization code
+AuthZ --> Browser: HTTP 302 Redirect
+note left of Browser
+  Location: http://localhost:8090/login/oauth2/code/scotaccount
+  ?code=YIzUFzxIFOE
+  &state=YPT3cgkJudEvO...
+end note
+deactivate AuthZ
+
+== Token Exchange ==
+Browser -> RP: 14. GET /login/oauth2/code/scotaccount?code=YIzUFzxIFOE&state=...
+activate RP
+RP -> RP: 15. Validate state parameter
+
+RP -> RP: 16. Generate client assertion JWT
+note right of RP
+  Header: {"alg": "RS256", "typ": "JWT"}
+  Payload: {
+    "iss": "6ovfxtjaivlpy",
+    "sub": "6ovfxtjaivlpy",
+    "aud": "https://authz.integration.../token",
+    "jti": "unique-id",
+    "iat": 1755797581,
+    "exp": 1755797881
+  }
+  Signature: RS256 with private key
+end note
+
+RP -> AuthZ: 17. POST /token
+activate AuthZ
+note right of RP
+  Content-Type: RPlication/x-www-form-urlencoded
+  
+  grant_type=authorization_code
+  code=YIzUFzxIFOE
+  redirect_uri=http://localhost:8090/login/oauth2/code/scotaccount
+  client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
+  client_assertion=eyJhbGciOiJSUzI1NiJ9...
+  code_verifier=<PKCE verifier>
+end note
+
+AuthZ -> AuthZ: 18. Validate client assertion
+AuthZ -> AuthZ: 19. Validate PKCE verifier
+AuthZ -> AuthZ: 20. Generate tokens
+
+AuthZ --> RP: HTTP 200 Token Response
+note left of AuthZ
+  {
+    "access_token": "eyJraWQiOiJXZ2lHIiw...",
+    "id_token": "eyJraWQiOiJCYk8zLTE3NTIyMDM0NjgiLCJhbGciOiJSUzI1NiJ9...",
+    "refresh_token": "eyJlbmMiOiJBMTI4Q0...",
+    "token_type": "Bearer",
+    "expires_in": 900,
+    "scope": "openid scotaccount.address scotaccount.email"
+  }
+end note
+deactivate AuthZ
+
+RP -> RP: 20. Decode and validate tokens
+note right of RP
+  ID Token Claims:
+  - sub: 2d510484-6fbe-46fb-8f57-afe52681666d
+  - aud: 6ovfxtjaivlpy
+  - iss: https://authz.integration...
+  - exp: 1755797881
+  - iat: 1755797581
+  - nonce: Qgor9vhRDe-eEE3K... (validated)
+  - jti: IHs1j0Su2XM
+end note
+
+RP -> RP: 21. Create authenticated session
+note right of RP
+  Principal: 2d510484-6fbe-46fb-8f57-afe52681666d
+  Authorities: [OIDC_USER, SCOPE_openid, 
+    SCOPE_scotaccount.address, SCOPE_scotaccount.email]
+  Session: 33AF70030EFEBCD21EDF2F6D39E9F48F
+end note
+
+== Fetch User Attributes ==
+RP -> Attr: 22. GET /attributes/values
+activate Attr
+note right of RP
+  Authorization: Bearer eyJraWQiOiJXZ2lHIiw...
+  (Access token from token response)
+end note
+
+Attr --> RP: 23. HTTP 200 Attributes Response
+note left of Attr
+  {
+    "verified_claims": [{
+      "scope": "scotaccount.address",
+      "verification": {
+        "outcome": "VERIFIED_SUCCESSFULLY",
+        "trust_framework": "uk_tfida",
+        "validation_method": "credit_reference_agency"
+      },
+      "claims": {
+        "address": {
+          "uprn": "132021690",
+          "streetName": "DALNAIR PLACE",
+          "postalCode": "G627RD"
+        }
+      }
+    }, {
+      "scope": "scotaccount.gpg45.medium",
+      "verification": {
+        "confidence_level": "medium"
+      },
+      "claims": {
+        "given_name": "David William",
+        "family_name": "McNabb",
+        "birth_date": "1976-08-24"
+      }
+    }, {
+      "scope": "scotaccount.email",
+      "claims": {
+        "email": "davidmcnabb76@gmail.com"
+      }
+    }]
+  }
+end note
+deactivate Attr
+
+RP --> Browser: 24. HTTP 302 Redirect to /
+note left of RP
+  Authentication complete
+  Session established
+end note
+deactivate RP
+
+== Authenticated Session ==
+Browser -> RP: 25. GET /
+activate RP
+RP -> RP: 26. Load authenticated user data
+RP --> Browser: 27. HTTP 200 Home page with user info
+note left of RP
+  Display user information
+  and verified claims
+end note
+deactivate RP
+
+== Logout Flow ==
+Browser -> RP: 28. POST /logout
+activate RP
+note right of Browser
+  CSRF token included
+end note
+
+RP -> RP: 29. Clear security context
+RP -> RP: 30. Invalidate session
+RP -> RP: 31. Clear cookies
+
+RP --> Browser: 32. HTTP 302 Redirect
+note left of RP
+  Location: https://authz.integration.../authorize/logout
+  ?id_token_hint=eyJraWQiOiJCYk8zLTE3NTIyMDM0NjgiLCJhbGciOiJSUzI1NiJ9...
+  &post_logout_redirect_uri=http://localhost:8090/logout/logged-out
+  &state=x5lC3JRN_yXnlQEPc...
+end note
+deactivate RP
+
+Browser -> AuthZ: 33. GET /authorize/logout
+activate AuthZ
+AuthZ -> AuthZ: 34. Validate id_token_hint
+AuthZ -> AuthZ: 35. Clear ScotAccount session
+AuthZ --> Browser: 36. HTTP 302 Redirect
+note left of AuthZ
+  Location: http://localhost:8090/logout/logged-out
+  ?state=x5lC3JRN_yXnlQEPc...
+end note
+deactivate AuthZ
+
+Browser -> RP: 37. GET /logout/logged-out?state=...
+activate RP
+RP -> RP: 38. Verify logout state
+RP --> Browser: 39. HTTP 302 Redirect to /
+note left of RP
+  User is now logged out
+  New anonymous session
+end note
+deactivate RP
+@enduml

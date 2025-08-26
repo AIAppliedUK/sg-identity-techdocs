@@ -4,10 +4,14 @@ title: "Integration Examples and Best Practices"
 description: "Practical integration examples and solutions for ScotAccount implementation challenges"
 eleventyNavigation:
   key: integration-examples
-  order: 7
+  order: 9
 ---
 
-This page provides practical integration examples and best practices for ScotAccount, helping you implement secure, robust code that you can tailor for your needs. These code elements are for example purposes only
+<div class="callout callout--warning">
+<strong>Example Code Disclaimer</strong>: All code examples in this guide are for educational and reference purposes only. They are not production-ready implementations and must be thoroughly reviewed, tested, and adapted to meet your specific security and operational requirements before use in any live system.
+</div>
+
+This page provides practical integration examples for ScotAccount implementation patterns. These examples demonstrate common integration approaches but must be customized and secured for your specific use case.
 
 ## Phase 1: Setup & Registration Examples
 
@@ -311,9 +315,9 @@ function handleAuthError(error, res) {
 }
 ```
 
-## Complete Example Implementation
+## Example Node.js/Express Implementation
 
-Here's a complete Node.js/Express example:
+Here's an example showing how these patterns might be implemented in a Node.js/Express application:
 
 ```javascript
 const express = require("express");
@@ -380,12 +384,12 @@ app.listen(3000, () => {
 });
 ```
 
-## Example: Complete Authentication Flow
+## Example: Authentication Flow with PKCE
 
-**Implementing PKCE (Proof Key for Code Exchange):**
+**Example PKCE (Proof Key for Code Exchange) Implementation:**
 
-- **Why:** Enhances security by preventing interception attacks
-- **How:** Always implement PKCE with the SHA256 method as shown below
+- **Purpose:** Example showing security pattern for preventing interception attacks
+- **Implementation:** Example using SHA256 method as recommended
 
 ```javascript
 // Complete authentication flow with PKCE and error handling
@@ -419,10 +423,10 @@ async function handleAuthentication(req, res) {
 
 ## Example: Token Validation
 
-**Verifying ID Tokens:**
+**Example ID Token Verification:**
 
-- **Why:** Ensures tokens are valid and not tampered with
-- **How:** Always validate tokens as shown below
+- **Purpose:** Example showing how tokens should be validated
+- **Implementation:** Example validation patterns as shown below
 
 ```javascript
 // Token validation example
@@ -451,12 +455,12 @@ async function validateTokens(tokens, expectedState, expectedNonce) {
 }
 ```
 
-## Example: Secure Session Management
+## Example: Session Management
 
-**Storing Sessions Securely:**
+**Example Secure Session Storage:**
 
-- **Why:** Protects user data and prevents unauthorised access
-- **How:** Use encrypted, server-side session storage
+- **Purpose:** Example showing secure session storage patterns
+- **Implementation:** Example using encrypted, server-side storage
 
 ```javascript
 // Secure session implementation example
@@ -505,10 +509,10 @@ class SecureSession {
 
 ## Example: Multi-Environment Configuration
 
-**Configuring for Different Environments:**
+**Example Environment Configuration:**
 
-- **Why:** Ensures correct settings for development, integration, and production
-- **How:** Use environment-specific configuration as shown below
+- **Purpose:** Example showing configuration patterns for different environments
+- **Implementation:** Example environment-specific settings
 
 ```javascript
 // Environment-specific configuration example
@@ -540,10 +544,10 @@ const currentConfig = config[process.env.NODE_ENV || "development"];
 
 ## Example: Error Handling
 
-**Handling Authentication Errors:**
+**Example Authentication Error Handling:**
 
-- **Why:** Improves user experience and simplifies debugging
-- **How:** Implement detailed error handling for different scenarios
+- **Purpose:** Example showing error handling patterns for better user experience
+- **Implementation:** Example error handling for different scenarios
 
 ```javascript
 // Error handling example
@@ -592,10 +596,10 @@ function handleAuthError(error, req, res) {
 
 ## Example: Monitoring and Logging
 
-**Tracking Authentication Events:**
+**Example Authentication Event Tracking:**
 
-- **Why:** Enables auditing and monitoring of authentication flows
-- **How:** Log events and metrics as shown below
+- **Purpose:** Example showing monitoring patterns for authentication flows
+- **Implementation:** Example logging and metrics collection
 
 ```javascript
 // Monitoring and logging example
@@ -645,12 +649,12 @@ AuthMonitoring.logAuthEvent("auth_success", userInfo.userId, {
 AuthMonitoring.trackMetric("auth_duration", authDuration);
 ```
 
-## Example: Integration and Security Testing
+## Example: Testing Integration
 
-**Testing Authentication and Security:**
+**Example Authentication and Security Testing:**
 
-- **Why:** Ensures your integration is robust and secure
-- **How:** Use integration and security tests as shown below
+- **Purpose:** Example showing testing patterns for integration validation
+- **Implementation:** Example integration and security test patterns
 
 ```javascript
 // Integration test example
@@ -700,7 +704,9 @@ describe("Security Tests", () => {
 });
 ```
 
-## Production Readiness Checklist
+## Example Implementation Checklist
+
+Example considerations for your production implementation:
 
 - [ ] **HTTPS enforcement** in all environments
 - [ ] **Security headers** implementation
@@ -712,19 +718,18 @@ describe("Security Tests", () => {
 - [ ] **Health check endpoints** for monitoring
 - [ ] **Graceful shutdown** handling
 - [ ] **Database connection pooling** configuration
-
 - [ ] **Performance optimisations** (e.g., JWT key caching, connection pooling, request timeouts)
 
 ## Next Steps
 
 <div class="callout callout--success">
-<strong>Ready to integrate?</strong> Use these examples and best practices to build a secure, robust ScotAccount integration.
+<strong>Ready to implement?</strong> Adapt these examples to build your ScotAccount integration, ensuring you review and test thoroughly before production deployment.
 </div>
 
 <div class="callout callout--info">
-<strong>Need more help?</strong> Follow the <a href="{{ '/scotaccount-complete-guide/' | url }}">Complete Implementation Guide</a> for comprehensive solutions.
+<strong>Need more examples?</strong> Review the <a href="{{ '/token-validation-examples/' | url }}">Token Validation Examples</a> for detailed validation patterns.
 </div>
 
-<div class="callout callout--info">
-<strong>Questions about security?</strong> Review the <a href="{{ '/scotaccount-token-validation-module/' | url }}">Token Validation Module</a> for detailed security guidance.
+<div class="callout callout--warning">
+<strong>Production deployment?</strong> Contact the ScotAccount team for security review and production deployment guidance before going live.
 </div>

@@ -9,8 +9,6 @@ eleventyNavigation:
 
 This guide provides technical implementation instructions for integrating with ScotAccount. Follow these steps to build secure authentication with optional verified attributes.
 
-[[toc]]
-
 ## Implementation Overview
 
 ScotAccount integration follows a four-phase approach:
@@ -18,7 +16,7 @@ ScotAccount integration follows a four-phase approach:
 1. **Setup & Registration** - Generate keys and register your service
 2. **Basic Authentication** - Implement OpenID Connect authentication flow
 3. **Verified Attributes** - Add identity, address, and email verification
-4. **Production Deployment** - Go live with monitoring and security measures
+4. **Production Deployment** - Go live with monitoring and security measuresr
 
 ## Phase 1: Setup & Registration
 

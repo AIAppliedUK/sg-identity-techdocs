@@ -1,53 +1,17 @@
 ---
 layout: base.njk
-title: "Comprehensive Guide"
+title: "Complete Guide"
 description: "Comprehensive technical guide for implementing ScotAccount authentication and verified attributes"
 eleventyNavigation:
   key: complete-guide
   order: 5
 ---
 
-## Quick Start Checklist
-
-### Phase 1: Setup & Registration
-
-- [ ] Generate RSA 3072-bit or EC P-256 key pair using OpenSSL
-- [ ] Securely store private key in secrets manager (AWS Secrets Manager, Azure Key Vault, etc.)
-- [ ] Determine required scopes based on your service needs
-- [ ] Identify production IP addresses for allowlisting (if applicable)
-- [ ] Define redirect and logout URIs for your service
-- [ ] Submit complete registration information to ScotAccount team
-- [ ] Receive client_id confirmation and test connectivity
-
-### Phase 2: Basic Authentication
-
-- [ ] Implement discovery endpoint integration to retrieve current configuration
-- [ ] Build PKCE parameter generation for security
-- [ ] Create authorization request builder with proper state management
-- [ ] Implement callback handler with comprehensive state validation
-- [ ] Build JWT client assertion creator using your private key
-- [ ] Complete token exchange implementation with error handling
-- [ ] Add robust ID token validation and user identity extraction
-
-### Phase 3: Verified Attributes
-
-- [ ] Determine which additional scopes your service requires
-- [ ] Implement attribute request flow with user consent handling
-- [ ] Build attribute response processor to parse verified claims
-- [ ] Add comprehensive attribute data validation and storage
-
-### Phase 4: Production Deployment
-
-- [ ] Update configuration to use production endpoints
-- [ ] Implement comprehensive monitoring and logging
-- [ ] Add user-friendly error handling and messaging
-- [ ] Complete security review and penetration testing
-
----
-
 ## Complete Authentication Flow Summary
 
 This section provides a step-by-step walkthrough of the entire authentication process with actual URLs and data exchanges.
+
+[[toc]]
 
 ### Step 1: Discovery Configuration
 

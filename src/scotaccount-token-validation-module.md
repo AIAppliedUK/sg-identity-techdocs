@@ -1,13 +1,17 @@
 ---
 layout: base.njk
-title: "Token Validation Module"
-description: "Secure validation of ID tokens and access tokens from ScotAccount with implementation examples"
+title: "Token Validation Examples"
+description: "Example implementations for validating ID tokens and access tokens from ScotAccount"
 eleventyNavigation:
-  key: token-validation
-  order: 5
+  key: token-validation-examples
+  order: 8
 ---
 
-Proper token validation is critical for security. This guide shows you how to validate ID tokens and access tokens from ScotAccount to ensure they're authentic and intended for your service.
+<div class="callout callout--warning">
+<strong>Example Code Disclaimer</strong>: The code examples in this guide are for educational and reference purposes only. They are not production-ready implementations and should be thoroughly reviewed, tested, and adapted to meet your specific security requirements before use in any live system.
+</div>
+
+This guide provides example implementations for validating ID tokens and access tokens from ScotAccount. These examples demonstrate proper validation patterns but must be adapted and secured for your specific use case.
 
 [[toc]]
 
@@ -16,7 +20,7 @@ Proper token validation is critical for security. This guide shows you how to va
 ScotAccount issues JSON Web Tokens (JWTs) that must be validated before trusting their contents. This ensures tokens haven't been tampered with and were genuinely issued by ScotAccount.
 
 <div class="callout callout--error">
-<strong>Critical Security Warning</strong>: Never trust token contents without proper validation. Always verify signatures and claims to prevent security vulnerabilities.
+<strong>Security Note</strong>: These examples show validation patterns that should be implemented. Never trust token contents without proper validation. Always verify signatures and claims in your production implementation.
 </div>
 
 ### What You Must Validate
@@ -59,7 +63,7 @@ ID tokens contain user identity information and must be validated immediately af
 - `jti` - **Unique token ID** (prevents duplicate tokens)
 - `sid` - **Session ID** (required for logout)
 
-### Complete Validation Implementation
+### Example Validation Implementation
 
 #### Step 1: Set Up JWKS Client
 
@@ -226,9 +230,9 @@ function extractAddressFromClaimsToken(claimsTokenPayload) {
 
 Use the access token (15 minutes) to call `GET https://issuer.main.integration.scotaccount.service.gov.scot/attributes/values` with a `DIS-Client-Assertion` whose audience is the attributes URL.
 
-## Complete Validation Example
+## Example Express.js Integration
 
-Here's a complete example showing validation in an Express.js application:
+Here's an example showing how validation might be integrated into an Express.js application:
 
 ```javascript
 const express = require("express");
@@ -310,15 +314,17 @@ if (error.message.includes("audience")) {
 }
 ```
 
-### Security Best Practices
+### Example Security Patterns
 
-1. **Always validate tokens** before trusting their contents
-2. **Use the latest token** after refresh operations
-3. **Log validation failures** for security monitoring
-4. **Implement rate limiting** on validation endpoints
-5. **Cache public keys** but refresh periodically
-6. **Handle clock skew** with appropriate tolerance
-7. **Validate all custom claims** from verified attributes
+These examples demonstrate security patterns you should implement:
+
+1. **Token validation** before trusting contents
+2. **Token refresh** handling in your application
+3. **Validation failure logging** for monitoring
+4. **Rate limiting** on validation endpoints
+5. **Public key caching** with refresh logic
+6. **Clock skew handling** with tolerance
+7. **Custom claim validation** for verified attributes
 
 ## Testing Token Validation
 
@@ -354,32 +360,36 @@ describe("Token Validation", () => {
 });
 ```
 
-## Production Considerations
+## Implementation Considerations
 
-### Performance Optimisation
+### Performance Optimisation Examples
 
-- **Cache JWKS keys** with appropriate TTL
-- **Implement connection pooling** for HTTP requests
-- **Use asynchronous validation** to avoid blocking
-- **Consider token validation libraries** for your platform
+These examples show performance patterns you might implement:
 
-### Monitoring and Alerts
+- **JWKS key caching** with appropriate TTL
+- **Connection pooling** for HTTP requests
+- **Asynchronous validation** to avoid blocking
+- **Token validation libraries** for your platform
 
-- **Track validation failures** and investigate patterns
-- **Monitor token expiration rates** to detect issues
-- **Alert on signature validation failures** as potential attacks
-- **Log all validation events** for audit purposes
+### Monitoring Examples
+
+Example monitoring patterns for your implementation:
+
+- **Validation failure tracking** and pattern investigation
+- **Token expiration monitoring** to detect issues
+- **Signature validation alerts** for potential attacks
+- **Validation event logging** for audit purposes
 
 ## Next Steps
 
 <div class="callout callout--success">
-<strong>Validation implemented?</strong> Review the <a href="{{ '/architecture/' | url }}">Architecture Overview</a> to understand the complete system design.
+<strong>Ready to implement?</strong> Review the <a href="{{ '/architecture/' | url }}">Architecture Overview</a> to understand the complete system design.
 </div>
 
 <div class="callout callout--info">
-<strong>Need implementation help?</strong> See the <a href="{{ '/scotaccount-complete-guide/' | url }}">Complete Implementation Guide</a> for full integration patterns.
+<strong>Need more examples?</strong> See the <a href="{{ '/integration-examples/' | url }}">Integration Examples</a> for additional implementation patterns.
 </div>
 
 <div class="callout callout--warning">
-<strong>Security questions?</strong> Contact the ScotAccount team for security review and production deployment guidance.
+<strong>Production deployment?</strong> Contact the ScotAccount team for security review and production deployment guidance before going live.
 </div>
