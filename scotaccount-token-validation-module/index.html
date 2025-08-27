@@ -10,8 +10,8 @@
   
   
 
-  <title>Token Validation Module | ScotAccount Technical Documentation</title>
-  <meta name="description" content="Secure validation of ID tokens and access tokens from ScotAccount with implementation examples">
+  <title>Token Validation Examples | ScotAccount Technical Documentation</title>
+  <meta name="description" content="Example implementations for validating ID tokens and access tokens from ScotAccount">
 
   
   <link rel="canonical" href="https://scotaccount.github.io/sg-identity-techdocs/scotaccount-token-validation-module/">
@@ -27,8 +27,8 @@
   <link rel="stylesheet" href="/sg-identity-techdocs/css/main.css">
 
   
-  <meta property="og:title" content="Token Validation Module">
-  <meta property="og:description" content="Secure validation of ID tokens and access tokens from ScotAccount with implementation examples">
+  <meta property="og:title" content="Token Validation Examples">
+  <meta property="og:description" content="Example implementations for validating ID tokens and access tokens from ScotAccount">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://scotaccount.github.io/sg-identity-techdocs/scotaccount-token-validation-module/">
   <meta property="og:image" content="https://scotaccount.github.io/sg-identity-techdocs/apple-touch-icon.png">
@@ -38,8 +38,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Token Validation Module",
-    "description": "Secure validation of ID tokens and access tokens from ScotAccount with implementation examples",
+    "headline": "Token Validation Examples",
+    "description": "Example implementations for validating ID tokens and access tokens from ScotAccount",
     "url": "https://scotaccount.github.io/sg-identity-techdocs/scotaccount-token-validation-module/",
     "image": "https://scotaccount.github.io/sg-identity-techdocs/apple-touch-icon.png",
     "author": {
@@ -109,21 +109,28 @@
           
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/scotaccount-guide/" class="site-nav__link">
-              Implementation Guide
+              Implementation
             </a>
           </li>
         
           
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">
-              Comprehensive Guide
+              Complete Guide
             </a>
           </li>
         
           
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link site-nav__link--active">
-              Token Validation
+              Token Examples
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/integration-examples/" class="site-nav__link">
+              Integration Examples
             </a>
           </li>
         
@@ -141,15 +148,18 @@
     </aside>
 
     <main class="main" id="main-content" role="main" tabindex="-1">
-      <h1>Token Validation Module</h1>
-      <p class="lead">Secure validation of ID tokens and access tokens from ScotAccount with implementation examples</p>
+      <h1>Token Validation Examples</h1>
+      <p class="lead">Example implementations for validating ID tokens and access tokens from ScotAccount</p>
 
-      <p>Proper token validation is critical for security. This guide shows you how to validate ID tokens and access tokens from ScotAccount to ensure they’re authentic and intended for your service.</p>
-<p><div class="table-of-contents"><ul><li><a href="#security-overview">Security Overview</a><ul><li><a href="#what-you-must-validate">What You Must Validate</a></li></ul></li><li><a href="#id-token-validation">ID Token Validation</a><ul><li><a href="#id-token-structure">ID Token Structure</a></li><li><a href="#complete-validation-implementation">Complete Validation Implementation</a><ul><li><a href="#step-1-set-up-jwks-client">Step 1: Set Up JWKS Client</a></li><li><a href="#step-2-implement-validation-function">Step 2: Implement Validation Function</a></li><li><a href="#step-3-additional-security-validations">Step 3: Additional Security Validations</a></li><li><a href="#step-4-extract-and-store-user-information">Step 4: Extract and Store User Information</a></li></ul></li></ul></li><li><a href="#verified-attributes-validation">Verified Attributes Validation</a><ul><li><a href="#identity-gpg45-medium-extraction-from-claimstoken">Identity (GPG45 Medium) extraction (from claimsToken)</a></li><li><a href="#address-extraction-from-claimstoken">Address extraction (from claimsToken)</a></li></ul></li><li><a href="#access-token-usage">Access Token Usage</a></li><li><a href="#complete-validation-example">Complete Validation Example</a></li><li><a href="#error-handling">Error Handling</a><ul><li><a href="#common-validation-errors">Common Validation Errors</a></li><li><a href="#security-best-practices">Security Best Practices</a></li></ul></li><li><a href="#testing-token-validation">Testing Token Validation</a><ul><li><a href="#unit-test-example">Unit Test Example</a></li></ul></li><li><a href="#production-considerations">Production Considerations</a><ul><li><a href="#performance-optimisation">Performance Optimisation</a></li><li><a href="#monitoring-and-alerts">Monitoring and Alerts</a></li></ul></li><li><a href="#next-steps">Next Steps</a></li></ul></div></p>
+      <div class="callout callout--warning">
+<strong>Example Code Disclaimer</strong>: The code examples in this guide are for educational and reference purposes only. They are not production-ready implementations and should be thoroughly reviewed, tested, and adapted to meet your specific security requirements before use in any live system.
+</div>
+<p>This guide provides example implementations for validating ID tokens and access tokens from ScotAccount. These examples demonstrate proper validation patterns but must be adapted and secured for your specific use case.</p>
+<p><div class="table-of-contents"><ul><li><a href="#security-overview">Security Overview</a><ul><li><a href="#what-you-must-validate">What You Must Validate</a></li></ul></li><li><a href="#id-token-validation">ID Token Validation</a><ul><li><a href="#id-token-structure">ID Token Structure</a></li><li><a href="#example-validation-implementation">Example Validation Implementation</a><ul><li><a href="#step-1-set-up-jwks-client">Step 1: Set Up JWKS Client</a></li><li><a href="#step-2-implement-validation-function">Step 2: Implement Validation Function</a></li><li><a href="#step-3-additional-security-validations">Step 3: Additional Security Validations</a></li><li><a href="#step-4-extract-and-store-user-information">Step 4: Extract and Store User Information</a></li></ul></li></ul></li><li><a href="#verified-attributes-validation">Verified Attributes Validation</a><ul><li><a href="#identity-gpg45-medium-extraction-from-claimstoken">Identity (GPG45 Medium) extraction (from claimsToken)</a></li><li><a href="#address-extraction-from-claimstoken">Address extraction (from claimsToken)</a></li></ul></li><li><a href="#access-token-usage">Access Token Usage</a></li><li><a href="#example-expressjs-integration">Example Express.js Integration</a></li><li><a href="#error-handling">Error Handling</a><ul><li><a href="#common-validation-errors">Common Validation Errors</a></li><li><a href="#example-security-patterns">Example Security Patterns</a></li></ul></li><li><a href="#testing-token-validation">Testing Token Validation</a><ul><li><a href="#unit-test-example">Unit Test Example</a></li></ul></li><li><a href="#implementation-considerations">Implementation Considerations</a><ul><li><a href="#performance-optimisation-examples">Performance Optimisation Examples</a></li><li><a href="#monitoring-examples">Monitoring Examples</a></li></ul></li><li><a href="#next-steps">Next Steps</a></li></ul></div></p>
 <h2 id="security-overview" tabindex="-1"><a class="header-anchor" href="#security-overview"><span>Security Overview</span></a></h2>
 <p>ScotAccount issues JSON Web Tokens (JWTs) that must be validated before trusting their contents. This ensures tokens haven’t been tampered with and were genuinely issued by ScotAccount.</p>
 <div class="callout callout--error">
-<strong>Critical Security Warning</strong>: Never trust token contents without proper validation. Always verify signatures and claims to prevent security vulnerabilities.
+<strong>Security Note</strong>: These examples show validation patterns that should be implemented. Never trust token contents without proper validation. Always verify signatures and claims in your production implementation.
 </div>
 <h3 id="what-you-must-validate" tabindex="-1"><a class="header-anchor" href="#what-you-must-validate"><span>What You Must Validate</span></a></h3>
 <ol>
@@ -184,7 +194,7 @@
 <li><code>jti</code> - <strong>Unique token ID</strong> (prevents duplicate tokens)</li>
 <li><code>sid</code> - <strong>Session ID</strong> (required for logout)</li>
 </ul>
-<h3 id="complete-validation-implementation" tabindex="-1"><a class="header-anchor" href="#complete-validation-implementation"><span>Complete Validation Implementation</span></a></h3>
+<h3 id="example-validation-implementation" tabindex="-1"><a class="header-anchor" href="#example-validation-implementation"><span>Example Validation Implementation</span></a></h3>
 <h4 id="step-1-set-up-jwks-client" tabindex="-1"><a class="header-anchor" href="#step-1-set-up-jwks-client"><span>Step 1: Set Up JWKS Client</span></a></h4>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> jwksClient <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"jwks-rsa"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> jwt <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"jsonwebtoken"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -322,8 +332,8 @@
 <span class="token punctuation">}</span></code></pre>
 <h2 id="access-token-usage" tabindex="-1"><a class="header-anchor" href="#access-token-usage"><span>Access Token Usage</span></a></h2>
 <p>Use the access token (15 minutes) to call <code>GET https://issuer.main.integration.scotaccount.service.gov.scot/attributes/values</code> with a <code>DIS-Client-Assertion</code> whose audience is the attributes URL.</p>
-<h2 id="complete-validation-example" tabindex="-1"><a class="header-anchor" href="#complete-validation-example"><span>Complete Validation Example</span></a></h2>
-<p>Here’s a complete example showing validation in an Express.js application:</p>
+<h2 id="example-expressjs-integration" tabindex="-1"><a class="header-anchor" href="#example-expressjs-integration"><span>Example Express.js Integration</span></a></h2>
+<p>Here’s an example showing how validation might be integrated into an Express.js application:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> express <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"express"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> jwt <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"jsonwebtoken"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> jwksClient <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"jwks-rsa"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -387,15 +397,16 @@ app<span class="token punctuation">.</span><span class="token function">get</spa
   console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"Token audience mismatch"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// This is a serious security issue</span>
 <span class="token punctuation">}</span></code></pre>
-<h3 id="security-best-practices" tabindex="-1"><a class="header-anchor" href="#security-best-practices"><span>Security Best Practices</span></a></h3>
+<h3 id="example-security-patterns" tabindex="-1"><a class="header-anchor" href="#example-security-patterns"><span>Example Security Patterns</span></a></h3>
+<p>These examples demonstrate security patterns you should implement:</p>
 <ol>
-<li><strong>Always validate tokens</strong> before trusting their contents</li>
-<li><strong>Use the latest token</strong> after refresh operations</li>
-<li><strong>Log validation failures</strong> for security monitoring</li>
-<li><strong>Implement rate limiting</strong> on validation endpoints</li>
-<li><strong>Cache public keys</strong> but refresh periodically</li>
-<li><strong>Handle clock skew</strong> with appropriate tolerance</li>
-<li><strong>Validate all custom claims</strong> from verified attributes</li>
+<li><strong>Token validation</strong> before trusting contents</li>
+<li><strong>Token refresh</strong> handling in your application</li>
+<li><strong>Validation failure logging</strong> for monitoring</li>
+<li><strong>Rate limiting</strong> on validation endpoints</li>
+<li><strong>Public key caching</strong> with refresh logic</li>
+<li><strong>Clock skew handling</strong> with tolerance</li>
+<li><strong>Custom claim validation</strong> for verified attributes</li>
 </ol>
 <h2 id="testing-token-validation" tabindex="-1"><a class="header-anchor" href="#testing-token-validation"><span>Testing Token Validation</span></a></h2>
 <h3 id="unit-test-example" tabindex="-1"><a class="header-anchor" href="#unit-test-example"><span>Unit Test Example</span></a></h3>
@@ -426,35 +437,37 @@ app<span class="token punctuation">.</span><span class="token function">get</spa
     assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>payload<span class="token punctuation">.</span>nonce<span class="token punctuation">,</span> correctNonce<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<h2 id="production-considerations" tabindex="-1"><a class="header-anchor" href="#production-considerations"><span>Production Considerations</span></a></h2>
-<h3 id="performance-optimisation" tabindex="-1"><a class="header-anchor" href="#performance-optimisation"><span>Performance Optimisation</span></a></h3>
+<h2 id="implementation-considerations" tabindex="-1"><a class="header-anchor" href="#implementation-considerations"><span>Implementation Considerations</span></a></h2>
+<h3 id="performance-optimisation-examples" tabindex="-1"><a class="header-anchor" href="#performance-optimisation-examples"><span>Performance Optimisation Examples</span></a></h3>
+<p>These examples show performance patterns you might implement:</p>
 <ul>
-<li><strong>Cache JWKS keys</strong> with appropriate TTL</li>
-<li><strong>Implement connection pooling</strong> for HTTP requests</li>
-<li><strong>Use asynchronous validation</strong> to avoid blocking</li>
-<li><strong>Consider token validation libraries</strong> for your platform</li>
+<li><strong>JWKS key caching</strong> with appropriate TTL</li>
+<li><strong>Connection pooling</strong> for HTTP requests</li>
+<li><strong>Asynchronous validation</strong> to avoid blocking</li>
+<li><strong>Token validation libraries</strong> for your platform</li>
 </ul>
-<h3 id="monitoring-and-alerts" tabindex="-1"><a class="header-anchor" href="#monitoring-and-alerts"><span>Monitoring and Alerts</span></a></h3>
+<h3 id="monitoring-examples" tabindex="-1"><a class="header-anchor" href="#monitoring-examples"><span>Monitoring Examples</span></a></h3>
+<p>Example monitoring patterns for your implementation:</p>
 <ul>
-<li><strong>Track validation failures</strong> and investigate patterns</li>
-<li><strong>Monitor token expiration rates</strong> to detect issues</li>
-<li><strong>Alert on signature validation failures</strong> as potential attacks</li>
-<li><strong>Log all validation events</strong> for audit purposes</li>
+<li><strong>Validation failure tracking</strong> and pattern investigation</li>
+<li><strong>Token expiration monitoring</strong> to detect issues</li>
+<li><strong>Signature validation alerts</strong> for potential attacks</li>
+<li><strong>Validation event logging</strong> for audit purposes</li>
 </ul>
 <h2 id="next-steps" tabindex="-1"><a class="header-anchor" href="#next-steps"><span>Next Steps</span></a></h2>
 <div class="callout callout--success">
-<strong>Validation implemented?</strong> Review the <a href="/sg-identity-techdocs/architecture/">Architecture Overview</a> to understand the complete system design.
+<strong>Ready to implement?</strong> Review the <a href="/sg-identity-techdocs/architecture/">Architecture Overview</a> to understand the complete system design.
 </div>
 <div class="callout callout--info">
-<strong>Need implementation help?</strong> See the <a href="/sg-identity-techdocs/scotaccount-complete-guide/">Complete Implementation Guide</a> for full integration patterns.
+<strong>Need more examples?</strong> See the <a href="/sg-identity-techdocs/integration-examples/">Integration Examples</a> for additional implementation patterns.
 </div>
 <div class="callout callout--warning">
-<strong>Security questions?</strong> Contact the ScotAccount team for security review and production deployment guidance.
+<strong>Production deployment?</strong> Contact the ScotAccount team for security review and production deployment guidance before going live.
 </div>
 
 
       
-      <footer class="content-footer"><p><small>Last updated: 22 August 2025</small></p></footer>
+      <footer class="content-footer"><p><small>Last updated: 27 August 2025</small></p></footer>
       
     </main>
   </div>

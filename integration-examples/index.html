@@ -109,21 +109,28 @@
           
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/scotaccount-guide/" class="site-nav__link">
-              Implementation Guide
+              Implementation
             </a>
           </li>
         
           
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">
-              Comprehensive Guide
+              Complete Guide
             </a>
           </li>
         
           
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link">
-              Token Validation
+              Token Examples
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/integration-examples/" class="site-nav__link site-nav__link--active">
+              Integration Examples
             </a>
           </li>
         
@@ -144,7 +151,10 @@
       <h1>Integration Examples and Best Practices</h1>
       <p class="lead">Practical integration examples and solutions for ScotAccount implementation challenges</p>
 
-      <p>This page provides practical integration examples and best practices for ScotAccount, helping you implement secure, robust code that you can tailor for your needs. These code elements are for example purposes only</p>
+      <div class="callout callout--warning">
+<strong>Example Code Disclaimer</strong>: All code examples in this guide are for educational and reference purposes only. They are not production-ready implementations and must be thoroughly reviewed, tested, and adapted to meet your specific security and operational requirements before use in any live system.
+</div>
+<p>This page provides practical integration examples for ScotAccount implementation patterns. These examples demonstrate common integration approaches but must be customized and secured for your specific use case.</p>
 <h2 id="phase-1-setup-registration-examples" tabindex="-1"><a class="header-anchor" href="#phase-1-setup-registration-examples"><span>Phase 1: Setup &amp; Registration Examples</span></a></h2>
 <h3 id="discovery-endpoint-integration" tabindex="-1"><a class="header-anchor" href="#discovery-endpoint-integration"><span>Discovery Endpoint Integration</span></a></h3>
 <p>Always retrieve current configuration dynamically:</p>
@@ -383,8 +393,8 @@
       <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<h2 id="complete-example-implementation" tabindex="-1"><a class="header-anchor" href="#complete-example-implementation"><span>Complete Example Implementation</span></a></h2>
-<p>Here’s a complete Node.js/Express example:</p>
+<h2 id="example-nodejsexpress-implementation" tabindex="-1"><a class="header-anchor" href="#example-nodejsexpress-implementation"><span>Example Node.js/Express Implementation</span></a></h2>
+<p>Here’s an example showing how these patterns might be implemented in a Node.js/Express application:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> express <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"express"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> jwt <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"jsonwebtoken"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> crypto <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"crypto"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -447,11 +457,11 @@ app<span class="token punctuation">.</span><span class="token function">get</spa
 app<span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Server running on port 3000"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<h2 id="example-complete-authentication-flow" tabindex="-1"><a class="header-anchor" href="#example-complete-authentication-flow"><span>Example: Complete Authentication Flow</span></a></h2>
-<p><strong>Implementing PKCE (Proof Key for Code Exchange):</strong></p>
+<h2 id="example-authentication-flow-with-pkce" tabindex="-1"><a class="header-anchor" href="#example-authentication-flow-with-pkce"><span>Example: Authentication Flow with PKCE</span></a></h2>
+<p><strong>Example PKCE (Proof Key for Code Exchange) Implementation:</strong></p>
 <ul>
-<li><strong>Why:</strong> Enhances security by preventing interception attacks</li>
-<li><strong>How:</strong> Always implement PKCE with the SHA256 method as shown below</li>
+<li><strong>Purpose:</strong> Example showing security pattern for preventing interception attacks</li>
+<li><strong>Implementation:</strong> Example using SHA256 method as recommended</li>
 </ul>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Complete authentication flow with PKCE and error handling</span>
 <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">handleAuthentication</span><span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -481,10 +491,10 @@ app<span class="token punctuation">.</span><span class="token function">listen</
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
 <h2 id="example-token-validation" tabindex="-1"><a class="header-anchor" href="#example-token-validation"><span>Example: Token Validation</span></a></h2>
-<p><strong>Verifying ID Tokens:</strong></p>
+<p><strong>Example ID Token Verification:</strong></p>
 <ul>
-<li><strong>Why:</strong> Ensures tokens are valid and not tampered with</li>
-<li><strong>How:</strong> Always validate tokens as shown below</li>
+<li><strong>Purpose:</strong> Example showing how tokens should be validated</li>
+<li><strong>Implementation:</strong> Example validation patterns as shown below</li>
 </ul>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Token validation example</span>
 <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">validateTokens</span><span class="token punctuation">(</span><span class="token parameter">tokens<span class="token punctuation">,</span> expectedState<span class="token punctuation">,</span> expectedNonce</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -510,11 +520,11 @@ app<span class="token punctuation">.</span><span class="token function">listen</
 
   <span class="token keyword">return</span> userInfo<span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<h2 id="example-secure-session-management" tabindex="-1"><a class="header-anchor" href="#example-secure-session-management"><span>Example: Secure Session Management</span></a></h2>
-<p><strong>Storing Sessions Securely:</strong></p>
+<h2 id="example-session-management" tabindex="-1"><a class="header-anchor" href="#example-session-management"><span>Example: Session Management</span></a></h2>
+<p><strong>Example Secure Session Storage:</strong></p>
 <ul>
-<li><strong>Why:</strong> Protects user data and prevents unauthorised access</li>
-<li><strong>How:</strong> Use encrypted, server-side session storage</li>
+<li><strong>Purpose:</strong> Example showing secure session storage patterns</li>
+<li><strong>Implementation:</strong> Example using encrypted, server-side storage</li>
 </ul>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Secure session implementation example</span>
 <span class="token keyword">class</span> <span class="token class-name">SecureSession</span> <span class="token punctuation">{</span>
@@ -559,10 +569,10 @@ app<span class="token punctuation">.</span><span class="token function">listen</
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
 <h2 id="example-multi-environment-configuration" tabindex="-1"><a class="header-anchor" href="#example-multi-environment-configuration"><span>Example: Multi-Environment Configuration</span></a></h2>
-<p><strong>Configuring for Different Environments:</strong></p>
+<p><strong>Example Environment Configuration:</strong></p>
 <ul>
-<li><strong>Why:</strong> Ensures correct settings for development, integration, and production</li>
-<li><strong>How:</strong> Use environment-specific configuration as shown below</li>
+<li><strong>Purpose:</strong> Example showing configuration patterns for different environments</li>
+<li><strong>Implementation:</strong> Example environment-specific settings</li>
 </ul>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Environment-specific configuration example</span>
 <span class="token keyword">const</span> config <span class="token operator">=</span> <span class="token punctuation">{</span>
@@ -590,10 +600,10 @@ app<span class="token punctuation">.</span><span class="token function">listen</
 
 <span class="token keyword">const</span> currentConfig <span class="token operator">=</span> config<span class="token punctuation">[</span>process<span class="token punctuation">.</span>env<span class="token punctuation">.</span><span class="token constant">NODE_ENV</span> <span class="token operator">||</span> <span class="token string">"development"</span><span class="token punctuation">]</span><span class="token punctuation">;</span></code></pre>
 <h2 id="example-error-handling" tabindex="-1"><a class="header-anchor" href="#example-error-handling"><span>Example: Error Handling</span></a></h2>
-<p><strong>Handling Authentication Errors:</strong></p>
+<p><strong>Example Authentication Error Handling:</strong></p>
 <ul>
-<li><strong>Why:</strong> Improves user experience and simplifies debugging</li>
-<li><strong>How:</strong> Implement detailed error handling for different scenarios</li>
+<li><strong>Purpose:</strong> Example showing error handling patterns for better user experience</li>
+<li><strong>Implementation:</strong> Example error handling for different scenarios</li>
 </ul>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Error handling example</span>
 <span class="token keyword">function</span> <span class="token function">handleAuthError</span><span class="token punctuation">(</span><span class="token parameter">error<span class="token punctuation">,</span> req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -638,10 +648,10 @@ app<span class="token punctuation">.</span><span class="token function">listen</
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
 <h2 id="example-monitoring-and-logging" tabindex="-1"><a class="header-anchor" href="#example-monitoring-and-logging"><span>Example: Monitoring and Logging</span></a></h2>
-<p><strong>Tracking Authentication Events:</strong></p>
+<p><strong>Example Authentication Event Tracking:</strong></p>
 <ul>
-<li><strong>Why:</strong> Enables auditing and monitoring of authentication flows</li>
-<li><strong>How:</strong> Log events and metrics as shown below</li>
+<li><strong>Purpose:</strong> Example showing monitoring patterns for authentication flows</li>
+<li><strong>Implementation:</strong> Example logging and metrics collection</li>
 </ul>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Monitoring and logging example</span>
 <span class="token keyword">class</span> <span class="token class-name">AuthMonitoring</span> <span class="token punctuation">{</span>
@@ -688,11 +698,11 @@ AuthMonitoring<span class="token punctuation">.</span><span class="token functio
   <span class="token literal-property property">sessionId</span><span class="token operator">:</span> userInfo<span class="token punctuation">.</span>sessionId<span class="token punctuation">,</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 AuthMonitoring<span class="token punctuation">.</span><span class="token function">trackMetric</span><span class="token punctuation">(</span><span class="token string">"auth_duration"</span><span class="token punctuation">,</span> authDuration<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<h2 id="example-integration-and-security-testing" tabindex="-1"><a class="header-anchor" href="#example-integration-and-security-testing"><span>Example: Integration and Security Testing</span></a></h2>
-<p><strong>Testing Authentication and Security:</strong></p>
+<h2 id="example-testing-integration" tabindex="-1"><a class="header-anchor" href="#example-testing-integration"><span>Example: Testing Integration</span></a></h2>
+<p><strong>Example Authentication and Security Testing:</strong></p>
 <ul>
-<li><strong>Why:</strong> Ensures your integration is robust and secure</li>
-<li><strong>How:</strong> Use integration and security tests as shown below</li>
+<li><strong>Purpose:</strong> Example showing testing patterns for integration validation</li>
+<li><strong>Implementation:</strong> Example integration and security test patterns</li>
 </ul>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Integration test example</span>
 <span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">"ScotAccount Integration"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
@@ -739,56 +749,35 @@ AuthMonitoring<span class="token punctuation">.</span><span class="token functio
       <span class="token punctuation">.</span><span class="token function">expect</span><span class="token punctuation">(</span><span class="token number">401</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<h2 id="production-readiness-checklist" tabindex="-1"><a class="header-anchor" href="#production-readiness-checklist"><span>Production Readiness Checklist</span></a></h2>
+<h2 id="example-implementation-checklist" tabindex="-1"><a class="header-anchor" href="#example-implementation-checklist"><span>Example Implementation Checklist</span></a></h2>
+<p>Example considerations for your production implementation:</p>
 <ul>
-<li>
-<p>[ ] <strong>HTTPS enforcement</strong> in all environments</p>
-</li>
-<li>
-<p>[ ] <strong>Security headers</strong> implementation</p>
-</li>
-<li>
-<p>[ ] <strong>Rate limiting</strong> on authentication endpoints</p>
-</li>
-<li>
-<p>[ ] <strong>CORS configuration</strong> for allowed origins</p>
-</li>
-<li>
-<p>[ ] <strong>CSP headers</strong> for XSS protection</p>
-</li>
-<li>
-<p>[ ] <strong>Secure cookie settings</strong> for session management</p>
-</li>
-<li>
-<p>[ ] <strong>Environment variable validation</strong> on startup</p>
-</li>
-<li>
-<p>[ ] <strong>Health check endpoints</strong> for monitoring</p>
-</li>
-<li>
-<p>[ ] <strong>Graceful shutdown</strong> handling</p>
-</li>
-<li>
-<p>[ ] <strong>Database connection pooling</strong> configuration</p>
-</li>
-<li>
-<p>[ ] <strong>Performance optimisations</strong> (e.g., JWT key caching, connection pooling, request timeouts)</p>
-</li>
+<li>[ ] <strong>HTTPS enforcement</strong> in all environments</li>
+<li>[ ] <strong>Security headers</strong> implementation</li>
+<li>[ ] <strong>Rate limiting</strong> on authentication endpoints</li>
+<li>[ ] <strong>CORS configuration</strong> for allowed origins</li>
+<li>[ ] <strong>CSP headers</strong> for XSS protection</li>
+<li>[ ] <strong>Secure cookie settings</strong> for session management</li>
+<li>[ ] <strong>Environment variable validation</strong> on startup</li>
+<li>[ ] <strong>Health check endpoints</strong> for monitoring</li>
+<li>[ ] <strong>Graceful shutdown</strong> handling</li>
+<li>[ ] <strong>Database connection pooling</strong> configuration</li>
+<li>[ ] <strong>Performance optimisations</strong> (e.g., JWT key caching, connection pooling, request timeouts)</li>
 </ul>
 <h2 id="next-steps" tabindex="-1"><a class="header-anchor" href="#next-steps"><span>Next Steps</span></a></h2>
 <div class="callout callout--success">
-<strong>Ready to integrate?</strong> Use these examples and best practices to build a secure, robust ScotAccount integration.
+<strong>Ready to implement?</strong> Adapt these examples to build your ScotAccount integration, ensuring you review and test thoroughly before production deployment.
 </div>
 <div class="callout callout--info">
-<strong>Need more help?</strong> Follow the <a href="/sg-identity-techdocs/scotaccount-complete-guide/">Complete Implementation Guide</a> for comprehensive solutions.
+<strong>Need more examples?</strong> Review the <a href="/sg-identity-techdocs/token-validation-examples/">Token Validation Examples</a> for detailed validation patterns.
 </div>
-<div class="callout callout--info">
-<strong>Questions about security?</strong> Review the <a href="/sg-identity-techdocs/scotaccount-token-validation-module/">Token Validation Module</a> for detailed security guidance.
+<div class="callout callout--warning">
+<strong>Production deployment?</strong> Contact the ScotAccount team for security review and production deployment guidance before going live.
 </div>
 
 
       
-      <footer class="content-footer"><p><small>Last updated: 22 August 2025</small></p></footer>
+      <footer class="content-footer"><p><small>Last updated: 27 August 2025</small></p></footer>
       
     </main>
   </div>

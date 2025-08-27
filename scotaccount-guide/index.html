@@ -109,21 +109,28 @@
           
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/scotaccount-guide/" class="site-nav__link site-nav__link--active">
-              Implementation Guide
+              Implementation
             </a>
           </li>
         
           
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">
-              Comprehensive Guide
+              Complete Guide
             </a>
           </li>
         
           
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link">
-              Token Validation
+              Token Examples
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/integration-examples/" class="site-nav__link">
+              Integration Examples
             </a>
           </li>
         
@@ -145,14 +152,13 @@
       <p class="lead">Technical guide for implementing ScotAccount authentication and verified attributes</p>
 
       <p>This guide provides technical implementation instructions for integrating with ScotAccount. Follow these steps to build secure authentication with optional verified attributes.</p>
-<p><div class="table-of-contents"><ul><li><a href="#implementation-overview">Implementation Overview</a></li><li><a href="#phase-1-setup-registration">Phase 1: Setup &amp; Registration</a><ul><li><a href="#generate-cryptographic-keys">Generate Cryptographic Keys</a></li><li><a href="#secure-key-storage">Secure Key Storage</a></li><li><a href="#service-registration">Service Registration</a></li><li><a href="#registration-response">Registration Response</a></li></ul></li><li><a href="#phase-2-basic-authentication">Phase 2: Basic Authentication</a><ul><li><a href="#discovery-endpoint-integration">Discovery Endpoint Integration</a></li><li><a href="#pkce-implementation">PKCE Implementation</a></li><li><a href="#authorization-request">Authorization Request</a></li><li><a href="#callback-handler">Callback Handler</a></li><li><a href="#jwt-client-assertion">JWT Client Assertion</a></li><li><a href="#token-exchange">Token Exchange</a></li><li><a href="#id-token-validation">ID Token Validation</a></li></ul></li><li><a href="#phase-3-verified-attributes">Phase 3: Verified Attributes</a><ul><li><a href="#requesting-additional-scopes">Requesting Additional Scopes</a></li></ul></li><li><a href="#phase-4-production-deployment">Phase 4: Production Deployment</a><ul><li><a href="#environment-configuration">Environment Configuration</a></li><li><a href="#monitoring-and-logging">Monitoring and Logging</a></li><li><a href="#error-handling">Error Handling</a></li><li><a href="#security-checklist">Security Checklist</a></li></ul></li><li><a href="#complete-example-implementation">Complete Example Implementation</a></li><li><a href="#troubleshooting-common-issues">Troubleshooting Common Issues</a><ul><li><a href="#invalid-client-assertion">Invalid Client Assertion</a></li><li><a href="#state-parameter-mismatch">State Parameter Mismatch</a></li><li><a href="#token-validation-failures">Token Validation Failures</a></li><li><a href="#pkce-errors">PKCE Errors</a></li></ul></li><li><a href="#support-and-next-steps">Support and Next Steps</a></li></ul></div></p>
 <h2 id="implementation-overview" tabindex="-1"><a class="header-anchor" href="#implementation-overview"><span>Implementation Overview</span></a></h2>
 <p>ScotAccount integration follows a four-phase approach:</p>
 <ol>
 <li><strong>Setup &amp; Registration</strong> - Generate keys and register your service</li>
 <li><strong>Basic Authentication</strong> - Implement OpenID Connect authentication flow</li>
 <li><strong>Verified Attributes</strong> - Add identity, address, and email verification</li>
-<li><strong>Production Deployment</strong> - Go live with monitoring and security measures</li>
+<li><strong>Production Deployment</strong> - Go live with monitoring and security measuresr</li>
 </ol>
 <h2 id="phase-1-setup-registration" tabindex="-1"><a class="header-anchor" href="#phase-1-setup-registration"><span>Phase 1: Setup &amp; Registration</span></a></h2>
 <h3 id="generate-cryptographic-keys" tabindex="-1"><a class="header-anchor" href="#generate-cryptographic-keys"><span>Generate Cryptographic Keys</span></a></h3>
@@ -512,7 +518,7 @@ code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk</code></pre>
 
 
       
-      <footer class="content-footer"><p><small>Last updated: 22 August 2025</small></p></footer>
+      <footer class="content-footer"><p><small>Last updated: 27 August 2025</small></p></footer>
       
     </main>
   </div>

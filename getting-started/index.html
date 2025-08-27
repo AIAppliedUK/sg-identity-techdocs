@@ -109,21 +109,28 @@
           
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/scotaccount-guide/" class="site-nav__link">
-              Implementation Guide
+              Implementation
             </a>
           </li>
         
           
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">
-              Comprehensive Guide
+              Complete Guide
             </a>
           </li>
         
           
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link">
-              Token Validation
+              Token Examples
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/integration-examples/" class="site-nav__link">
+              Integration Examples
             </a>
           </li>
         
@@ -168,9 +175,7 @@
 <li><strong>Receive client_id</strong> - Get your unique client identifier</li>
 </ol>
 <h3 id="phase-2-basic-authentication" tabindex="-1"><a class="header-anchor" href="#phase-2-basic-authentication"><span>Phase 2: Basic Authentication</span></a></h3>
-<p>The first step in your implementation is get the authentication flow working. This will prove connectivity and<br>
-your applications ability to send requests to the ScotAccount serveice and handle the redirects to enable the<br>
-user to complete the login steps necessary to complete authentication.</p>
+<p>The first step in your implementation is get the authentication flow working. This will prove connectivity and your applications ability to send requests to the ScotAccount serveice and handle the redirects to enable the user to complete the login steps necessary to complete authentication.</p>
 <ol>
 <li><strong>Implement discovery endpoint</strong> - Retrieve current configuration automatically</li>
 <li><strong>Build PKCE parameters</strong> - Generate code verifier and challenge</li>
@@ -195,12 +200,14 @@ user to complete the login steps necessary to complete authentication.</p>
 <li><strong>Complete security review</strong> - Recommended: Run penetration testing</li>
 </ol>
 <h2 id="core-authentication-flow" tabindex="-1"><a class="header-anchor" href="#core-authentication-flow"><span>Core Authentication Flow</span></a></h2>
+<p><img src="/sg-identity-techdocs/assets/diagrams/auth-flow.png" alt="ScotAccount High-Level Architecture"></p>
+<p><em>Figure: Illustration of authentication flow.</em></p>
 <p>The ScotAccount authentication process follows these key steps:</p>
-<h3 id="1-discovery-configuration" tabindex="-1"><a class="header-anchor" href="#1-discovery-configuration"><span>1. Discovery Configuration</span></a></h3>
-<p>First, retrieve the current configuration:</p>
+<p>Before you begin, retrieve the current configuration to ensure you have the latest url’s scopes etc. This provides all endpoint URLs and supported features. Ensure your application leverages</p>
 <pre class="language-http"><code class="language-http">GET https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration</code></pre>
-<p>This provides all endpoint URLs and supported features. Ensure your application leverages</p>
-<h3 id="2-generate-security-parameters" tabindex="-1"><a class="header-anchor" href="#2-generate-security-parameters"><span>2. Generate Security Parameters</span></a></h3>
+<h3 id="1-user-attempts-to-login" tabindex="-1"><a class="header-anchor" href="#1-user-attempts-to-login"><span>1. User attempts to login</span></a></h3>
+<p>User accesses your service and you determine the user needs to authenticate using ScotAccount.</p>
+<h3 id="2-3-generate-security-parameters" tabindex="-1"><a class="header-anchor" href="#2-3-generate-security-parameters"><span>2 &amp; 3 Generate Security Parameters</span></a></h3>
 <p>During the first call to scotaccount, your application is responsible for implementing the PKCE client data and security required to succesfully implement an OIDC client.</p>
 <p>Your application must generate:</p>
 <ul>
@@ -209,8 +216,8 @@ user to complete the login steps necessary to complete authentication.</p>
 <li><strong>State parameter</strong> - Unique value to prevent CSRF attacks</li>
 <li><strong>Nonce</strong> - Random value for replay protection</li>
 </ul>
-<h3 id="3-redirect-to-scotaccount" tabindex="-1"><a class="header-anchor" href="#3-redirect-to-scotaccount"><span>3. Redirect to ScotAccount</span></a></h3>
-<p>Build the authorization URL and redirect users:</p>
+<h3 id="4-5-6-redirect-to-scotaccount" tabindex="-1"><a class="header-anchor" href="#4-5-6-redirect-to-scotaccount"><span>4, 5 &amp; 6 Redirect to ScotAccount</span></a></h3>
+<p>Build the authorization URL and redirect users to ScotAccount using a redirect like the one shown below</p>
 <pre><code>https://authz.integration.scotaccount.service.gov.scot/authorize?
     client_id=your-client-id&amp;
     redirect_uri=https://yourservice.gov.scot/auth/callback&amp;
@@ -221,15 +228,15 @@ user to complete the login steps necessary to complete authentication.</p>
     code_challenge=your-code-challenge&amp;
     code_challenge_method=S256
 </code></pre>
-<h3 id="4-handle-callback" tabindex="-1"><a class="header-anchor" href="#4-handle-callback"><span>4. Handle Callback</span></a></h3>
-<p>Users authenticate at ScotAccount and return to your callback URL:</p>
+<h3 id="6-7-handle-callback" tabindex="-1"><a class="header-anchor" href="#6-7-handle-callback"><span>6 &amp; 7. Handle Callback</span></a></h3>
+<p>The user will then authenticate at ScotAccount and return to your callback URL using a redirect we send to the users browser</p>
 <pre><code>https://yourservice.gov.scot/auth/callback?
     code=authorization-code&amp;
     state=your-state-value
 </code></pre>
 <p><strong>Critical</strong>: Always validate the state parameter matches your original value.</p>
 <h3 id="5-exchange-code-for-tokens" tabindex="-1"><a class="header-anchor" href="#5-exchange-code-for-tokens"><span>5. Exchange Code for Tokens</span></a></h3>
-<p>Create a JWT client assertion and exchange the authorization code:</p>
+<p>Once you receive this callback you then must create a JWT client assertion and exchange the authorization code:</p>
 <pre class="language-http"><code class="language-http">POST https://authz.integration.scotaccount.service.gov.scot/token
 <span class="token header"><span class="token header-name keyword">Content-Type</span><span class="token punctuation">:</span> <span class="token header-value">application/x-www-form-urlencoded</span></span>
 
@@ -284,8 +291,6 @@ code_verifier=your-code-verifier</code></pre>
   <span class="token literal-property property">authenticatedAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   <span class="token literal-property property">expiresAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">,</span> <span class="token comment">// 1 hour</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
-<p><img src="/sg-identity-techdocs/assets/diagrams/auth-flow.png" alt="ScotAccount High-Level Architecture"></p>
-<p><em>Figure: Illustration of authentication flow.</em></p>
 <h3 id="logout-implementation" tabindex="-1"><a class="header-anchor" href="#logout-implementation"><span>Logout Implementation</span></a></h3>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Redirect to ScotAccount logout</span>
 <span class="token keyword">const</span> logoutUrl <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://authz.integration.scotaccount.service.gov.scot/authorize/logout?
@@ -315,7 +320,7 @@ code_verifier=your-code-verifier</code></pre>
 
 
       
-      <footer class="content-footer"><p><small>Last updated: 22 August 2025</small></p></footer>
+      <footer class="content-footer"><p><small>Last updated: 27 August 2025</small></p></footer>
       
     </main>
   </div>

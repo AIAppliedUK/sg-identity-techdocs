@@ -10,7 +10,7 @@
   
   
 
-  <title>Comprehensive Guide | ScotAccount Technical Documentation</title>
+  <title>Complete Guide | ScotAccount Technical Documentation</title>
   <meta name="description" content="Comprehensive technical guide for implementing ScotAccount authentication and verified attributes">
 
   
@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="/sg-identity-techdocs/css/main.css">
 
   
-  <meta property="og:title" content="Comprehensive Guide">
+  <meta property="og:title" content="Complete Guide">
   <meta property="og:description" content="Comprehensive technical guide for implementing ScotAccount authentication and verified attributes">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://scotaccount.github.io/sg-identity-techdocs/scotaccount-complete-guide/">
@@ -38,7 +38,7 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Comprehensive Guide",
+    "headline": "Complete Guide",
     "description": "Comprehensive technical guide for implementing ScotAccount authentication and verified attributes",
     "url": "https://scotaccount.github.io/sg-identity-techdocs/scotaccount-complete-guide/",
     "image": "https://scotaccount.github.io/sg-identity-techdocs/apple-touch-icon.png",
@@ -109,21 +109,28 @@
           
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/scotaccount-guide/" class="site-nav__link">
-              Implementation Guide
+              Implementation
             </a>
           </li>
         
           
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link site-nav__link--active">
-              Comprehensive Guide
+              Complete Guide
             </a>
           </li>
         
           
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link">
-              Token Validation
+              Token Examples
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/integration-examples/" class="site-nav__link">
+              Integration Examples
             </a>
           </li>
         
@@ -141,47 +148,12 @@
     </aside>
 
     <main class="main" id="main-content" role="main" tabindex="-1">
-      <h1>Comprehensive Guide</h1>
+      <h1>Complete Guide</h1>
       <p class="lead">Comprehensive technical guide for implementing ScotAccount authentication and verified attributes</p>
 
-      <h2 id="quick-start-checklist" tabindex="-1"><a class="header-anchor" href="#quick-start-checklist"><span>Quick Start Checklist</span></a></h2>
-<h3 id="phase-1-setup-registration" tabindex="-1"><a class="header-anchor" href="#phase-1-setup-registration"><span>Phase 1: Setup &amp; Registration</span></a></h3>
-<ul>
-<li>[ ] Generate RSA 3072-bit or EC P-256 key pair using OpenSSL</li>
-<li>[ ] Securely store private key in secrets manager (AWS Secrets Manager, Azure Key Vault, etc.)</li>
-<li>[ ] Determine required scopes based on your service needs</li>
-<li>[ ] Identify production IP addresses for allowlisting (if applicable)</li>
-<li>[ ] Define redirect and logout URIs for your service</li>
-<li>[ ] Submit complete registration information to ScotAccount team</li>
-<li>[ ] Receive client_id confirmation and test connectivity</li>
-</ul>
-<h3 id="phase-2-basic-authentication" tabindex="-1"><a class="header-anchor" href="#phase-2-basic-authentication"><span>Phase 2: Basic Authentication</span></a></h3>
-<ul>
-<li>[ ] Implement discovery endpoint integration to retrieve current configuration</li>
-<li>[ ] Build PKCE parameter generation for security</li>
-<li>[ ] Create authorization request builder with proper state management</li>
-<li>[ ] Implement callback handler with comprehensive state validation</li>
-<li>[ ] Build JWT client assertion creator using your private key</li>
-<li>[ ] Complete token exchange implementation with error handling</li>
-<li>[ ] Add robust ID token validation and user identity extraction</li>
-</ul>
-<h3 id="phase-3-verified-attributes" tabindex="-1"><a class="header-anchor" href="#phase-3-verified-attributes"><span>Phase 3: Verified Attributes</span></a></h3>
-<ul>
-<li>[ ] Determine which additional scopes your service requires</li>
-<li>[ ] Implement attribute request flow with user consent handling</li>
-<li>[ ] Build attribute response processor to parse verified claims</li>
-<li>[ ] Add comprehensive attribute data validation and storage</li>
-</ul>
-<h3 id="phase-4-production-deployment" tabindex="-1"><a class="header-anchor" href="#phase-4-production-deployment"><span>Phase 4: Production Deployment</span></a></h3>
-<ul>
-<li>[ ] Update configuration to use production endpoints</li>
-<li>[ ] Implement comprehensive monitoring and logging</li>
-<li>[ ] Add user-friendly error handling and messaging</li>
-<li>[ ] Complete security review and penetration testing</li>
-</ul>
-<hr>
-<h2 id="complete-authentication-flow-summary" tabindex="-1"><a class="header-anchor" href="#complete-authentication-flow-summary"><span>Complete Authentication Flow Summary</span></a></h2>
+      <h2 id="complete-authentication-flow-summary" tabindex="-1"><a class="header-anchor" href="#complete-authentication-flow-summary"><span>Complete Authentication Flow Summary</span></a></h2>
 <p>This section provides a step-by-step walkthrough of the entire authentication process with actual URLs and data exchanges.</p>
+<p><div class="table-of-contents"><ul><li><a href="#complete-authentication-flow-summary">Complete Authentication Flow Summary</a><ul><li><a href="#step-1-discovery-configuration">Step 1: Discovery Configuration</a></li><li><a href="#step-2-start-authentication">Step 2: Start Authentication</a></li><li><a href="#step-3-user-authenticates">Step 3: User Authenticates</a></li><li><a href="#step-4-exchange-code-for-tokens">Step 4: Exchange Code for Tokens</a></li><li><a href="#step-5-validate-id-token">Step 5: Validate ID Token</a></li><li><a href="#step-6-request-verified-attributes-optional">Step 6: Request Verified Attributes (Optional)</a></li><li><a href="#step-7-logout">Step 7: Logout</a></li></ul></li><li><a href="#understanding-scotaccount-a-developers-perspective">Understanding ScotAccount: A Developer’s Perspective</a><ul><li><a href="#the-value-proposition-for-developers">The Value Proposition for Developers</a></li><li><a href="#core-concepts-you-need-to-understand">Core Concepts You Need to Understand</a></li><li><a href="#why-openid-connect-and-oauth-20-matter">Why OpenID Connect and OAuth 2.0 Matter</a></li></ul></li><li><a href="#architecture-overview">Architecture Overview</a></li><li><a href="#phase-1-setup-registration">Phase 1: Setup &amp; Registration</a><ul><li><a href="#understanding-what-you-need-to-prepare">Understanding What You Need to Prepare</a></li><li><a href="#cryptographic-key-generation-strategy">Cryptographic Key Generation Strategy</a></li><li><a href="#scope-planning-and-data-requirements-analysis">Scope Planning and Data Requirements Analysis</a></li><li><a href="#registration-information-preparation">Registration Information Preparation</a></li></ul></li><li><a href="#phase-2-basic-authentication-implementation">Phase 2: Basic Authentication Implementation</a><ul><li><a href="#understanding-the-openid-connect-flow">Understanding the OpenID Connect Flow</a></li><li><a href="#discovery-and-configuration-management">Discovery and Configuration Management</a></li><li><a href="#pkce-implementation-strategy">PKCE Implementation Strategy</a></li><li><a href="#state-management-for-csrf-protection">State Management for CSRF Protection</a></li><li><a href="#authorization-request-construction">Authorization Request Construction</a></li><li><a href="#token-exchange-and-client-authentication">Token Exchange and Client Authentication</a></li><li><a href="#token-validation-and-user-identity-extraction">Token Validation and User Identity Extraction</a></li></ul></li><li><a href="#phase-3-verified-attributes-integration">Phase 3: Verified Attributes Integration</a><ul><li><a href="#understanding-attribute-requests">Understanding Attribute Requests</a></li><li><a href="#attribute-verification-levels-and-trust">Attribute Verification Levels and Trust</a></li><li><a href="#progressive-consent-and-user-experience">Progressive Consent and User Experience</a></li><li><a href="#attribute-data-structure-and-validation">Attribute Data Structure and Validation</a></li><li><a href="#attribute-storage-and-lifecycle-management">Attribute Storage and Lifecycle Management</a></li></ul></li><li><a href="#testing-strategy-mock-service-usage">Testing Strategy &amp; Mock Service Usage</a><ul><li><a href="#understanding-testing-environments">Understanding Testing Environments</a></li><li><a href="#testing-strategy-progression">Testing Strategy Progression</a></li><li><a href="#mock-service-implementation-guide">Mock Service Implementation Guide</a></li><li><a href="#production-like-environment-testing">Production-Like Environment Testing</a></li><li><a href="#recommended-testing-approach">Recommended Testing Approach</a></li></ul></li><li><a href="#quick-reference">Quick Reference</a><ul><li><a href="#essential-endpoints">Essential Endpoints</a></li><li><a href="#scope-reference-and-data-mapping">Scope Reference and Data Mapping</a></li><li><a href="#token-lifetimes-and-usage-patterns">Token Lifetimes and Usage Patterns</a></li><li><a href="#common-error-codes-and-resolution">Common Error Codes and Resolution</a></li></ul></li><li><a href="#phase-4-production-deployment">Phase 4: Production Deployment</a><ul><li><a href="#understanding-production-environment-differences">Understanding Production Environment Differences</a></li><li><a href="#production-configuration-checklist">Production Configuration Checklist</a></li><li><a href="#production-endpoints">Production Endpoints</a></li><li><a href="#monitoring-and-operational-considerations">Monitoring and Operational Considerations</a></li><li><a href="#support-and-incident-response">Support and Incident Response</a></li><li><a href="#security-considerations-for-production">Security Considerations for Production</a></li></ul></li></ul></div></p>
 <h3 id="step-1-discovery-configuration" tabindex="-1"><a class="header-anchor" href="#step-1-discovery-configuration"><span>Step 1: Discovery Configuration</span></a></h3>
 <pre class="language-http"><code class="language-http">GET https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration</code></pre>
 <p>Response provides all endpoint URLs and supported features.</p>
@@ -285,7 +257,7 @@ code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk</code></pre>
 <p>Once authentication is complete, ScotAccount redirects the user back to your service with an authorization code. Your backend processes this code by exchanging it for tokens through ScotAccount’s token service. If your service needs verified attributes about the user, you can make additional requests to the attribute service using the access token you received.</p>
 <p>The final steps involve storing or updating user information in your database, creating an appropriate session, and granting access to your service. Throughout this process, tokens are cryptographically signed JWTs that you validate using ScotAccount’s public keys, ensuring authenticity and integrity.</p>
 <hr>
-<h2 id="phase-1-setup-registration-1" tabindex="-1"><a class="header-anchor" href="#phase-1-setup-registration-1"><span>Phase 1: Setup &amp; Registration</span></a></h2>
+<h2 id="phase-1-setup-registration" tabindex="-1"><a class="header-anchor" href="#phase-1-setup-registration"><span>Phase 1: Setup &amp; Registration</span></a></h2>
 <h3 id="understanding-what-you-need-to-prepare" tabindex="-1"><a class="header-anchor" href="#understanding-what-you-need-to-prepare"><span>Understanding What You Need to Prepare</span></a></h3>
 <p>Before you can integrate with ScotAccount, you need to establish a secure, trusted relationship between your service and ScotAccount’s infrastructure. This involves several critical components that work together to ensure secure communication and proper authorization.</p>
 <p>The foundation of this relationship is cryptographic key management. You’ll generate a public-private key pair where you keep the private key absolutely secure within your systems and provide the public key to ScotAccount during registration. ScotAccount uses your public key to verify that API requests are genuinely coming from your service.</p>
@@ -997,7 +969,7 @@ When receiving callbacks without matching state:</p>
 <li>The PKCE verifier matches the original challenge</li>
 </ul>
 <hr>
-<h2 id="phase-4-production-deployment-1" tabindex="-1"><a class="header-anchor" href="#phase-4-production-deployment-1"><span>Phase 4: Production Deployment</span></a></h2>
+<h2 id="phase-4-production-deployment" tabindex="-1"><a class="header-anchor" href="#phase-4-production-deployment"><span>Phase 4: Production Deployment</span></a></h2>
 <h3 id="understanding-production-environment-differences" tabindex="-1"><a class="header-anchor" href="#understanding-production-environment-differences"><span>Understanding Production Environment Differences</span></a></h3>
 <p>Moving from development and testing to production involves several important changes that affect both security and operational considerations. The production environment implements stricter security controls and requires additional configuration that isn’t necessary during development.</p>
 <p>The most significant difference is the IP allowlisting requirement for production deployments. Unlike the integration environment where any IP address can connect for testing purposes, production requires that you register all IP addresses that will communicate with ScotAccount’s APIs. This security measure helps protect against unauthorised access and provides an additional audit trail for all API communications.</p>
@@ -1099,7 +1071,7 @@ Maintain audit logs that support your organisation’s compliance requirements w
 
 
       
-      <footer class="content-footer"><p><small>Last updated: 22 August 2025</small></p></footer>
+      <footer class="content-footer"><p><small>Last updated: 27 August 2025</small></p></footer>
       
     </main>
   </div>
