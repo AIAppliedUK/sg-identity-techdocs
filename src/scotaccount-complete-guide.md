@@ -63,8 +63,8 @@ Create client assertion JWT:
   "iss": "your-client-id",
   "sub": "your-client-id",
   "aud": "https://authz.integration.scotaccount.service.gov.scot/token",
-  "exp": 1757847083,
-  "iat": 1741953083,
+  "exp": 1678931762 + 300, // 5 minutes from iat
+  "iat": 1678931762,
   "jti": "unique-id-here"
 }
 ```
@@ -75,7 +75,7 @@ Make token request:
 POST https://authz.integration.scotaccount.service.gov.scot/token
 Content-Type: application/x-www-form-urlencoded
 
-grant_type=authorization_code&
+grant_type=authorisation_code&
 code=SplxlOBeZQQYbYS6WxSbIA&
 redirect_uri=https://yourservice.gov.scot/auth/callback&
 client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&
@@ -161,7 +161,7 @@ ScotAccount uses token-based security rather than traditional password handling.
 
 OpenID Connect builds upon OAuth 2.0 to provide a standardised approach to identity and authorisation. OAuth 2.0 handles the authorisation aspect, determining what a user is allowed to access, whilst OpenID Connect adds the identity layer, proving who the user actually is. This separation of concerns allows for more flexible and secure implementations.
 
-The protocols include sophisticated protection mechanisms against common attack vectors. Cross-Site Request Forgery protection through state parameters, authorization code interception protection through PKCE, and replay attack protection through nonce values all work together to create a robust security framework.
+The protocols include sophisticated protection mechanisms against common attack vectors. Cross-Site Request Forgery protection through state parameters, authorisation code interception protection through PKCE, and replay attack protection through nonce values all work together to create a robust security framework.
 
 ---
 
@@ -173,7 +173,7 @@ _Figure: High-level architecture of ScotAccount and its integration with core DI
 
 This architecture diagram illustrates the complete integration pattern between your government service and ScotAccount. The flow begins when a user visits your service and needs to authenticate. Your web application redirects them to ScotAccount's authentication service, which handles the actual credential verification process.
 
-Once authentication is complete, ScotAccount redirects the user back to your service with an authorization code. Your backend processes this code by exchanging it for tokens through ScotAccount's token service. If your service needs verified attributes about the user, you can make additional requests to the attribute service using the access token you received.
+Once authentication is complete, ScotAccount redirects the user back to your service with an authorisation code. Your backend processes this code by exchanging it for tokens through ScotAccount's token service. If your service needs verified attributes about the user, you can make additional requests to the attribute service using the access token you received.
 
 The final steps involve storing or updating user information in your database, creating an appropriate session, and granting access to your service. Throughout this process, tokens are cryptographically signed JWTs that you validate using ScotAccount's public keys, ensuring authenticity and integrity.
 
@@ -183,7 +183,7 @@ The final steps involve storing or updating user information in your database, c
 
 ### Understanding What You Need to Prepare
 
-Before you can integrate with ScotAccount, you need to establish a secure, trusted relationship between your service and ScotAccount's infrastructure. This involves several critical components that work together to ensure secure communication and proper authorization.
+Before you can integrate with ScotAccount, you need to establish a secure, trusted relationship between your service and ScotAccount's infrastructure. This involves several critical components that work together to ensure secure communication and proper authorisation.
 
 The foundation of this relationship is cryptographic key management. You'll generate a public-private key pair where you keep the private key absolutely secure within your systems and provide the public key to ScotAccount during registration. ScotAccount uses your public key to verify that API requests are genuinely coming from your service.
 
@@ -197,7 +197,7 @@ The security of your entire ScotAccount integration depends on proper cryptograp
 
 Elliptic Curve keys have smaller key sizes and good performance characteristics. The P-256 curve provides security roughly equivalent to a 3072-bit RSA keys whilst requiring significantly less computational resources. This can be particularly beneficial for high-volume services or resource-constrained environments.
 
-Regardless of which key type you choose, the critical security requirement is proper private key storage. Your private key must never exist in plain text outside of your application's runtime memory. Use dedicated secret management systems like AWS Secrets Manager, Azure Key Vault, or HashiCorp Vault. The key should be loaded into your application at runtime and never written to configuration files, environment variables, or any persistent storage.
+Regardless of which key type you choose, the critical security requirement is proper private key storage. Your private key must never exist in plain text outside of your application's runtime memory. Use dedicated secret management systems like AWS Secrets Manager, Azure Key Vault, or HashiCorp Vault. The key should be loaded into your application at runtime and never written to configuration files, environment variables, or any persistent storage. Additionally, you MUST use different key pairs for production and test environments to maintain security isolation.
 
 ### Scope Planning and Data Requirements Analysis
 
@@ -205,7 +205,7 @@ Understanding which scopes your service requires is fundamental to a successful 
 
 The openid scope is mandatory for all integrations as it provides the basic authentication functionality and the persistent user identifier that allows you to recognise returning users. This UUID is immutable and provides a reliable way to link user sessions and data across multiple interactions.
 
-The scotaccount.gpg45.medium scope provides verified identity information including the user's given name, family name, and date of birth. This information has been verified to GPG45 medium assurance level through a comprehensive process that includes checking identity documents and performing various verification checks. This scope is essential for services that need to verify users' legal identities.
+The scotaccount.gpg45.medium scope provides verified identity information including the user's given name, family name, and date of birth. This information has been verified to GPG45 medium assurance level through a comprehensive process that includes checking identity documents and performing various verification checks. Note that this scope can return two possible outcomes: "verified" when the identity has been successfully verified with the identity attributes bound to the user's UUID, or "unverified" when the user has completed the GPG45 verification process but could not be successfully verified. Your service must handle both states appropriately. This scope is essential for services that need to verify users' legal identities.
 
 The scotaccount.address scope provides a verified postal address that has been checked against credit reference records. This verification process confirms that the user has a genuine connection to the provided address through financial or residency records. This scope is particularly useful for services that need to verify where users live for eligibility or delivery purposes.
 
@@ -261,7 +261,7 @@ Service -> Service: 2. Generate PKCE parameters\n(code_verifier, code_challenge)
 Service -> Service: 3. Generate state & nonce\n(CSRF & replay protection)
 Service -> User: 4. Redirect to ScotAccount\nwith auth request
 User -> SA: 5. Authentication & consent
-SA -> User: 6. Redirect back with\nauthorization code
+SA -> User: 6. Redirect back with\nauthorisation code
 User -> Service: 7. Callback with code & state
 Service -> Service: 8. Validate state parameter\n(CSRF protection)
 Service -> Service: 9. Create client assertion JWT\n(signed with private key)
@@ -283,13 +283,13 @@ end note
 
 This comprehensive flow diagram illustrates every critical step in the OpenID Connect authentication process as implemented by ScotAccount. Each step serves specific security purposes and contributes to the overall integrity of the authentication system.
 
-The process begins when a user attempts to access a protected resource in your service. Your service recognises that authentication is required and initiates the OpenID Connect flow by generating the necessary security parameters. The PKCE parameters protect against authorization code interception attacks, whilst the state and nonce parameters provide protection against CSRF and replay attacks respectively.
+The process begins when a user attempts to access a protected resource in your service. Your service recognises that authentication is required and initiates the OpenID Connect flow by generating the necessary security parameters. The PKCE parameters protect against authorisation code interception attacks, whilst the state and nonce parameters provide protection against CSRF and replay attacks respectively.
 
-Your service then redirects the user to ScotAccount with a carefully constructed authorization request that includes all necessary parameters. ScotAccount handles the actual authentication process, which may involve multiple steps depending on the user's account status and the security requirements.
+Your service then redirects the user to ScotAccount with a carefully constructed authorisation request that includes all necessary parameters. ScotAccount handles the actual authentication process, which may involve multiple steps depending on the user's account status and the security requirements.
 
-Once authentication is complete, ScotAccount redirects the user back to your service with an authorization code. Your service validates the state parameter to ensure the response corresponds to a request it actually made, then creates a client assertion JWT to prove its identity to ScotAccount.
+Once authentication is complete, ScotAccount redirects the user back to your service with an authorisation code. Your service validates the state parameter to ensure the response corresponds to a request it actually made, then creates a client assertion JWT to prove its identity to ScotAccount.
 
-The token exchange step involves your service sending the authorization code, client assertion, and PKCE code verifier to ScotAccount's token endpoint. ScotAccount validates all these components before issuing tokens that your service can use.
+The token exchange step involves your service sending the authorisation code, client assertion, and PKCE code verifier to ScotAccount's token endpoint. ScotAccount validates all these components before issuing tokens that your service can use.
 
 Finally, your service validates the received tokens, extracts the user's identifier, and creates an appropriate session to grant access to the protected resource.
 
@@ -315,7 +315,7 @@ Host: authz.integration.scotaccount.service.gov.scot
 ```json
 {
   "issuer": "https://authz.integration.scotaccount.service.gov.scot",
-  "authorization_endpoint": "https://authz.integration.scotaccount.service.gov.scot/authorize",
+  "authorisation_endpoint": "https://authz.integration.scotaccount.service.gov.scot/authorize",
   "token_endpoint": "https://authz.integration.scotaccount.service.gov.scot/token",
   "jwks_uri": "https://authz.integration.scotaccount.service.gov.scot/jwks.json",
   "registration_endpoint": "https://authz.integration.scotaccount.service.gov.scot/register",
@@ -327,7 +327,7 @@ Host: authz.integration.scotaccount.service.gov.scot
   ],
   "response_types_supported": ["code"],
   "response_modes_supported": ["query"],
-  "grant_types_supported": ["authorization_code", "refresh_token"],
+  "grant_types_supported": ["authorisation_code", "refresh_token"],
   "subject_types_supported": ["pairwise"],
   "id_token_signing_alg_values_supported": ["RS256"],
   "token_endpoint_auth_methods_supported": ["private_key_jwt"],
@@ -360,21 +360,112 @@ https://authz.integration.scotaccount.service.gov.scot/jwks.json
 
 Dynamic configuration retrieval is essential because it allows your service to adapt to changes in ScotAccount's infrastructure without requiring code updates. ScotAccount may periodically update endpoint URLs, rotate cryptographic keys, or modify supported authentication methods. By retrieving configuration dynamically, your service can handle these changes automatically.
 
-The discovery endpoint provides several critical pieces of information that your application will use throughout the authentication process. The issuer field identifies ScotAccount as the identity provider and must match the issuer claims in tokens that ScotAccount issues. The authorization_endpoint is where you'll send users to begin the authentication process, whilst the token_endpoint is where your application will exchange authorization codes for tokens.
+The discovery endpoint provides several critical pieces of information that your application will use throughout the authentication process. The issuer field identifies ScotAccount as the identity provider and must match the issuer claims in tokens that ScotAccount issues. The authorisation_endpoint is where you'll send users to begin the authentication process, whilst the token_endpoint is where your application will exchange authorisation codes for tokens.
 
 The jwks_uri provides access to the cryptographic keys that ScotAccount uses to sign tokens. Your application will use these keys to validate the authenticity and integrity of tokens it receives. The various supported fields indicate which authentication methods, token types, and cryptographic algorithms ScotAccount supports, helping ensure compatibility between your implementation and ScotAccount's capabilities.
 
 Implementing robust configuration management involves caching the discovery response to improve performance whilst ensuring that your application picks up configuration changes within a reasonable timeframe. Error handling should include fallback to cached configuration if the discovery endpoint is temporarily unavailable, helping maintain service availability during network issues or ScotAccount maintenance periods.
 
+### JWKS Key Rotation Strategy
+
+ScotAccount routinely and automatically rotates signing keys to maintain security. Understanding how key rotation works is essential for implementing reliable token validation.
+
+**Key Rotation Principles:**
+
+- **Most recent key will always be the first one available in the json structure**
+- **Call JWKS prior to commencing each OIDC flow**
+- Keys are rotated periodically with both current and old keys available
+- Older keys are retained for a period to handle JWTs signed with those keys
+
+**Day-by-Day Rotation Example:**
+
+**Day 1 - Initial State:**
+```json
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "e": "AQAB", 
+      "use": "sig",
+      "kid": "WgiG",
+      "n": "123"
+    }
+  ]
+}
+```
+
+**Day 2 - New Key Added:**
+```json
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "e": "AQAB",
+      "use": "sig", 
+      "kid": "XsXX",
+      "n": "456"
+    },
+    {
+      "kty": "RSA",
+      "e": "AQAB",
+      "use": "sig",
+      "kid": "WgiG", 
+      "n": "123"
+    }
+  ]
+}
+```
+
+**Day 3 - Further Rotation:**
+```json
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "e": "AQAB",
+      "use": "sig",
+      "kid": "ZZ12",
+      "n": "789"
+    },
+    {
+      "kty": "RSA",
+      "e": "AQAB",
+      "use": "sig",
+      "kid": "XsXX",
+      "n": "456"
+    },
+    {
+      "kty": "RSA",
+      "e": "AQAB",
+      "use": "sig",
+      "kid": "WgiG",
+      "n": "123"
+    }
+  ]
+}
+```
+
+**Implementation Best Practices:**
+
+- **Always fetch JWKS before each flow**: Don't cache keys for extended periods
+- **Use kid to select appropriate key**: Match the key ID from token header to JWKS
+- **Handle multiple keys gracefully**: Your code should work with any number of keys in the array
+- **Validate against correct key**: Always use the key specified by the token's kid claim
+- **Expect key changes**: Never hard-code key values or assume keys won't change
+
+**Why This Matters:**
+
+Key rotation is a critical security practice that ensures compromised keys can be quickly replaced. By fetching the latest JWKS before each authentication flow, your service automatically adapts to key changes without requiring manual updates or service restarts.
+
 ### PKCE Implementation Strategy
 
-PKCE (Proof Key for Code Exchange) is a critical security enhancement that protects the authorization code flow against interception attacks. Understanding how PKCE works and implementing it correctly is essential for maintaining the security of your ScotAccount integration.
+PKCE (Proof Key for Code Exchange) is a critical security enhancement that protects the authorisation code flow against interception attacks. Understanding how PKCE works and implementing it correctly is essential for maintaining the security of your ScotAccount integration.
 
-PKCE addresses a specific vulnerability in the OAuth 2.0 authorization code flow where an attacker might intercept the authorization code during the redirect back to your application. In traditional OAuth 2.0, this authorization code could then be exchanged for tokens by anyone who possesses it.
+PKCE addresses a specific vulnerability in the OAuth 2.0 authorisation code flow where an attacker might intercept the authorisation code during the redirect back to your application. In traditional OAuth 2.0, this authorisation code could then be exchanged for tokens by anyone who possesses it.
 
-PKCE solves this problem by introducing a cryptographic challenge-response mechanism. Your application generates a random code verifier, calculates a corresponding code challenge using SHA256 hashing, and includes the code challenge in the initial authorization request. The authorization code that ScotAccount returns is cryptographically bound to this code challenge.
+PKCE solves this problem by introducing a cryptographic challenge-response mechanism. Your application generates a random code verifier, calculates a corresponding code challenge using SHA256 hashing, and includes the code challenge in the initial authorisation request. The authorisation code that ScotAccount returns is cryptographically bound to this code challenge.
 
-When your application exchanges the authorization code for tokens, it must provide the original code verifier. ScotAccount can then verify that the code verifier matches the code challenge from the original request, proving that the token exchange request is coming from the same application that initiated the authorization flow.
+When your application exchanges the authorisation code for tokens, it must provide the original code verifier. ScotAccount can then verify that the code verifier matches the code challenge from the original request, proving that the token exchange request is coming from the same application that initiated the authorisation flow.
 
 The security of PKCE depends entirely on the unpredictability of the code verifier. The code verifier must be generated using a cryptographically secure random number generator and must have sufficient entropy to resist brute-force attacks. The code verifier should be between 43 and 128 characters long and use the base64url character set.
 
@@ -382,19 +473,22 @@ The code challenge is calculated by taking the SHA256 hash of the code verifier 
 
 ### State Management for CSRF Protection
 
-The state parameter provides protection against Cross-Site Request Forgery attacks by ensuring that authorization responses correspond to requests that your application actually initiated. Implementing state management correctly is crucial for maintaining the security of the authentication flow.
+The state parameter provides protection against Cross-Site Request Forgery attacks by ensuring that authorisation responses correspond to requests that your application actually initiated. Implementing state management correctly is crucial for maintaining the security of the authentication flow.
 
 CSRF attacks occur when an attacker tricks a user into performing actions they didn't intend by exploiting their existing authenticated sessions. In the context of OpenID Connect, this could involve an attacker initiating an authentication flow and then tricking a victim into completing it, potentially allowing the attacker to gain access to the victim's account.
 
-The state parameter prevents this attack by creating a unique, unpredictable value for each authentication request. Your application generates this value and includes it in the authorization request. ScotAccount returns the same state value in the authorization response, allowing your application to verify that the response corresponds to a request it actually made.
+The state parameter prevents this attack by creating a unique, unpredictable value for each authentication request. Your application generates this value and includes it in the authorisation request. ScotAccount returns the same state value in the authorisation response, allowing your application to verify that the response corresponds to a request it actually made.
 
-Proper state management involves generating cryptographically secure random state values that cannot be predicted by attackers. Each state value should be single-use and have a limited lifetime to prevent replay attacks. Your application should store the state value securely during the authentication flow and validate it when processing the authorization response.
+**⚠️ CRITICAL: Authentication Flow Validity**
+Authentication flows remain valid for 7 days - you MUST persist state parameters securely throughout this period. If a user begins authentication but doesn't complete it immediately, they can return within 7 days to continue. Your application must be able to validate the state parameter even after extended periods.
 
-The state validation step must occur before any other processing of the authorization response. If the state value doesn't match what your application originally generated, the entire response should be rejected as potentially malicious.
+Proper state management involves generating cryptographically secure random state values that cannot be predicted by attackers. Each state value should be single-use and have a limited lifetime to prevent replay attacks. Your application should store the state value securely during the authentication flow and validate it when processing the authorisation response.
+
+The state validation step must occur before any other processing of the authorisation response. If the state value doesn't match what your application originally generated, the entire response should be rejected as potentially malicious.
 
 ### Authorization Request Construction
 
-The authorization request is the first step in the authentication flow where your application redirects the user to ScotAccount for authentication. Constructing this request correctly is crucial for both security and functionality.
+The authorisation request is the first step in the authentication flow where your application redirects the user to ScotAccount for authentication. Constructing this request correctly is crucial for both security and functionality.
 
 **Authorization Endpoint URL:**
 
@@ -416,11 +510,11 @@ GET https://authz.integration.scotaccount.service.gov.scot/authorize?
     code_challenge_method=S256
 ```
 
-Each parameter in the authorization request serves a specific purpose:
+Each parameter in the authorisation request serves a specific purpose:
 
 - **client_id**: Your unique identifier assigned during registration (e.g., `6ovfxtjaivlpy`)
 - **redirect_uri**: Where ScotAccount sends users after authentication. Must exactly match your registered URI
-- **response_type**: Always `code` for the authorization code flow
+- **response_type**: Always `code` for the authorisation code flow
 - **scope**: Space-separated list of requested permissions. `openid` is mandatory
 - **state**: Random value for CSRF protection (you generate this)
 - **nonce**: Random value for replay protection (you generate this)
@@ -454,7 +548,7 @@ GET https://authz.integration.scotaccount.service.gov.scot/authorize?
 
 ### Token Exchange and Client Authentication
 
-The token exchange step is where your application proves its identity to ScotAccount and exchanges the authorization code for usable tokens. This critical step requires your service to create a special JWT called a "client assertion" that acts like a digital signature, proving you are who you claim to be.
+The token exchange step is where your application proves its identity to ScotAccount and exchanges the authorisation code for usable tokens. This critical step requires your service to create a special JWT called a "client assertion" that acts like a digital signature, proving you are who you claim to be.
 
 **Token Endpoint URL:**
 
@@ -471,8 +565,8 @@ Your service creates a JWT with these claims:
   "iss": "your-client-id",
   "sub": "your-client-id",
   "aud": "https://authz.integration.scotaccount.service.gov.scot/token",
-  "exp": 1757847083, // 6 months from now
-  "iat": 1741953083, // Current time
+  "exp": 1678931762 + 300, // 5 minutes from iat
+  "iat": 1678931762, // Current time
   "jti": "239a5659-0533-4faa-ba97-8f6ee057843f" // Unique ID
 }
 ```
@@ -490,7 +584,7 @@ POST /token HTTP/1.1
 Host: authz.integration.scotaccount.service.gov.scot
 Content-Type: application/x-www-form-urlencoded
 
-grant_type=authorization_code&
+grant_type=authorisation_code&
 code=SplxlOBeZQQYbYS6WxSbIA&
 redirect_uri=https://yourservice.gov.scot/auth/callback&
 client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&
@@ -500,9 +594,9 @@ code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
 
 **Request Parameters Explained:**
 
-- **grant_type**: Always `authorization_code`
-- **code**: The authorization code from the callback
-- **redirect_uri**: Must match exactly what you used in the authorization request
+- **grant_type**: Always `authorisation_code`
+- **code**: The authorisation code from the callback
+- **redirect_uri**: Must match exactly what you used in the authorisation request
 - **client_assertion_type**: Always this exact URN value
 - **client_assertion**: Your signed JWT proving your identity
 - **code_verifier**: The original PKCE verifier you generated
@@ -585,7 +679,7 @@ The payload contains the actual claims about the authentication event. Each fiel
 - **iss (Issuer)**: ScotAccount's identifier, which must match the issuer from the discovery document.
 - **exp (Expiration)**: Unix timestamp indicating when this token expires (15 minutes after issuance).
 - **iat (Issued At)**: Unix timestamp of when the token was created.
-- **nonce**: The random value you provided in the authorization request, used to prevent replay attacks.
+- **nonce**: The random value you provided in the authorisation request, used to prevent replay attacks.
 - **jti (JWT ID)**: A unique identifier for this specific token.
 - **sid (Session ID)**: ScotAccount's session identifier, used for session management and logout.
 
@@ -596,11 +690,11 @@ Proper JWT validation involves several distinct steps, each of which protects ag
 
 The validation process involves several critical steps that must be performed in the correct order to ensure security. First, your service parses the JWT to extract the header and payload sections. Using the key identifier from the header, you retrieve the appropriate public key from ScotAccount's JWKS endpoint. This key is then used to verify the cryptographic signature, ensuring the token hasn't been tampered with and was genuinely issued by ScotAccount.
 
-After signature verification, you must validate each claim in the token. The expiration time must be checked to ensure the token is still valid. The issuer must match ScotAccount's identifier exactly as provided in the discovery document. The audience must be your client ID, confirming this token was issued specifically for your service. The nonce must match the value your service provided in the original authorization request, preventing replay attacks.
+After signature verification, you must validate each claim in the token. The expiration time must be checked to ensure the token is still valid. The issuer must match ScotAccount's identifier exactly as provided in the discovery document. The audience must be your client ID, confirming this token was issued specifically for your service. The nonce must match the value your service provided in the original authorisation request, preventing replay attacks.
 
 Successful validation confirms that the token is authentic, current, and intended for your service. The subject claim then provides the persistent user identifier that your service uses to recognise this user in all future interactions. This UUID remains constant for each user across all their sessions and interactions with your service.
 
-OpenID Connect specific validation includes verifying the nonce claim to prevent replay attacks. The nonce value in the token must match the nonce value your application included in the original authorization request. Additionally, the subject claim provides the persistent user identifier that your application will use to recognise the user in future interactions.
+OpenID Connect specific validation includes verifying the nonce claim to prevent replay attacks. The nonce value in the token must match the nonce value your application included in the original authorisation request. Additionally, the subject claim provides the persistent user identifier that your application will use to recognise the user in future interactions.
 
 Once validation is complete, you can extract the user's persistent identifier from the sub claim and use it to establish or update the user's session within your application. This UUID uniquely and persistently identifies the user across all interactions with ScotAccount-integrated services and serves as the foundation for user identity management in your service.
 
@@ -657,7 +751,7 @@ Your service first checks whether the user already has the required attributes s
 
 If additional attributes are needed, your service initiates a new authentication flow that includes the additional scopes for the required attributes. This triggers ScotAccount's consent process, where users are clearly informed about what information is being requested and why.
 
-Upon user consent, ScotAccount provides an authorization code that your service exchanges for tokens, including an access token specifically scoped for the requested attributes. This access token is then used to make a request to ScotAccount's attribute service, which returns the verified information in the form of a signed JWT.
+Upon user consent, ScotAccount provides an authorisation code that your service exchanges for tokens, including an access token specifically scoped for the requested attributes. This access token is then used to make a request to ScotAccount's attribute service, which returns the verified information in the form of a signed JWT.
 
 The attribute JWT contains not only the verified claims but also detailed verification metadata that describes how each piece of information was verified and what level of assurance it carries. Your service validates this JWT using the same cryptographic verification process used for ID tokens.
 
@@ -676,6 +770,17 @@ Each verified attribute includes metadata that describes the verification proces
 ### Progressive Consent and User Experience
 
 Implementing verified attributes effectively requires careful consideration of the user experience and the timing of attribute requests. Progressive consent, where you request additional attributes only when they become necessary for specific functionality, generally provides a better user experience than requesting all possible attributes upfront.
+
+**⚠️ CRITICAL: GPG45 Verification Time and Cross-Device Warnings**
+
+**GPG45 medium identity verification can take days or weeks** to complete. This extended timeframe creates significant challenges that must be addressed in your service design:
+
+**Extended Verification Duration:**
+- Users may take days, weeks, or even longer to provide necessary documents and complete verification steps
+- Users may start on one device and complete on another
+- Your service initiated an authentication flow but may never receive a callback
+- State parameters won't match across devices
+- You must design for stateless returns
 
 **Critical Design Consideration: Extended GPG45 Verification Processes**
 
@@ -764,6 +869,134 @@ This approach has several benefits for both user experience and conversion rates
 
 However, progressive consent also requires careful implementation to avoid creating frustrating user experiences. Your service should clearly communicate when additional verification will be required and provide smooth transitions between different levels of access.
 
+### Complete 20-Step Verified Attributes Flow
+
+This section documents the exact 20-step verified attributes flow as defined in the authoritative PlantUML specification. Each step is reproduced exactly as specified, including original terminology and typos for technical accuracy.
+
+**Prerequisites:**
+- User must be authenticated and present
+- Dual-flow requirement: Basic authentication followed by verified attributes flow
+- User presence required throughout the process
+
+**Detailed Step-by-Step Flow:**
+
+1. **User autheticated to DIS present on RP web app.**
+   - *Note: User is already authenticated to your service and present in the browser session*
+
+2. **Decides logged in user requires IDV**
+   - *Your service determines that identity verification (IDV) is needed for the current user*
+
+3. **Get latest config from /well-known**
+   - *Retrieve current ScotAccount configuration from discovery endpoint*
+
+4. **Get latest public key**
+   - *Fetch current JWKS from ScotAccount's public key endpoint*
+
+5. **Prep Authentication Request, code_challengechallenge and code_verifier**
+   - *Generate PKCE parameters and prepare authentication request*
+   - *Note: Scope = openid, scotaccount.gpg45.medium*
+
+6. **Redirect to AuthorsationEndpoint...**
+   - *Send user to ScotAccount's authorization endpoint*
+
+7. **...with Authentication Request and code_challenge**
+   - *User arrives at ScotAccount with your authentication request parameters*
+
+8. **User consents to IDV**
+   - *User provides consent for identity verification data sharing*
+
+9. **If consnet store the auth code challenge and its method**
+   - *ScotAccount stores PKCE challenge parameters upon user consent*
+
+10. **Redirect to redirecturi......**
+    - *ScotAccount redirects user back to your service*
+
+11. **...with auth code**
+    - *User returns to your callback URL with authorization code*
+
+12. **Request tokens with code and Code_verfier**
+    - *Exchange authorization code for tokens using PKCE verifier*
+    - *Send: auth code, code_verifier, private_jwt*
+
+13. **verifies the code challenge and code and private_jwt**
+    - *ScotAccount validates all authentication parameters*
+
+14. **Return Tokens.**
+    - *Receive: id_token, access_token, refresh_token*
+
+15. **Check Sigs on ID Token and Access Token**
+    - *Validate cryptographic signatures on received tokens*
+
+16. **Request resultes jwt**
+    - *Make request to attributes endpoint*
+    - *Send: acess_token, private_jwt*
+
+17. **verify access token and private_jwt**
+    - *ScotAccount validates tokens and client assertion*
+
+18. **send results jwt**
+    - *ScotAccount returns verified attributes in JWT format*
+
+19. **Check Sigs on results jwt**
+    - *Validate signature on the attributes JWT*
+
+20. **verify sub uuid in results jwt is the same as ID Token.**
+    - *Ensure user UUID matches between ID token and attributes JWT*
+
+**Critical Implementation Notes:**
+
+- **Dual-Flow Requirement**: This is a separate flow that follows initial authentication
+- **User Presence**: User must be actively present and consent to each attribute request
+- **Token Scope**: Access tokens are scoped specifically to requested verified attributes
+- **Security Validation**: Each JWT must be cryptographically validated
+- **UUID Matching**: The sub claim must be consistent across all tokens for security
+
+## Business Rules for Verified Attributes
+
+Understanding these business rules is critical for implementing verified attributes correctly and providing a good user experience:
+
+### Prerequisites and Validation Rules
+
+**1. Authentication First**
+You must first authenticate a user and check (using the UUID) whether you still require any verified attribute/s.
+
+**2. Avoid Duplicate Requests**
+You should not request verified attributes that you have previously been provided. Implement local storage and checking mechanisms to avoid sending repeated requests for the same verified attributes, which could create loops for the user.
+
+### ScotAccount Response Behavior
+
+**3. Best Effort Attribute Provision**
+ScotAccount will return as many of the verified attributes as it can - from none to all. For various reasons (e.g., data not available, ScotAccount unable to verify the data, user doesn't give permission, user cancels etc.), it may not always be possible to provide all requested attributes.
+
+**4. Partial Success Handling**
+Your service must be designed to handle any permutation of requested attributes being returned - this could be any combination from none to all requested attributes.
+
+### User Consent and Token Management
+
+**5. User Presence Requirement**
+The user needs to be present and give their permission - no long-lived access/refresh tokens are available for the attribute endpoint.
+
+**6. Per-Flow Token Issuance**
+Tokens are issued 'per flow' - each verified attributes request requires a fresh authentication flow with active user participation.
+
+### Flow Management
+
+**7. Multiple Flows Permitted**
+Multiple auth code flows can be run separately to request multiple verified attributes. For example, a service may ask for some verified attributes at the beginning of a user's application process, but later determine that additional verified attributes are required.
+
+**8. Avoid Repeated Requests**
+Services must avoid sending repeated requests for the same verified attributes, which could create frustrating loops for the user.
+
+### Implementation Guidelines
+
+**Essential Implementation Practices:**
+
+- **Check Local Data First**: Always check your local database to see what verified attributes you already have for the user before initiating new flows
+- **Progressive Requests**: Request additional attributes only when they become functionally necessary
+- **Graceful Degradation**: Design your service to function with partial attribute sets
+- **Clear User Communication**: Explain to users why specific attributes are needed and when
+- **Efficient Caching**: Store received verified attributes appropriately to avoid unnecessary re-requests
+
 ### Attribute Data Structure and Validation
 
 Verified attributes are returned in a structured JSON format within a signed JWT that includes both the actual attribute data and comprehensive verification metadata. Understanding this structure is essential for properly extracting and validating the information your service receives.
@@ -810,7 +1043,7 @@ DIS-Client-Assertion: eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI2b3ZmeHRq...
         "confidence_level": "medium",
         "time": "2024-03-15T14:30:00Z",
         "verifier": {
-          "organization": "ScotAccount",
+          "organisation": "ScotAccount",
           "txn": "a4dbe877-df63-4608-95b0-3a7fe3a4d751"
         }
       },
@@ -828,7 +1061,7 @@ DIS-Client-Assertion: eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI2b3ZmeHRq...
         "validation_method": "credit_reference_agency",
         "time": "2024-03-15T14:30:00Z",
         "verifier": {
-          "organization": "ScotAccount",
+          "organisation": "ScotAccount",
           "txn": "b5ece988-eg74-5719-a6c1-4b8gf4b5e862"
         }
       },
@@ -863,7 +1096,15 @@ DIS-Client-Assertion: eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI2b3ZmeHRq...
    - `401 Unauthorized`: Invalid access token or client assertion
    - `403 Forbidden`: Token doesn't have required scopes
 
+<div class="callout callout--warning">
+<strong>Complete Error Handling:</strong> For comprehensive error codes, resolution strategies, and example error handling code, see the <a href="{{ '/error-reference/' | url }}">Error Reference documentation</a>.
+</div>
+
 The verified claims array contains one or more attribute objects, each corresponding to a scope that was requested and successfully provided. Each attribute object includes the scope identifier, the actual claims data, and detailed verification information.
+
+<div class="callout callout--info">
+<strong>Complete Data Structure Reference:</strong> For the full JSON schema specification including all field definitions, validation rules, and examples, see the <a href="{{ '/scotaccount-currentschema/' | url }}">Current Data Schema documentation</a>.
+</div>
 
 When processing attribute data, your service should validate not only the cryptographic signature of the JWT but also examine the verification metadata to ensure that the attributes meet your specific requirements for assurance level and recency. Different use cases may require different levels of verification, and the metadata provides the information needed to make these determinations.
 
@@ -997,6 +1238,10 @@ The downward flow between phases represents increasing realism and decreasing fl
 
 The mock service simulates all ScotAccount endpoints and responses, allowing you to develop and test your integration without managing test data. Think of it as a practice environment where you can make mistakes safely and learn how the service behaves. Visit the mock service URL for comprehensive documentation about its capabilities and limitations.
 
+<div class="callout callout--info">
+<strong>Complete Testing Documentation:</strong> For detailed testing scenarios, mock service configuration, and comprehensive testing strategies, see the <a href="{{ '/testing-guide/' | url }}">Testing Guide</a> which includes examples for all testing phases and error scenarios.
+</div>
+
 **Using the Mock Service Effectively:**
 
 The beauty of the mock service lies in its simplicity. You don't need to register your client or provide IP addresses, which means you can start testing immediately. This rapid feedback loop is invaluable during initial development when you're still figuring out how all the pieces fit together.
@@ -1072,7 +1317,13 @@ Understanding exactly what data each scope provides helps you request appropriat
 
 Understanding token lifetimes helps you implement appropriate caching, refresh, and error handling strategies in your integration.
 
-**Authorization Code**: Authorization codes are single-use tokens with a 10-minute lifetime that must be exchanged for usable tokens immediately after being received. These codes cannot be stored or reused and should be processed as soon as they're received from the authorization callback.
+**⚠️ CRITICAL TOKEN TIMING INFORMATION:**
+- **Authentication flows remain valid for 7 days** - you MUST persist state parameters
+- **ScotAccount session timeout is 4 hours**
+- **Access tokens expire after 15 minutes**
+- **Access and refresh tokens are valid for 15 minutes only**
+
+**Authorisation Code**: Authorisation codes are single-use tokens that must be exchanged for usable tokens immediately after being received. These codes cannot be stored or reused and should be processed as soon as they're received from the authorisation callback. The exact lifetime of authorization codes is not specified in the documentation but they are short-lived by design.
 
 **Access Token**: Access tokens have a 15-minute lifetime and are used for making API requests to ScotAccount's attribute service. These tokens are scoped to specific attributes and cannot be used beyond their intended scope or lifetime.
 
@@ -1080,7 +1331,7 @@ Understanding token lifetimes helps you implement appropriate caching, refresh, 
 
 **Refresh Token**: Refresh tokens have a 15-minute lifetime and provide limited token refresh capabilities. The refresh token mechanism in ScotAccount is primarily designed for extending access to attribute APIs rather than long-term session management.
 
-**Session**: Service session duration is 1 hour.
+**Session**: ScotAccount user sessions last 4 hours. Access tokens expire after 15 minutes.
 
 ### Common Error Codes and Resolution
 
@@ -1095,7 +1346,7 @@ https://yourservice.gov.scot/auth/callback?
     state=your-state
 ```
 
-Common authorization errors:
+Common authorisation errors:
 
 - `invalid_request`: Missing or invalid parameters (check scopes, redirect_uri)
 - `access_denied`: User cancelled or denied consent
@@ -1147,11 +1398,11 @@ Common token errors:
 - Offering alternative ways to use your service without full permissions
 - Not repeatedly requesting the same permissions in a loop
 
-**invalid_grant errors** typically indicate authorization code issues. Ensure that:
+**invalid_grant errors** typically indicate authorisation code issues. Ensure that:
 
 - Codes are exchanged immediately (within 10 minutes)
 - Each code is only used once
-- The redirect_uri in token exchange matches the authorization request
+- The redirect_uri in token exchange matches the authorisation request
 - The PKCE verifier matches the original challenge
 
 ---

@@ -1,0 +1,283 @@
+{
+    "$defs": {
+        "issType": {
+            "type": "string",
+            "format": "uri",
+            "description": "The issuer of the JWT"
+        },
+        "subType": {
+            "type": "string",
+            "description": "The subject of the JWT"
+        },
+        "iatType": {
+            "type": "integer",
+            "description": "The issued at time of the JWT"
+        },
+        "addressType": {
+            "type": "object",
+            "properties": {
+                "uprn": {
+                    "type": "string",
+                    "pattern": "^[0-9]+$",
+                    "maxLength": 12,
+                    "description": "Unique Property Reference Number"
+                },
+                "organisationName": {
+                    "type": "string",
+                    "maxLength": 60,
+                    "description": "Organisation Name"
+                },
+                "departmentName": {
+                    "type": "string",
+                    "maxLength": 60,
+                    "description": "Department Name"
+                },
+                "subBuildingName": {
+                    "type": "string",
+                    "maxLength": 60,
+                    "description": "Sub-Building Name"
+                },
+                "buildingNumber": {
+                    "type": "string",
+                    "pattern": "^[0-9]+$",
+                    "maxLength": 4,
+                    "description": "Building Number"
+                },
+                "buildingName": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "description": "Building Name"
+                },
+                "dependentStreetName": {
+                    "type": "string",
+                    "maxLength": 80,
+                    "description": "Dependent Street Name"
+                },
+                "streetName": {
+                    "type": "string",
+                    "maxLength": 80,
+                    "description": "Street Name"
+                },
+                "doubleDependentAddressLocality": {
+                    "type": "string",
+                    "maxLength": 35,
+                    "description": "Double Dependent Address Locality"
+                },
+                "dependentAddressLocality": {
+                    "type": "string",
+                    "maxLength": 35,
+                    "description": "Dependent Address Locality"
+                },
+                "addressLocality": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "description": "Address Locality"
+                },
+                "postalCode": {
+                    "type": "string",
+                    "maxLength": 8,
+                    "description": "Postal Code"
+                }
+            }
+        },
+        "verificationType": {
+            "type": "object",
+            "properties": {
+                "outcome": {
+                    "type": "string",
+                    "enum": [
+                        "VERIFIED_SUCCESSFULLY",
+                        "VERIFIED_WITH_WARNINGS",
+                        "VERIFICATION_FAILED"
+                    ],
+                    "description": "Outcome of the verification process"
+                },
+                "trust_framework": {
+                    "type": "string",
+                    "enum": [
+                        "uk_tfida"
+                    ],
+                    "description": "Identifier for the trust framework"
+                },
+                "assurance_policy": {
+                    "type": "string",
+                    "enum": [
+                        "GPG_45",
+                        "other_possible_values"
+                    ],
+                    "description": "The assurance policy used through the verification process."
+                },
+                "confidence_level": {
+                    "type": "string",
+                    "enum": [
+                        "low",
+                        "medium",
+                        "high",
+                        "very_high"
+                    ],
+                    "description": "The confidence level as described in good practice guide 45."
+                },
+                "validation_method": {
+                    "type": "string",
+                    "enum": [
+                        "credit_reference_agency",
+                        "email_loop",
+                        "self_certified"
+                    ],
+                    "descriptions": {
+                        "credit_reference_agency": "Validation using credit reference agency",
+                        "email_loop": "Validation via email loop process",
+                        "self_certified": "Validation via self certification"
+                    }
+                },
+                "time": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Time at which the claims were verified"
+                },
+                "verifier": {
+                    "type": "object",
+                    "properties": {
+                        "organization": {
+                            "type": "string",
+                            "maxLength": 60,
+                            "description": "Name of the organization that verified the claims"
+                        },
+                        "txn": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "Transaction ID of the verification process"
+                        }
+                    },
+                    "required": [
+                        "organization",
+                        "txn"
+                    ]
+                }
+            },
+            "required": [
+                "outcome",
+                "trust_framework",
+                "time",
+                "verifier"
+            ]
+        },
+        "emailType": {
+            "type": "string",
+            "format": "email",
+            "description": "End-User's preferred e-mail address. Its value MUST conform to the RFC 5322 [RFC5322] addr-spec syntax"
+        },
+        "givenNameType": {
+            "type": "string",
+            "description": "The given name of the end user."
+        },
+        "familyNameType": {
+            "type": "string",
+            "description": "The family name of the end user."
+        },
+        "birthDateType": {
+            "type": "string",
+            "format": "date",
+            "description": "The birth date of the end user in YYYY-MM-DD format."
+        },
+        "scopeType": {
+            "type": "string",
+            "enum": [
+                "scotaccount.address",
+                "scotaccount.gpg45.medium",
+                "scotaccount.email"
+            ],
+            "description": "The scope of verified claims. Each scope returns a well defines set of claims."
+        },
+        "addressClaimsType": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "$ref": "#/$defs/addressType"
+                }
+            },
+            "required": [
+                "address"
+            ]
+        },
+        "emailClaimsType": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "$ref": "#/$defs/emailType"
+                }
+            },
+            "required": [
+                "email"
+            ]
+        },
+        "gpg45MediumClaimsType": {
+            "type": "object",
+            "properties": {
+                "given_name": {
+                    "$ref": "#/$defs/givenNameType"
+                },
+                "family_name": {
+                    "$ref": "#/$defs/familyNameType"
+                },
+                "birth_date": {
+                    "$ref": "#/$defs/birthDateType"
+                }
+            },
+            "required": [
+                "given_name",
+                "family_name",
+                "birth_date"
+            ]
+        }
+    },
+    "$id": "https://schema.scotaccount.service.gov.scot/external/v2/scotaccount-verified-claims",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "scotaccount.verified.claims",
+    "type": "object",
+    "properties": {
+        "iss": {
+            "$ref": "#/$defs/issType"
+        },
+        "sub": {
+            "$ref": "#/$defs/subType"
+        },
+        "iat": {
+            "$ref": "#/$defs/iatType"
+        },
+        "verified_claims": {
+            "type": "array",
+            "items": {
+                "scope": {
+                    "$ref": "#/$defs/scopeType"
+                },
+                "verification": {
+                    "$ref": "#/$defs/verificationType"
+                },
+                "claims": {
+                    "oneOf": [
+                        {
+                            "$ref": "#/$defs/addressClaimsType"
+                        },
+                        {
+                            "$ref": "#/$defs/emailClaimsType"
+                        },
+                        {
+                            "$ref": "#/$defs/gpg45MediumClaimsType"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "scope",
+                "verification"
+            ]
+        }
+    },
+    "required": [
+        "iss",
+        "sub",
+        "iat",
+        "verified_claims"
+    ]
+}

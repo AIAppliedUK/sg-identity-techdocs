@@ -4,7 +4,7 @@ title: "Token Validation Examples"
 description: "Example implementations for validating ID tokens and access tokens from ScotAccount"
 eleventyNavigation:
   key: token-validation-examples
-  order: 8
+  order: 9
 ---
 
 <div class="callout callout--warning">
@@ -187,6 +187,10 @@ async function handleTokenValidation(idToken, expectedNonce, clientId) {
 
 Verified attributes are provided by the attributes endpoint as a signed `claimsToken` JWT that includes a `verified_claims` array. Validate the JWT and extract claims for the scopes you requested.
 
+<div class="callout callout--info">
+<strong>Full Schema Reference</strong>: For the complete JSON schema definition of the verified claims structure returned from the attributes endpoint, see the <a href="{{ '/scotaccount-currentschema/' | url }}">ScotAccount Service Schema</a> documentation.
+</div>
+
 ### Identity (GPG45 Medium) extraction (from claimsToken)
 
 ```javascript
@@ -319,12 +323,17 @@ if (error.message.includes("audience")) {
 These examples demonstrate security patterns you should implement:
 
 1. **Token validation** before trusting contents
-2. **Token refresh** handling in your application
-3. **Validation failure logging** for monitoring
-4. **Rate limiting** on validation endpoints
-5. **Public key caching** with refresh logic
-6. **Clock skew handling** with tolerance
-7. **Custom claim validation** for verified attributes
+2. **JWKS key rotation** handling with cache refresh
+3. **State persistence** with 7-day expiration
+4. **DIS-Client-Assertion** creation for attributes endpoint
+5. **Mock service integration** for testing environments
+6. **Comprehensive error handling** for all failure scenarios
+7. **Token refresh** handling in your application
+8. **Validation failure logging** for monitoring
+9. **Rate limiting** on validation endpoints
+10. **Public key caching** with refresh logic
+11. **Clock skew handling** with tolerance
+12. **Custom claim validation** for verified attributes
 
 ## Testing Token Validation
 
@@ -334,6 +343,11 @@ These examples demonstrate security patterns you should implement:
 const assert = require("assert");
 
 describe("Token Validation", () => {
+  beforeEach(() => {
+    // Reset mocks and clear Redis
+    redis.flushall();
+  });
+  
   it("should reject tokens with invalid signatures", async () => {
     const invalidToken = "invalid.jwt.token";
 
@@ -343,6 +357,21 @@ describe("Token Validation", () => {
     } catch (error) {
       assert(error.message.includes("Invalid"));
     }
+  });
+  
+  it("should handle DIS-Client-Assertion creation", () => {
+    const clientId = 'test-client';
+    const privateKey = getTestPrivateKey();
+    
+    const assertion = createDisClientAssertion(clientId, privateKey);
+    const decoded = jwt.decode(assertion, { complete: true });
+    
+    expect(decoded.payload.iss).toBe(clientId);
+    expect(decoded.payload.sub).toBe(clientId);
+    expect(decoded.payload.aud).toBe(
+      'https://issuer.main.integration.scotaccount.service.gov.scot/attributes/values'
+    );
+    expect(decoded.header.alg).toBe('RS256');
   });
 
   it("should validate correct nonce", async () => {
@@ -360,25 +389,206 @@ describe("Token Validation", () => {
 });
 ```
 
+## Logout Implementation with Token Validation
+
+Example logout flow with proper token handling:
+
+```javascript
+// Logout requires id_token_hint for ScotAccount
+async function initiateLogout(req, res, idToken) {
+  try {
+    const config = await getOidcConfiguration();
+    const logoutState = crypto.randomBytes(16).toString('hex');
+    
+    // Store logout state for validation
+    await redis.setex(`logout_state:${logoutState}`, 300, JSON.stringify({
+      timestamp: Date.now(),
+      userId: req.user?.id
+    })); // 5 minutes
+    
+    // Build logout URL with id_token_hint
+    const logoutUrl = `${config.end_session_endpoint}?` +
+      `id_token_hint=${idToken}&` +
+      `post_logout_redirect_uri=${encodeURIComponent(req.protocol + '://' + req.get('host') + '/auth/logout-callback')}&` +
+      `state=${logoutState}`;
+    
+    res.redirect(logoutUrl);
+  } catch (error) {
+    console.error('Logout initiation failed:', error);
+    // Fallback: destroy local session
+    req.session.destroy();
+    res.redirect('/');
+  }
+}
+
+// Handle logout callback
+async function handleLogoutCallback(req, res) {
+  const { state } = req.query;
+  
+  try {
+    if (!state) {
+      throw new Error('Missing logout state parameter');
+    }
+    
+    // Validate logout state
+    const stateDataJson = await redis.get(`logout_state:${state}`);
+    const stateData = stateDataJson ? JSON.parse(stateDataJson) : null;
+    
+    if (!stateData) {
+      throw new Error('Invalid or expired logout state');
+    }
+    
+    // Clean up state
+    await redis.del(`logout_state:${state}`);
+    
+    // Log successful logout
+    console.log(`User ${stateData.userId} successfully logged out`);
+    
+  } catch (error) {
+    console.warn('Logout callback validation failed:', error.message);
+    // Continue with logout anyway
+  }
+  
+  // Always destroy local session
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Session destruction failed:', err);
+    }
+    res.redirect('/logged-out');
+  });
+}
+```
+
 ## Implementation Considerations
 
 ### Performance Optimisation Examples
 
 These examples show performance patterns you might implement:
 
+```javascript
+// Optimised JWKS client with intelligent caching
+const optimisedJwksClient = jwksClient({
+  jwksUri: "https://authz.integration.scotaccount.service.gov.scot/jwks.json",
+  cache: true,
+  cacheMaxAge: 600000, // 10 minutes
+  cacheMaxEntries: 5, // Limit memory usage
+  rateLimit: true,
+  jwksRequestsPerMinute: 10, // Allow more requests for high traffic
+  timeout: 30000, // 30 second timeout
+  proxy: process.env.HTTP_PROXY, // Support corporate proxies
+});
+
+// Connection pooling for attributes requests
+const httpsAgent = new https.Agent({
+  keepAlive: true,
+  maxSockets: 50,
+  maxFreeSockets: 10,
+  timeout: 60000,
+  freeSocketTimeout: 30000
+});
+
+// Batch token validation for multiple tokens
+async function validateTokensBatch(tokens, clientId, issuer) {
+  const validationPromises = tokens.map(tokenData => 
+    validateIdToken(
+      tokenData.token, 
+      clientId, 
+      tokenData.nonce, 
+      issuer
+    ).catch(error => ({ error, token: tokenData.token }))
+  );
+  
+  const results = await Promise.allSettled(validationPromises);
+  
+  return results.map((result, index) => ({
+    token: tokens[index].token,
+    success: result.status === 'fulfilled' && !result.value.error,
+    payload: result.status === 'fulfilled' ? result.value : null,
+    error: result.status === 'rejected' ? result.reason : result.value?.error
+  }));
+}
+```
+
 - **JWKS key caching** with appropriate TTL
 - **Connection pooling** for HTTP requests
 - **Asynchronous validation** to avoid blocking
 - **Token validation libraries** for your platform
+- **Batch processing** for multiple token validations
+- **Memory management** for JWKS cache
+- **Request timeouts** and retry logic
 
 ### Monitoring Examples
 
 Example monitoring patterns for your implementation:
 
+```javascript
+// Comprehensive monitoring for token validation
+class TokenValidationMonitoring {
+  static logValidationEvent(event, details = {}) {
+    const logEntry = {
+      timestamp: new Date().toISOString(),
+      event: event,
+      userId: details.userId,
+      sessionId: details.sessionId,
+      tokenId: details.tokenId,
+      clientId: details.clientId,
+      userAgent: details.userAgent,
+      ipAddress: details.ipAddress,
+      environment: process.env.NODE_ENV
+    };
+    
+    console.log(JSON.stringify(logEntry));
+    
+    // Send to monitoring system
+    this.sendToMonitoring(logEntry);
+  }
+  
+  static alertSecurityEvent(event, details) {
+    const alert = {
+      severity: 'HIGH',
+      event: event,
+      timestamp: new Date().toISOString(),
+      details: details
+    };
+    
+    console.error('SECURITY ALERT:', JSON.stringify(alert));
+    
+    // Send immediate alert to security team
+    this.sendSecurityAlert(alert);
+  }
+  
+  static trackMetric(metric, value, tags = {}) {
+    // Track validation performance metrics
+    metrics.increment(`scotaccount.validation.${metric}`, value, {
+      environment: process.env.NODE_ENV,
+      ...tags
+    });
+  }
+}
+
+// Usage examples throughout validation process
+TokenValidationMonitoring.logValidationEvent('token_validation_started', {
+  userId: 'unknown',
+  tokenId: decodedToken?.jti
+});
+
+TokenValidationMonitoring.trackMetric('validation_success', 1, {
+  token_type: 'id_token'
+});
+
+TokenValidationMonitoring.alertSecurityEvent('audience_mismatch', {
+  expected: expectedClientId,
+  received: payload.aud
+});
+```
+
 - **Validation failure tracking** and pattern investigation
 - **Token expiration monitoring** to detect issues
 - **Signature validation alerts** for potential attacks
 - **Validation event logging** for audit purposes
+- **JWKS refresh frequency** monitoring
+- **State persistence cleanup** monitoring
+- **Authentication flow completion rates**
 
 ## Next Steps
 

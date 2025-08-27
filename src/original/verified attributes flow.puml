@@ -1,0 +1,116 @@
+@startum@startuml 
+
+!theme bluegray 
+
+title "ScotAccount Identity Verification - Authcode flow PKCE" 
+
+participant EndUserAgent 
+
+participant RelyingParty 
+
+box "scotaccount" 
+
+participant AuthorsationEndpoint 
+
+participant TokenEndpoint 
+
+participant DiscoveryEndpoint 
+
+participant JWKSEndpoint 
+
+participant AttributeEndpoint 
+
+EndUserAgent -> RelyingParty: 1. User autheticated to DIS present on RP 
+
+web app. 
+
+RelyingParty -> RelyingParty: 2. Decides logged in user requires IDV 
+
+RelyingParty -> DiscoveryEndpoint: 3. Get latest config from /well-known 
+
+RelyingParty -> JWKSEndpoint: 4. Get latest public key 
+
+RelyingParty -> RelyingParty: 5. Prep Authentication Request, 
+
+code_challengechallenge and code_verifier 
+
+note left 
+
+scope = openid, scotaccount.gpg45.medium 
+
+end note 
+
+RelyingParty -> EndUserAgent: 6. Redirect to AuthorsationEndpoint... 
+
+EndUserAgent -> AuthorsationEndpoint: 7. .....with Authentication Request 
+
+and code_challenge 
+
+EndUserAgent <-> AuthorsationEndpoint: 8. User consents to IDV 
+
+AuthorsationEndpoint -> AuthorsationEndpoint: 9. If consnet store the auth 
+
+code challenge and its method 
+
+AuthorsationEndpoint -> EndUserAgent: 10. Redirect to redirecturi...... 
+
+EndUserAgent -> RelyingParty: 11 ....with auth code 
+
+RelyingParty -> TokenEndpoint: 12. Request tokens with code and 
+
+Code_verfier 
+
+note left 
+
+send 
+
+auth code 
+
+code_verifier 
+
+private_jwt 
+
+end note 
+
+TokenEndpoint -> TokenEndpoint: 13. verifies the code challenge and code 
+
+and private_jwt 
+
+TokenEndpoint -> RelyingParty: 14. Return Tokens. 
+
+note left 
+
+receive 
+
+id_token 
+
+access_token 
+
+refresh_token 
+end note 
+
+RelyingParty -> RelyingParty: 15. Check Sigs on ID Token and Access Token 
+
+RelyingParty -> AttributeEndpoint: 16. Request resultes jwt 
+
+note left 
+
+send 
+
+acess_token, private_jwt 
+
+end note 
+
+AttributeEndpoint -> AttributeEndpoint: 17. verify access token and 
+
+private_jwt 
+
+AttributeEndpoint -> RelyingParty: 18. send results jwt 
+
+RelyingParty -> RelyingParty: 19. Check Sigs on results jwt 
+
+RelyingParty -> RelyingParty: 20 verify sub uuid in results jwt is the same as 
+
+ID Token. 
+
+@enduml

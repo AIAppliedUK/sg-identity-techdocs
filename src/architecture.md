@@ -160,8 +160,9 @@ _Figure: High-level architecture of ScotAccount and its integration with core DI
 ### Cryptographic Requirements
 
 - **Signing Algorithms**: RS256, ES256
-- **Key Lengths**: RSA 3072-bit minimum, EC P-256
-- **Token Expiration**: 15 minutes for access tokens, 1 hour for sessions
+- **Key Lengths**: RSA 2048-bit minimum (3072-bit recommended), EC P-256
+- **Token Expiration**: 15 minutes for access and refresh tokens
+- **Session Duration**: 4 hours for user sessions
 - **Certificate Management**: Automatic rotation and validation
 
 ## Scalability and Performance
@@ -181,6 +182,12 @@ _Figure: High-level architecture of ScotAccount and its integration with core DI
 - **Monitoring**: Real-time performance tracking
 
 ## Compliance and Governance
+
+### Security Requirements for Production
+
+- **IP Allowlisting**: Backend service IPs must be provided to ScotAccount for production deployment
+- **Private Key Security**: Keys must be securely stored and loaded at runtime
+- **Environment Separation**: Different cryptographic keys required for production vs test environments
 
 ### Regulatory Compliance
 

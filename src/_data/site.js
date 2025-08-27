@@ -46,14 +46,24 @@ module.exports = function() {
         key: "complete-guide"
       },
       {
-        text: "Token Examples",
-        url: "/scotaccount-token-validation-module/",
-        key: "token-validation-examples"
+        text: "Testing Guide",
+        url: "/testing-guide/",
+        key: "testing-guide"
+      },
+      {
+        text: "Error Reference",
+        url: "/error-reference/",
+        key: "error-reference"
       },
       {
         text: "Integration Examples",
         url: "/integration-examples/",
         key: "integration-examples"
+      },
+      {
+        text: "Token Validation",
+        url: "/scotaccount-token-validation-module/",
+        key: "token-validation-examples"
       }
     ]
   };

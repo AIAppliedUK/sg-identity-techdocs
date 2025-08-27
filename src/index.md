@@ -9,20 +9,50 @@ eleventyNavigation:
 
 ## What ScotAccount Provides
 
-ScotAccount offers two core capabilities for government services:
+ScotAccount offers two distinct and complementary capabilities for government services:
 
-- **User Authentication** - Verify users have a ScotAccount and receive a persistent user identifier (UUID)
-- **Verified Attributes** - Access independently verified identity, address, and email data
+### 1. User Authentication
+- **Persistent User Identity**: Each user receives a unique UUID that remains constant across all interactions
+- **GPG45 Medium Assurance**: High confidence in user identity through comprehensive verification processes
+- **Single Sign-On**: Users authenticate once and access multiple government services seamlessly
+- **OpenID Connect Standard**: Built on industry-standard protocols with PKCE for enhanced security
 
-When a use completes the verification process their identity verified to **GPG45 Medium assurance level** through comprehensive identity verification processes.
+### 2. Verified Attributes Access
+- **Identity Data**: Independently verified name and date of birth (GPG45 Medium level)
+- **Address Information**: Current address verified through credit reference agency checks
+- **Email Verification**: Confirmed email address through verification loops
+- **Mobile Verification**: Confirmed mobile number through SMS verification
+- **Cross-Device Support**: Users can start verification on one device and complete on another
+- **7-Day Flow Persistence**: Verification states persist for up to 7 days for user convenience
 
-## Get Started Quickly
+### Key Distinctions
 
-- **[Quick Start Guide]({{ '/getting-started/' | url }})** - Get a working integration quickly
-- **[Implementation Guide]({{ '/scotaccount-guide/' | url }})** - High level implementation guide
-- **[Comprehensive Guide]({{ '/scotaccount-complete-guide/' | url }})** - Comprehensive implementation guide detailing the implementation
-- **[Token Validation]({{ '/scotaccount-token-validation-module/' | url }})** - Secure token handling
-- **[Token Validation Module]({{ '/scotaccount-token-validation-module/' | url }})** - Secure token verification
+**Authentication vs Verified Attributes**: Authentication establishes who the user is with a persistent UUID. Verified attributes provide additional verified personal information that users explicitly consent to share. Services can use authentication alone or combine it with verified attributes based on their specific needs.
+
+**Session Management**: User sessions last up to 4 hours, with access tokens expiring after 15 minutes. Verification flows remain valid for 7 days to accommodate complex verification processes that may require time to complete.
+
+## Quick Access to Key Resources
+
+### New to ScotAccount?
+- **[Getting Started Guide]({{ '/getting-started/' | url }})** - Understand the basics and set up your first integration
+- **[Architecture Overview]({{ '/architecture/' | url }})** - System components and data flows
+- **[Current Data Schema]({{ '/scotaccount-currentschema/' | url }})** - Complete JSON schema reference for all data structures
+
+### Ready to Integrate?
+- **[Implementation Guide]({{ '/scotaccount-guide/' | url }})** - Step-by-step technical implementation
+- **[Complete Guide]({{ '/scotaccount-complete-guide/' | url }})** - Comprehensive implementation with detailed explanations
+- **[Token Validation Module]({{ '/scotaccount-token-validation-module/' | url }})** - Secure token verification patterns
+
+### Need Examples?
+- **[Integration Examples]({{ '/integration-examples/' | url }})** - Working code examples and implementation patterns
+- **[Testing Guide]({{ '/testing-guide/' | url }})** - Mock service setup and testing scenarios
+- **[Error Reference]({{ '/error-reference/' | url }})** - Complete error codes and resolution strategies
+
+### Testing Environment Links
+- **Integration Environment**: `https://integration.scotaccount.service.gov.scot`
+- **Mock Service**: `https://mock.scotaccount.service.gov.scot`
+- **JWKS Endpoint**: `https://integration.scotaccount.service.gov.scot/.well-known/jwks.json`
+- **OpenID Configuration**: `https://integration.scotaccount.service.gov.scot/.well-known/openid_configuration`
 
 ## Integration Journey
 
@@ -93,18 +123,42 @@ ScotAccount uniquely handles verification processes that can minutes or days:
 - **Testing Tools**: Mock service for rapid development and testing
 - **Production Support**: Dedicated support for live service operation
 
-## Next Steps
+## Critical Implementation Reminders
 
-Choose your path based on your role:
+<div class="callout callout--warning">
+<strong>Session Timeouts</strong>: User sessions last 4 hours, access tokens expire after 15 minutes, and verification flows remain valid for 7 days. Plan your user experience accordingly.
+</div>
+
+<div class="callout callout--danger">
+<strong>JWKS Key Rotation</strong>: Always fetch the latest JWKS before starting new flows. Keys rotate regularly for security. See our <a href="{{ '/scotaccount-complete-guide/' | url }}#jwks-handling">JWKS handling guide</a>.
+</div>
+
+<div class="callout callout--info">
+<strong>GPG45 Timeline Warning</strong>: Cross-device verification flows can take minutes to days to complete. Design your service to handle asynchronous verification results appropriately.
+</div>
+
+## Next Steps by Role
 
 <div class="callout callout--info">
 <strong>New to ScotAccount?</strong> Start with our <a href="{{ '/getting-started/' | url }}">Getting Started guide</a> to understand the basics and set up your first integration.
 </div>
 
 <div class="callout callout--success">
-<strong>Ready to implement?</strong> Jump into the <a href="{{ '/scotaccount-complete-guide/' | url }}">Complete Implementation Guide</a> for detailed technical instructions.
+<strong>Ready to integrate?</strong> Follow the <a href="{{ '/scotaccount-guide/' | url }}">Implementation Guide</a> for step-by-step technical instructions with common pitfalls guidance.
+</div>
+
+<div class="callout callout--primary">
+<strong>Need examples?</strong> Explore <a href="{{ '/integration-examples/' | url }}">working code examples</a> and use our comprehensive <a href="{{ '/testing-guide/' | url }}">testing scenarios</a>.
 </div>
 
 <div class="callout callout--warning">
 <strong>Need architecture details?</strong> Review the <a href="{{ '/architecture/' | url }}">Architecture Overview</a> to understand system components and data flows.
 </div>
+
+## Business Rules Summary
+
+- **Single Flow Requirement**: Authentication must complete before requesting verified attributes
+- **User Consent**: Users explicitly consent to each attribute request during the flow
+- **Data Freshness**: Attribute data reflects verification status at time of request - not stored permanently
+- **DIS-Client-Assertion**: Required header for all attribute requests - see <a href="{{ '/scotaccount-complete-guide/' | url }}#client-assertion">implementation details</a>
+- **State Persistence**: Maintain state for 7 days to support cross-device verification flows
