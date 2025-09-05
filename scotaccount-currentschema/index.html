@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  
+  
+  
+  
+
+  <title>ScotAccount Service Schema | ScotAccount Technical Documentation</title>
+  <meta name="description" content="JSON Schema definition for the data structure returned by the ScotAccount service">
+
+  
+  <link rel="canonical" href="https://scotaccount.github.io/sg-identity-techdocs/scotaccount-currentschema/">
+
+  
+  <link rel="icon" type="image/x-icon" href="/sg-identity-techdocs/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/sg-identity-techdocs/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/sg-identity-techdocs/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/sg-identity-techdocs/favicon-16x16.png">
+  <link rel="mask-icon" href="/sg-identity-techdocs/safari-pinned-tab.svg" color="#0065bd">
+
+  
+  <link rel="stylesheet" href="/sg-identity-techdocs/css/main.css">
+
+  
+  <meta property="og:title" content="ScotAccount Service Schema">
+  <meta property="og:description" content="JSON Schema definition for the data structure returned by the ScotAccount service">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://scotaccount.github.io/sg-identity-techdocs/scotaccount-currentschema/">
+  <meta property="og:image" content="https://scotaccount.github.io/sg-identity-techdocs/apple-touch-icon.png">
+
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "ScotAccount Service Schema",
+    "description": "JSON Schema definition for the data structure returned by the ScotAccount service",
+    "url": "https://scotaccount.github.io/sg-identity-techdocs/scotaccount-currentschema/",
+    "image": "https://scotaccount.github.io/sg-identity-techdocs/apple-touch-icon.png",
+    "author": {
+      "@type": "Organization",
+      "name": "Scottish Government",
+      "url": "https://www.gov.scot"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Scottish Government",
+      "url": "https://www.gov.scot"
+    }
+  }
+  </script>
+</head>
+
+<body>
+  <!-- Cookie banner and skip link as you had, if needed -->
+
+  <header class="sg-header" role="banner">
+    <div class="sg-header__wrapper">
+      <div class="sg-header__branding">
+        <a href="/sg-identity-techdocs/" class="sg-header__logo">
+          <img src="/sg-identity-techdocs/assets/scotgovlogo.svg" alt="Scottish Government" class="sg-header__logo-image">
+        </a>
+      </div>
+      <div class="sg-header__search">
+        <form class="sg-header__search-form" role="search" action="/sg-identity-techdocs/search" method="get">
+          <label for="search-input" class="sg-header__search-label">Search</label>
+          <input type="search" id="search-input" name="q" class="sg-header__search-input" placeholder="Search">
+          <button type="submit" class="sg-header__search-button" aria-label="Search">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+              <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  
+  <nav class="site-nav" role="navigation" aria-label="Main navigation">
+    <div class="site-nav__wrapper">
+      <ul class="site-nav__list" id="nav-menu">
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/" class="site-nav__link">
+              Home
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/getting-started/" class="site-nav__link">
+              Getting Started
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/architecture/" class="site-nav__link">
+              Architecture
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/scotaccount-guide/" class="site-nav__link">
+              Implementation
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">
+              Complete Guide
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/testing-guide/" class="site-nav__link">
+              Testing Guide
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/error-reference/" class="site-nav__link">
+              Error Reference
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/integration-examples/" class="site-nav__link">
+              Integration Examples
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link">
+              Token Validation
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    
+    <aside class="sidebar" role="complementary" aria-label="Page navigation">
+      <h3 class="sidebar__title">On this page</h3>
+      <div class="sidebar__toc" id="page-toc">
+        
+      </div>
+    </aside>
+
+    <main class="main" id="main-content" role="main" tabindex="-1">
+      <h1>ScotAccount Service Schema</h1>
+      <p class="lead">JSON Schema definition for the data structure returned by the ScotAccount service</p>
+
+      <h1 id="scotaccount-service-schema" tabindex="-1"><a class="header-anchor" href="#scotaccount-service-schema"><span>ScotAccount Service Schema</span></a></h1>
+<p>The current schema for the scotaccount service is listed below. This describes the data and structure the service will return from the verified attributes endpoint.</p>
+<h2 id="schema-overview" tabindex="-1"><a class="header-anchor" href="#schema-overview"><span>Schema Overview</span></a></h2>
+<p>This JSON Schema (draft-07) defines the structure of the <code>claimsToken</code> JWT payload returned when calling the attributes endpoint. The schema includes:</p>
+<ul>
+<li><strong>JWT Standard Claims</strong>: <code>iss</code> (issuer), <code>sub</code> (subject), and <code>iat</code> (issued at time)</li>
+<li><strong>Verified Claims Array</strong>: Contains verification details and claims for each requested scope</li>
+<li><strong>Scope-Specific Claims</strong>: Different claim structures based on the scope (<code>scotaccount.address</code>, <code>scotaccount.gpg45.medium</code>, or <code>scotaccount.email</code>)</li>
+</ul>
+<h2 id="full-schema-definition" tabindex="-1"><a class="header-anchor" href="#full-schema-definition"><span>Full Schema Definition</span></a></h2>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"$defs"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"issType"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+      <span class="token property">"format"</span><span class="token operator">:</span> <span class="token string">"uri"</span><span class="token punctuation">,</span>
+      <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"The issuer of the JWT"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"subType"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+      <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"The subject of the JWT"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"iatType"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"integer"</span><span class="token punctuation">,</span>
+      <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"The issued at time of the JWT"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"addressType"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"object"</span><span class="token punctuation">,</span>
+      <span class="token property">"properties"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"uprn"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"pattern"</span><span class="token operator">:</span> <span class="token string">"^[0-9]+$"</span><span class="token punctuation">,</span>
+          <span class="token property">"maxLength"</span><span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Unique Property Reference Number"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"organisationName"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"maxLength"</span><span class="token operator">:</span> <span class="token number">60</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Organisation Name"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"departmentName"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"maxLength"</span><span class="token operator">:</span> <span class="token number">60</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Department Name"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"subBuildingName"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"maxLength"</span><span class="token operator">:</span> <span class="token number">60</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Sub-Building Name"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"buildingNumber"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"pattern"</span><span class="token operator">:</span> <span class="token string">"^[0-9]+$"</span><span class="token punctuation">,</span>
+          <span class="token property">"maxLength"</span><span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Building Number"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"buildingName"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"maxLength"</span><span class="token operator">:</span> <span class="token number">50</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Building Name"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"dependentStreetName"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"maxLength"</span><span class="token operator">:</span> <span class="token number">80</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Dependent Street Name"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"streetName"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"maxLength"</span><span class="token operator">:</span> <span class="token number">80</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Street Name"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"doubleDependentAddressLocality"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"maxLength"</span><span class="token operator">:</span> <span class="token number">35</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Double Dependent Address Locality"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"dependentAddressLocality"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"maxLength"</span><span class="token operator">:</span> <span class="token number">35</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Dependent Address Locality"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"addressLocality"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"maxLength"</span><span class="token operator">:</span> <span class="token number">30</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Address Locality"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"postalCode"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"maxLength"</span><span class="token operator">:</span> <span class="token number">8</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Postal Code"</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"verificationType"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"object"</span><span class="token punctuation">,</span>
+      <span class="token property">"properties"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"outcome"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"enum"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token string">"VERIFIED_SUCCESSFULLY"</span><span class="token punctuation">,</span>
+            <span class="token string">"VERIFIED_WITH_WARNINGS"</span><span class="token punctuation">,</span>
+            <span class="token string">"VERIFICATION_FAILED"</span>
+          <span class="token punctuation">]</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Outcome of the verification process"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"trust_framework"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"enum"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"uk_tfida"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Identifier for the trust framework"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"assurance_policy"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"enum"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"GPG_45"</span><span class="token punctuation">,</span> <span class="token string">"other_possible_values"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"The assurance policy used through the verification process."</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"confidence_level"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"enum"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"low"</span><span class="token punctuation">,</span> <span class="token string">"medium"</span><span class="token punctuation">,</span> <span class="token string">"high"</span><span class="token punctuation">,</span> <span class="token string">"very_high"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"The confidence level as described in good practice guide 45."</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"validation_method"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"enum"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"credit_reference_agency"</span><span class="token punctuation">,</span> <span class="token string">"email_loop"</span><span class="token punctuation">,</span> <span class="token string">"self_certified"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+          <span class="token property">"descriptions"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token property">"credit_reference_agency"</span><span class="token operator">:</span> <span class="token string">"Validation using credit reference agency"</span><span class="token punctuation">,</span>
+            <span class="token property">"email_loop"</span><span class="token operator">:</span> <span class="token string">"Validation via email loop process"</span><span class="token punctuation">,</span>
+            <span class="token property">"self_certified"</span><span class="token operator">:</span> <span class="token string">"Validation via self certification"</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"time"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+          <span class="token property">"format"</span><span class="token operator">:</span> <span class="token string">"date-time"</span><span class="token punctuation">,</span>
+          <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Time at which the claims were verified"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"verifier"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"object"</span><span class="token punctuation">,</span>
+          <span class="token property">"properties"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token property">"organisation"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+              <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+              <span class="token property">"maxLength"</span><span class="token operator">:</span> <span class="token number">60</span><span class="token punctuation">,</span>
+              <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Name of the organisation that verified the claims"</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token property">"txn"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+              <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+              <span class="token property">"format"</span><span class="token operator">:</span> <span class="token string">"uuid"</span><span class="token punctuation">,</span>
+              <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Transaction ID of the verification process"</span>
+            <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token property">"required"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"organisation"</span><span class="token punctuation">,</span> <span class="token string">"txn"</span><span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token property">"required"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"outcome"</span><span class="token punctuation">,</span> <span class="token string">"trust_framework"</span><span class="token punctuation">,</span> <span class="token string">"time"</span><span class="token punctuation">,</span> <span class="token string">"verifier"</span><span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"emailType"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+      <span class="token property">"format"</span><span class="token operator">:</span> <span class="token string">"email"</span><span class="token punctuation">,</span>
+      <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"End-User's preferred e-mail address. Its value MUST conform to the RFC 5322 [RFC5322] addr-spec syntax"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"givenNameType"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+      <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"The given name of the end user."</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"familyNameType"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+      <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"The family name of the end user."</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"birthDateType"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+      <span class="token property">"format"</span><span class="token operator">:</span> <span class="token string">"date"</span><span class="token punctuation">,</span>
+      <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"The birth date of the end user in YYYY-MM-DD format."</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"scopeType"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+      <span class="token property">"enum"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token string">"scotaccount.address"</span><span class="token punctuation">,</span>
+        <span class="token string">"scotaccount.gpg45.medium"</span><span class="token punctuation">,</span>
+        <span class="token string">"scotaccount.email"</span>
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"The scope of verified claims. Each scope returns a well defines set of claims."</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"addressClaimsType"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"object"</span><span class="token punctuation">,</span>
+      <span class="token property">"properties"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"address"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"$ref"</span><span class="token operator">:</span> <span class="token string">"#/$defs/addressType"</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token property">"required"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"address"</span><span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"emailClaimsType"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"object"</span><span class="token punctuation">,</span>
+      <span class="token property">"properties"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"email"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"$ref"</span><span class="token operator">:</span> <span class="token string">"#/$defs/emailType"</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token property">"required"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"email"</span><span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"gpg45MediumClaimsType"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"object"</span><span class="token punctuation">,</span>
+      <span class="token property">"properties"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"given_name"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"$ref"</span><span class="token operator">:</span> <span class="token string">"#/$defs/givenNameType"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"family_name"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"$ref"</span><span class="token operator">:</span> <span class="token string">"#/$defs/familyNameType"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"birth_date"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"$ref"</span><span class="token operator">:</span> <span class="token string">"#/$defs/birthDateType"</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token property">"required"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"given_name"</span><span class="token punctuation">,</span> <span class="token string">"family_name"</span><span class="token punctuation">,</span> <span class="token string">"birth_date"</span><span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token property">"$id"</span><span class="token operator">:</span> <span class="token string">"https://schema.scotaccount.service.gov.scot/external/v2/scotaccount-verified-claims"</span><span class="token punctuation">,</span>
+  <span class="token property">"$schema"</span><span class="token operator">:</span> <span class="token string">"http://json-schema.org/draft-07/schema#"</span><span class="token punctuation">,</span>
+  <span class="token property">"title"</span><span class="token operator">:</span> <span class="token string">"scotaccount.verified.claims"</span><span class="token punctuation">,</span>
+  <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"object"</span><span class="token punctuation">,</span>
+  <span class="token property">"properties"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"iss"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"$ref"</span><span class="token operator">:</span> <span class="token string">"#/$defs/issType"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"sub"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"$ref"</span><span class="token operator">:</span> <span class="token string">"#/$defs/subType"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"iat"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"$ref"</span><span class="token operator">:</span> <span class="token string">"#/$defs/iatType"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"verified_claims"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"array"</span><span class="token punctuation">,</span>
+      <span class="token property">"items"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"scope"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"$ref"</span><span class="token operator">:</span> <span class="token string">"#/$defs/scopeType"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"verification"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"$ref"</span><span class="token operator">:</span> <span class="token string">"#/$defs/verificationType"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"claims"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"oneOf"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span>
+              <span class="token property">"$ref"</span><span class="token operator">:</span> <span class="token string">"#/$defs/addressClaimsType"</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span>
+              <span class="token property">"$ref"</span><span class="token operator">:</span> <span class="token string">"#/$defs/emailClaimsType"</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span>
+              <span class="token property">"$ref"</span><span class="token operator">:</span> <span class="token string">"#/$defs/gpg45MediumClaimsType"</span>
+            <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token property">"required"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"scope"</span><span class="token punctuation">,</span> <span class="token string">"verification"</span><span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token property">"required"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"iss"</span><span class="token punctuation">,</span> <span class="token string">"sub"</span><span class="token punctuation">,</span> <span class="token string">"iat"</span><span class="token punctuation">,</span> <span class="token string">"verified_claims"</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre>
+
+
+      
+      <footer class="content-footer"><p><small>Last updated: 5 September 2025</small></p></footer>
+      
+    </main>
+  </div>
+
+  <footer class="sg-footer" role="contentinfo">
+    <!-- your footer blocks as before -->
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
+  <script src="/sg-identity-techdocs/js/search.js"></script>
+  
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const tocContainer = document.getElementById('page-toc');
+      const main = document.querySelector('.main');
+      
+      if (tocContainer && main) {
+        // Find all h2, h3, and h4 headings with IDs
+        const headings = main.querySelectorAll('h2[id], h3[id], h4[id]');
+        
+        if (headings.length > 0) {
+          const tocList = document.createElement('ul');
+          tocList.className = 'sidebar__nav';
+          
+          headings.forEach(heading => {
+            const level = parseInt(heading.tagName.charAt(1));
+            const listItem = document.createElement('li');
+            listItem.className = 'sidebar__nav-item sidebar__nav-item--level-' + level;
+            
+            const link = document.createElement('a');
+            link.href = '#' + heading.id;
+            link.className = 'sidebar__nav-link';
+            // Get text from the heading, excluding the anchor symbol
+            const headingText = heading.querySelector('span') ? 
+              heading.querySelector('span').textContent : 
+              heading.textContent;
+            link.textContent = headingText.replace('#', '').trim();
+            
+            // Add click handler for smooth scrolling
+            link.addEventListener('click', function(e) {
+              e.preventDefault();
+              heading.scrollIntoView({ behavior: 'smooth' });
+              // Update URL without jumping
+              history.pushState(null, null, '#' + heading.id);
+            });
+            
+            listItem.appendChild(link);
+            tocList.appendChild(listItem);
+          });
+          
+          tocContainer.appendChild(tocList);
+          
+          // Highlight current section on scroll
+          let ticking = false;
+          function updateTOC() {
+            const scrollPosition = window.scrollY + 100;
+            let currentSection = null;
+            
+            headings.forEach(heading => {
+              if (heading.offsetTop <= scrollPosition) {
+                currentSection = heading.id;
+              }
+            });
+            
+            // Update active link
+            tocContainer.querySelectorAll('.sidebar__nav-link').forEach(link => {
+              link.classList.remove('sidebar__nav-link--active');
+              if (currentSection && link.getAttribute('href') === '#' + currentSection) {
+                link.classList.add('sidebar__nav-link--active');
+              }
+            });
+            
+            ticking = false;
+          }
+          
+          window.addEventListener('scroll', function() {
+            if (!ticking) {
+              window.requestAnimationFrame(updateTOC);
+              ticking = true;
+            }
+          });
+          
+          // Initial update
+          updateTOC();
+        } else {
+          // No headings found, hide the sidebar
+          const sidebar = document.querySelector('.sidebar');
+          if (sidebar) {
+            sidebar.style.display = 'none';
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

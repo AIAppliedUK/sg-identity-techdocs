@@ -122,8 +122,15 @@
         
           
           <li class="site-nav__item">
-            <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link site-nav__link--active">
-              Token Examples
+            <a href="/sg-identity-techdocs/testing-guide/" class="site-nav__link">
+              Testing Guide
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/error-reference/" class="site-nav__link">
+              Error Reference
             </a>
           </li>
         
@@ -131,6 +138,13 @@
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/integration-examples/" class="site-nav__link">
               Integration Examples
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link site-nav__link--active">
+              Token Validation
             </a>
           </li>
         
@@ -155,7 +169,7 @@
 <strong>Example Code Disclaimer</strong>: The code examples in this guide are for educational and reference purposes only. They are not production-ready implementations and should be thoroughly reviewed, tested, and adapted to meet your specific security requirements before use in any live system.
 </div>
 <p>This guide provides example implementations for validating ID tokens and access tokens from ScotAccount. These examples demonstrate proper validation patterns but must be adapted and secured for your specific use case.</p>
-<p><div class="table-of-contents"><ul><li><a href="#security-overview">Security Overview</a><ul><li><a href="#what-you-must-validate">What You Must Validate</a></li></ul></li><li><a href="#id-token-validation">ID Token Validation</a><ul><li><a href="#id-token-structure">ID Token Structure</a></li><li><a href="#example-validation-implementation">Example Validation Implementation</a><ul><li><a href="#step-1-set-up-jwks-client">Step 1: Set Up JWKS Client</a></li><li><a href="#step-2-implement-validation-function">Step 2: Implement Validation Function</a></li><li><a href="#step-3-additional-security-validations">Step 3: Additional Security Validations</a></li><li><a href="#step-4-extract-and-store-user-information">Step 4: Extract and Store User Information</a></li></ul></li></ul></li><li><a href="#verified-attributes-validation">Verified Attributes Validation</a><ul><li><a href="#identity-gpg45-medium-extraction-from-claimstoken">Identity (GPG45 Medium) extraction (from claimsToken)</a></li><li><a href="#address-extraction-from-claimstoken">Address extraction (from claimsToken)</a></li></ul></li><li><a href="#access-token-usage">Access Token Usage</a></li><li><a href="#example-expressjs-integration">Example Express.js Integration</a></li><li><a href="#error-handling">Error Handling</a><ul><li><a href="#common-validation-errors">Common Validation Errors</a></li><li><a href="#example-security-patterns">Example Security Patterns</a></li></ul></li><li><a href="#testing-token-validation">Testing Token Validation</a><ul><li><a href="#unit-test-example">Unit Test Example</a></li></ul></li><li><a href="#implementation-considerations">Implementation Considerations</a><ul><li><a href="#performance-optimisation-examples">Performance Optimisation Examples</a></li><li><a href="#monitoring-examples">Monitoring Examples</a></li></ul></li><li><a href="#next-steps">Next Steps</a></li></ul></div></p>
+<p><div class="table-of-contents"><ul><li><a href="#security-overview">Security Overview</a><ul><li><a href="#what-you-must-validate">What You Must Validate</a></li></ul></li><li><a href="#id-token-validation">ID Token Validation</a><ul><li><a href="#id-token-structure">ID Token Structure</a></li><li><a href="#example-validation-implementation">Example Validation Implementation</a><ul><li><a href="#step-1-set-up-jwks-client">Step 1: Set Up JWKS Client</a></li><li><a href="#step-2-implement-validation-function">Step 2: Implement Validation Function</a></li><li><a href="#step-3-additional-security-validations">Step 3: Additional Security Validations</a></li><li><a href="#step-4-extract-and-store-user-information">Step 4: Extract and Store User Information</a></li></ul></li></ul></li><li><a href="#verified-attributes-validation">Verified Attributes Validation</a><ul><li><a href="#identity-gpg45-medium-extraction-from-claimstoken">Identity (GPG45 Medium) extraction (from claimsToken)</a></li><li><a href="#address-extraction-from-claimstoken">Address extraction (from claimsToken)</a></li></ul></li><li><a href="#access-token-usage">Access Token Usage</a></li><li><a href="#example-expressjs-integration">Example Express.js Integration</a></li><li><a href="#error-handling">Error Handling</a><ul><li><a href="#common-validation-errors">Common Validation Errors</a></li><li><a href="#example-security-patterns">Example Security Patterns</a></li></ul></li><li><a href="#testing-token-validation">Testing Token Validation</a><ul><li><a href="#unit-test-example">Unit Test Example</a></li></ul></li><li><a href="#logout-implementation-with-token-validation">Logout Implementation with Token Validation</a></li><li><a href="#implementation-considerations">Implementation Considerations</a><ul><li><a href="#performance-optimisation-examples">Performance Optimisation Examples</a></li><li><a href="#monitoring-examples">Monitoring Examples</a></li></ul></li><li><a href="#next-steps">Next Steps</a></li></ul></div></p>
 <h2 id="security-overview" tabindex="-1"><a class="header-anchor" href="#security-overview"><span>Security Overview</span></a></h2>
 <p>ScotAccount issues JSON Web Tokens (JWTs) that must be validated before trusting their contents. This ensures tokens haven’t been tampered with and were genuinely issued by ScotAccount.</p>
 <div class="callout callout--error">
@@ -299,6 +313,9 @@
 <span class="token punctuation">}</span></code></pre>
 <h2 id="verified-attributes-validation" tabindex="-1"><a class="header-anchor" href="#verified-attributes-validation"><span>Verified Attributes Validation</span></a></h2>
 <p>Verified attributes are provided by the attributes endpoint as a signed <code>claimsToken</code> JWT that includes a <code>verified_claims</code> array. Validate the JWT and extract claims for the scopes you requested.</p>
+<div class="callout callout--info">
+<strong>Full Schema Reference</strong>: For the complete JSON schema definition of the verified claims structure returned from the attributes endpoint, see the <a href="/sg-identity-techdocs/scotaccount-currentschema/">ScotAccount Service Schema</a> documentation.
+</div>
 <h3 id="identity-gpg45-medium-extraction-from-claimstoken" tabindex="-1"><a class="header-anchor" href="#identity-gpg45-medium-extraction-from-claimstoken"><span>Identity (GPG45 Medium) extraction (from claimsToken)</span></a></h3>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">extractIdentityFromClaimsToken</span><span class="token punctuation">(</span><span class="token parameter">claimsTokenPayload</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>Array<span class="token punctuation">.</span><span class="token function">isArray</span><span class="token punctuation">(</span>claimsTokenPayload<span class="token punctuation">.</span>verified_claims<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
@@ -401,6 +418,11 @@ app<span class="token punctuation">.</span><span class="token function">get</spa
 <p>These examples demonstrate security patterns you should implement:</p>
 <ol>
 <li><strong>Token validation</strong> before trusting contents</li>
+<li><strong>JWKS key rotation</strong> handling with cache refresh</li>
+<li><strong>State persistence</strong> with 7-day expiration</li>
+<li><strong>DIS-Client-Assertion</strong> creation for attributes endpoint</li>
+<li><strong>Mock service integration</strong> for testing environments</li>
+<li><strong>Comprehensive error handling</strong> for all failure scenarios</li>
 <li><strong>Token refresh</strong> handling in your application</li>
 <li><strong>Validation failure logging</strong> for monitoring</li>
 <li><strong>Rate limiting</strong> on validation endpoints</li>
@@ -413,6 +435,11 @@ app<span class="token punctuation">.</span><span class="token function">get</spa
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> assert <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"assert"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">"Token Validation"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token function">beforeEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Reset mocks and clear Redis</span>
+    redis<span class="token punctuation">.</span><span class="token function">flushall</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
   <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">"should reject tokens with invalid signatures"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
     <span class="token keyword">const</span> invalidToken <span class="token operator">=</span> <span class="token string">"invalid.jwt.token"</span><span class="token punctuation">;</span>
 
@@ -422,6 +449,21 @@ app<span class="token punctuation">.</span><span class="token function">get</spa
     <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
       <span class="token function">assert</span><span class="token punctuation">(</span>error<span class="token punctuation">.</span>message<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">"Invalid"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">"should handle DIS-Client-Assertion creation"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> clientId <span class="token operator">=</span> <span class="token string">'test-client'</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> privateKey <span class="token operator">=</span> <span class="token function">getTestPrivateKey</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">const</span> assertion <span class="token operator">=</span> <span class="token function">createDisClientAssertion</span><span class="token punctuation">(</span>clientId<span class="token punctuation">,</span> privateKey<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> decoded <span class="token operator">=</span> jwt<span class="token punctuation">.</span><span class="token function">decode</span><span class="token punctuation">(</span>assertion<span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">complete</span><span class="token operator">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token function">expect</span><span class="token punctuation">(</span>decoded<span class="token punctuation">.</span>payload<span class="token punctuation">.</span>iss<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span>clientId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>decoded<span class="token punctuation">.</span>payload<span class="token punctuation">.</span>sub<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span>clientId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>decoded<span class="token punctuation">.</span>payload<span class="token punctuation">.</span>aud<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span>
+      <span class="token string">'https://issuer.main.integration.scotaccount.service.gov.scot/attributes/values'</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>decoded<span class="token punctuation">.</span>header<span class="token punctuation">.</span>alg<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token string">'RS256'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">"should validate correct nonce"</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
@@ -437,22 +479,192 @@ app<span class="token punctuation">.</span><span class="token function">get</spa
     assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>payload<span class="token punctuation">.</span>nonce<span class="token punctuation">,</span> correctNonce<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h2 id="logout-implementation-with-token-validation" tabindex="-1"><a class="header-anchor" href="#logout-implementation-with-token-validation"><span>Logout Implementation with Token Validation</span></a></h2>
+<p>Example logout flow with proper token handling:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Logout requires id_token_hint for ScotAccount</span>
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">initiateLogout</span><span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res<span class="token punctuation">,</span> idToken</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> config <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">getOidcConfiguration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> logoutState <span class="token operator">=</span> crypto<span class="token punctuation">.</span><span class="token function">randomBytes</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token string">'hex'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Store logout state for validation</span>
+    <span class="token keyword">await</span> redis<span class="token punctuation">.</span><span class="token function">setex</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">logout_state:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>logoutState<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> <span class="token number">300</span><span class="token punctuation">,</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token literal-property property">timestamp</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">userId</span><span class="token operator">:</span> req<span class="token punctuation">.</span>user<span class="token operator">?.</span>id
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 5 minutes</span>
+    
+    <span class="token comment">// Build logout URL with id_token_hint</span>
+    <span class="token keyword">const</span> logoutUrl <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>config<span class="token punctuation">.</span>end_session_endpoint<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">?</span><span class="token template-punctuation string">`</span></span> <span class="token operator">+</span>
+      <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">id_token_hint=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>idToken<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&amp;</span><span class="token template-punctuation string">`</span></span> <span class="token operator">+</span>
+      <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">post_logout_redirect_uri=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">encodeURIComponent</span><span class="token punctuation">(</span>req<span class="token punctuation">.</span>protocol <span class="token operator">+</span> <span class="token string">'://'</span> <span class="token operator">+</span> req<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'host'</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'/auth/logout-callback'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&amp;</span><span class="token template-punctuation string">`</span></span> <span class="token operator">+</span>
+      <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">state=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>logoutState<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+    
+    res<span class="token punctuation">.</span><span class="token function">redirect</span><span class="token punctuation">(</span>logoutUrl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">'Logout initiation failed:'</span><span class="token punctuation">,</span> error<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// Fallback: destroy local session</span>
+    req<span class="token punctuation">.</span>session<span class="token punctuation">.</span><span class="token function">destroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    res<span class="token punctuation">.</span><span class="token function">redirect</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Handle logout callback</span>
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">handleLogoutCallback</span><span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> state <span class="token punctuation">}</span> <span class="token operator">=</span> req<span class="token punctuation">.</span>query<span class="token punctuation">;</span>
+  
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>state<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'Missing logout state parameter'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    
+    <span class="token comment">// Validate logout state</span>
+    <span class="token keyword">const</span> stateDataJson <span class="token operator">=</span> <span class="token keyword">await</span> redis<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">logout_state:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>state<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> stateData <span class="token operator">=</span> stateDataJson <span class="token operator">?</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>stateDataJson<span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>stateData<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'Invalid or expired logout state'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    
+    <span class="token comment">// Clean up state</span>
+    <span class="token keyword">await</span> redis<span class="token punctuation">.</span><span class="token function">del</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">logout_state:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>state<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Log successful logout</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">User </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>stateData<span class="token punctuation">.</span>userId<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> successfully logged out</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">warn</span><span class="token punctuation">(</span><span class="token string">'Logout callback validation failed:'</span><span class="token punctuation">,</span> error<span class="token punctuation">.</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// Continue with logout anyway</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token comment">// Always destroy local session</span>
+  req<span class="token punctuation">.</span>session<span class="token punctuation">.</span><span class="token function">destroy</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">'Session destruction failed:'</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    res<span class="token punctuation">.</span><span class="token function">redirect</span><span class="token punctuation">(</span><span class="token string">'/logged-out'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
 <h2 id="implementation-considerations" tabindex="-1"><a class="header-anchor" href="#implementation-considerations"><span>Implementation Considerations</span></a></h2>
 <h3 id="performance-optimisation-examples" tabindex="-1"><a class="header-anchor" href="#performance-optimisation-examples"><span>Performance Optimisation Examples</span></a></h3>
 <p>These examples show performance patterns you might implement:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Optimised JWKS client with intelligent caching</span>
+<span class="token keyword">const</span> optimisedJwksClient <span class="token operator">=</span> <span class="token function">jwksClient</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">jwksUri</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/jwks.json"</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">cache</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">cacheMaxAge</span><span class="token operator">:</span> <span class="token number">600000</span><span class="token punctuation">,</span> <span class="token comment">// 10 minutes</span>
+  <span class="token literal-property property">cacheMaxEntries</span><span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token comment">// Limit memory usage</span>
+  <span class="token literal-property property">rateLimit</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">jwksRequestsPerMinute</span><span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token comment">// Allow more requests for high traffic</span>
+  <span class="token literal-property property">timeout</span><span class="token operator">:</span> <span class="token number">30000</span><span class="token punctuation">,</span> <span class="token comment">// 30 second timeout</span>
+  <span class="token literal-property property">proxy</span><span class="token operator">:</span> process<span class="token punctuation">.</span>env<span class="token punctuation">.</span><span class="token constant">HTTP_PROXY</span><span class="token punctuation">,</span> <span class="token comment">// Support corporate proxies</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Connection pooling for attributes requests</span>
+<span class="token keyword">const</span> httpsAgent <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">https<span class="token punctuation">.</span>Agent</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">keepAlive</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">maxSockets</span><span class="token operator">:</span> <span class="token number">50</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">maxFreeSockets</span><span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">timeout</span><span class="token operator">:</span> <span class="token number">60000</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">freeSocketTimeout</span><span class="token operator">:</span> <span class="token number">30000</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Batch token validation for multiple tokens</span>
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">validateTokensBatch</span><span class="token punctuation">(</span><span class="token parameter">tokens<span class="token punctuation">,</span> clientId<span class="token punctuation">,</span> issuer</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> validationPromises <span class="token operator">=</span> tokens<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">tokenData</span> <span class="token operator">=></span> 
+    <span class="token function">validateIdToken</span><span class="token punctuation">(</span>
+      tokenData<span class="token punctuation">.</span>token<span class="token punctuation">,</span> 
+      clientId<span class="token punctuation">,</span> 
+      tokenData<span class="token punctuation">.</span>nonce<span class="token punctuation">,</span> 
+      issuer
+    <span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token parameter">error</span> <span class="token operator">=></span> <span class="token punctuation">(</span><span class="token punctuation">{</span> error<span class="token punctuation">,</span> <span class="token literal-property property">token</span><span class="token operator">:</span> tokenData<span class="token punctuation">.</span>token <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token keyword">const</span> results <span class="token operator">=</span> <span class="token keyword">await</span> Promise<span class="token punctuation">.</span><span class="token function">allSettled</span><span class="token punctuation">(</span>validationPromises<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token keyword">return</span> results<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">result<span class="token punctuation">,</span> index</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token literal-property property">token</span><span class="token operator">:</span> tokens<span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">.</span>token<span class="token punctuation">,</span>
+    <span class="token literal-property property">success</span><span class="token operator">:</span> result<span class="token punctuation">.</span>status <span class="token operator">===</span> <span class="token string">'fulfilled'</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>result<span class="token punctuation">.</span>value<span class="token punctuation">.</span>error<span class="token punctuation">,</span>
+    <span class="token literal-property property">payload</span><span class="token operator">:</span> result<span class="token punctuation">.</span>status <span class="token operator">===</span> <span class="token string">'fulfilled'</span> <span class="token operator">?</span> result<span class="token punctuation">.</span>value <span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">error</span><span class="token operator">:</span> result<span class="token punctuation">.</span>status <span class="token operator">===</span> <span class="token string">'rejected'</span> <span class="token operator">?</span> result<span class="token punctuation">.</span>reason <span class="token operator">:</span> result<span class="token punctuation">.</span>value<span class="token operator">?.</span>error
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
 <ul>
 <li><strong>JWKS key caching</strong> with appropriate TTL</li>
 <li><strong>Connection pooling</strong> for HTTP requests</li>
 <li><strong>Asynchronous validation</strong> to avoid blocking</li>
 <li><strong>Token validation libraries</strong> for your platform</li>
+<li><strong>Batch processing</strong> for multiple token validations</li>
+<li><strong>Memory management</strong> for JWKS cache</li>
+<li><strong>Request timeouts</strong> and retry logic</li>
 </ul>
 <h3 id="monitoring-examples" tabindex="-1"><a class="header-anchor" href="#monitoring-examples"><span>Monitoring Examples</span></a></h3>
 <p>Example monitoring patterns for your implementation:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Comprehensive monitoring for token validation</span>
+<span class="token keyword">class</span> <span class="token class-name">TokenValidationMonitoring</span> <span class="token punctuation">{</span>
+  <span class="token keyword">static</span> <span class="token function">logValidationEvent</span><span class="token punctuation">(</span><span class="token parameter">event<span class="token punctuation">,</span> details <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> logEntry <span class="token operator">=</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">timestamp</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toISOString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">event</span><span class="token operator">:</span> event<span class="token punctuation">,</span>
+      <span class="token literal-property property">userId</span><span class="token operator">:</span> details<span class="token punctuation">.</span>userId<span class="token punctuation">,</span>
+      <span class="token literal-property property">sessionId</span><span class="token operator">:</span> details<span class="token punctuation">.</span>sessionId<span class="token punctuation">,</span>
+      <span class="token literal-property property">tokenId</span><span class="token operator">:</span> details<span class="token punctuation">.</span>tokenId<span class="token punctuation">,</span>
+      <span class="token literal-property property">clientId</span><span class="token operator">:</span> details<span class="token punctuation">.</span>clientId<span class="token punctuation">,</span>
+      <span class="token literal-property property">userAgent</span><span class="token operator">:</span> details<span class="token punctuation">.</span>userAgent<span class="token punctuation">,</span>
+      <span class="token literal-property property">ipAddress</span><span class="token operator">:</span> details<span class="token punctuation">.</span>ipAddress<span class="token punctuation">,</span>
+      <span class="token literal-property property">environment</span><span class="token operator">:</span> process<span class="token punctuation">.</span>env<span class="token punctuation">.</span><span class="token constant">NODE_ENV</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>logEntry<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Send to monitoring system</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">sendToMonitoring</span><span class="token punctuation">(</span>logEntry<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token keyword">static</span> <span class="token function">alertSecurityEvent</span><span class="token punctuation">(</span><span class="token parameter">event<span class="token punctuation">,</span> details</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> alert <span class="token operator">=</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">severity</span><span class="token operator">:</span> <span class="token string">'HIGH'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">event</span><span class="token operator">:</span> event<span class="token punctuation">,</span>
+      <span class="token literal-property property">timestamp</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toISOString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">details</span><span class="token operator">:</span> details
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    
+    console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">'SECURITY ALERT:'</span><span class="token punctuation">,</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>alert<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Send immediate alert to security team</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">sendSecurityAlert</span><span class="token punctuation">(</span>alert<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token keyword">static</span> <span class="token function">trackMetric</span><span class="token punctuation">(</span><span class="token parameter">metric<span class="token punctuation">,</span> value<span class="token punctuation">,</span> tags <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// Track validation performance metrics</span>
+    metrics<span class="token punctuation">.</span><span class="token function">increment</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">scotaccount.validation.</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>metric<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> value<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">environment</span><span class="token operator">:</span> process<span class="token punctuation">.</span>env<span class="token punctuation">.</span><span class="token constant">NODE_ENV</span><span class="token punctuation">,</span>
+      <span class="token operator">...</span>tags
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Usage examples throughout validation process</span>
+TokenValidationMonitoring<span class="token punctuation">.</span><span class="token function">logValidationEvent</span><span class="token punctuation">(</span><span class="token string">'token_validation_started'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">userId</span><span class="token operator">:</span> <span class="token string">'unknown'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">tokenId</span><span class="token operator">:</span> decodedToken<span class="token operator">?.</span>jti
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+TokenValidationMonitoring<span class="token punctuation">.</span><span class="token function">trackMetric</span><span class="token punctuation">(</span><span class="token string">'validation_success'</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">token_type</span><span class="token operator">:</span> <span class="token string">'id_token'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+TokenValidationMonitoring<span class="token punctuation">.</span><span class="token function">alertSecurityEvent</span><span class="token punctuation">(</span><span class="token string">'audience_mismatch'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">expected</span><span class="token operator">:</span> expectedClientId<span class="token punctuation">,</span>
+  <span class="token literal-property property">received</span><span class="token operator">:</span> payload<span class="token punctuation">.</span>aud
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <ul>
 <li><strong>Validation failure tracking</strong> and pattern investigation</li>
 <li><strong>Token expiration monitoring</strong> to detect issues</li>
 <li><strong>Signature validation alerts</strong> for potential attacks</li>
 <li><strong>Validation event logging</strong> for audit purposes</li>
+<li><strong>JWKS refresh frequency</strong> monitoring</li>
+<li><strong>State persistence cleanup</strong> monitoring</li>
+<li><strong>Authentication flow completion rates</strong></li>
 </ul>
 <h2 id="next-steps" tabindex="-1"><a class="header-anchor" href="#next-steps"><span>Next Steps</span></a></h2>
 <div class="callout callout--success">
@@ -467,7 +679,7 @@ app<span class="token punctuation">.</span><span class="token function">get</spa
 
 
       
-      <footer class="content-footer"><p><small>Last updated: 27 August 2025</small></p></footer>
+      <footer class="content-footer"><p><small>Last updated: 5 September 2025</small></p></footer>
       
     </main>
   </div>

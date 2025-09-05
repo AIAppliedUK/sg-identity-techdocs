@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  
+  
+  
+  
+
+  <title>Testing Guide | ScotAccount Technical Documentation</title>
+  <meta name="description" content="Comprehensive testing guide for ScotAccount integration">
+
+  
+  <link rel="canonical" href="https://scotaccount.github.io/sg-identity-techdocs/testing-guide/">
+
+  
+  <link rel="icon" type="image/x-icon" href="/sg-identity-techdocs/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/sg-identity-techdocs/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/sg-identity-techdocs/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/sg-identity-techdocs/favicon-16x16.png">
+  <link rel="mask-icon" href="/sg-identity-techdocs/safari-pinned-tab.svg" color="#0065bd">
+
+  
+  <link rel="stylesheet" href="/sg-identity-techdocs/css/main.css">
+
+  
+  <meta property="og:title" content="Testing Guide">
+  <meta property="og:description" content="Comprehensive testing guide for ScotAccount integration">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://scotaccount.github.io/sg-identity-techdocs/testing-guide/">
+  <meta property="og:image" content="https://scotaccount.github.io/sg-identity-techdocs/apple-touch-icon.png">
+
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Testing Guide",
+    "description": "Comprehensive testing guide for ScotAccount integration",
+    "url": "https://scotaccount.github.io/sg-identity-techdocs/testing-guide/",
+    "image": "https://scotaccount.github.io/sg-identity-techdocs/apple-touch-icon.png",
+    "author": {
+      "@type": "Organization",
+      "name": "Scottish Government",
+      "url": "https://www.gov.scot"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Scottish Government",
+      "url": "https://www.gov.scot"
+    }
+  }
+  </script>
+</head>
+
+<body>
+  <!-- Cookie banner and skip link as you had, if needed -->
+
+  <header class="sg-header" role="banner">
+    <div class="sg-header__wrapper">
+      <div class="sg-header__branding">
+        <a href="/sg-identity-techdocs/" class="sg-header__logo">
+          <img src="/sg-identity-techdocs/assets/scotgovlogo.svg" alt="Scottish Government" class="sg-header__logo-image">
+        </a>
+      </div>
+      <div class="sg-header__search">
+        <form class="sg-header__search-form" role="search" action="/sg-identity-techdocs/search" method="get">
+          <label for="search-input" class="sg-header__search-label">Search</label>
+          <input type="search" id="search-input" name="q" class="sg-header__search-input" placeholder="Search">
+          <button type="submit" class="sg-header__search-button" aria-label="Search">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+              <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  
+  <nav class="site-nav" role="navigation" aria-label="Main navigation">
+    <div class="site-nav__wrapper">
+      <ul class="site-nav__list" id="nav-menu">
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/" class="site-nav__link">
+              Home
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/getting-started/" class="site-nav__link">
+              Getting Started
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/architecture/" class="site-nav__link">
+              Architecture
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/scotaccount-guide/" class="site-nav__link">
+              Implementation
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/scotaccount-complete-guide/" class="site-nav__link">
+              Complete Guide
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/testing-guide/" class="site-nav__link site-nav__link--active">
+              Testing Guide
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/error-reference/" class="site-nav__link">
+              Error Reference
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/integration-examples/" class="site-nav__link">
+              Integration Examples
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link">
+              Token Validation
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    
+    <aside class="sidebar" role="complementary" aria-label="Page navigation">
+      <h3 class="sidebar__title">On this page</h3>
+      <div class="sidebar__toc" id="page-toc">
+        
+      </div>
+    </aside>
+
+    <main class="main" id="main-content" role="main" tabindex="-1">
+      <h1>Testing Guide</h1>
+      <p class="lead">Comprehensive testing guide for ScotAccount integration</p>
+
+      <p>A complete guide to testing your ScotAccount integration using the mock service, demo Relying Party, and automated testing approaches. This guide covers both manual and automated testing strategies to ensure robust integration before production deployment.</p>
+<h2 id="quick-connectivity-test" tabindex="-1"><a class="header-anchor" href="#quick-connectivity-test"><span>Quick Connectivity Test</span></a></h2>
+<p>Before diving into complex integration testing, verify basic connectivity to ScotAccount services:</p>
+<h3 id="simple-health-check" tabindex="-1"><a class="header-anchor" href="#simple-health-check"><span>Simple Health Check</span></a></h3>
+<pre class="language-bash"><code class="language-bash"><span class="token comment"># Test discovery endpoint connectivity</span>
+<span class="token function">curl</span> <span class="token parameter variable">-X</span> GET https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration
+
+<span class="token comment"># Expected response: JSON configuration document</span>
+<span class="token comment"># Response time should be &lt; 500ms</span></code></pre>
+<h3 id="discovery-endpoint-validation" tabindex="-1"><a class="header-anchor" href="#discovery-endpoint-validation"><span>Discovery Endpoint Validation</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">testConnectivity</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> discoveryUrl <span class="token operator">=</span> <span class="token string">'https://authz.integration.scotaccount.service.gov.scot/.well-known/openid-configuration'</span><span class="token punctuation">;</span>
+  
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span>discoveryUrl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>response<span class="token punctuation">.</span>ok<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">HTTP </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>response<span class="token punctuation">.</span>status<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    
+    <span class="token keyword">const</span> config <span class="token operator">=</span> <span class="token keyword">await</span> response<span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Validate required endpoints exist</span>
+    <span class="token keyword">const</span> requiredEndpoints <span class="token operator">=</span> <span class="token punctuation">[</span>
+      <span class="token string">'authorization_endpoint'</span><span class="token punctuation">,</span>
+      <span class="token string">'token_endpoint'</span><span class="token punctuation">,</span>
+      <span class="token string">'jwks_uri'</span><span class="token punctuation">,</span>
+      <span class="token string">'issuer'</span>
+    <span class="token punctuation">]</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> endpoint <span class="token keyword">of</span> requiredEndpoints<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>config<span class="token punctuation">[</span>endpoint<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Missing </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>endpoint<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'✓ Connectivity test passed'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'✓ All required endpoints available'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">'✗ Connectivity test failed:'</span><span class="token punctuation">,</span> error<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h2 id="testing-environments" tabindex="-1"><a class="header-anchor" href="#testing-environments"><span>Testing Environments</span></a></h2>
+<p>ScotAccount provides dedicated testing environments to support your development and integration testing needs.</p>
+<h3 id="environment-urls" tabindex="-1"><a class="header-anchor" href="#environment-urls"><span>Environment URLs</span></a></h3>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Purpose</th>
+<th>Base URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mock Service</strong></td>
+<td>Automated testing without UI</td>
+<td><code>https://mock-dis.main.integration.scotaccount.service.gov.scot/v2/</code></td>
+</tr>
+<tr>
+<td><strong>Demo RP</strong></td>
+<td>Manual testing interface</td>
+<td><code>https://oidc-private-client.integration.scotaccount.service.gov.scot/integration</code></td>
+</tr>
+<tr>
+<td><strong>Demo RP (Mock)</strong></td>
+<td>Demo RP pointing to mock service</td>
+<td><code>https://oidc-private-client.integration.scotaccount.service.gov.scot/mock-dis/v2/</code></td>
+</tr>
+<tr>
+<td><strong>Integration</strong></td>
+<td>Full integration testing</td>
+<td><code>https://authz.integration.scotaccount.service.gov.scot</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="mock-service-documentation" tabindex="-1"><a class="header-anchor" href="#mock-service-documentation"><span>Mock Service Documentation</span></a></h2>
+<p>The mock service provides a simplified ScotAccount implementation for automated testing. It bypasses user interaction whilst maintaining the same API interface as the production service.</p>
+<h3 id="mock-service-url" tabindex="-1"><a class="header-anchor" href="#mock-service-url"><span>Mock Service URL</span></a></h3>
+<pre><code>https://mock-dis.main.integration.scotaccount.service.gov.scot/v2/
+</code></pre>
+<h3 id="mock-service-endpoints" tabindex="-1"><a class="header-anchor" href="#mock-service-endpoints"><span>Mock Service Endpoints</span></a></h3>
+<p>The mock service provides three core endpoints:</p>
+<ol>
+<li>
+<p><strong>Authorisation Endpoint</strong>: <code>/authorize</code></p>
+<ul>
+<li>Handles the authorisation process</li>
+<li>Returns authorisation codes without user interaction</li>
+</ul>
+</li>
+<li>
+<p><strong>Token Endpoint</strong>: <code>/token</code></p>
+<ul>
+<li>Exchanges authorisation codes for tokens</li>
+<li>Returns mock tokens with valid structure</li>
+</ul>
+</li>
+<li>
+<p><strong>Attributes Endpoint</strong>: <code>/attributes/values</code></p>
+<ul>
+<li>Returns mock verified attribute data</li>
+<li>Supports all standard attribute scopes</li>
+</ul>
+</li>
+</ol>
+<h3 id="important-mock-service-limitations" tabindex="-1"><a class="header-anchor" href="#important-mock-service-limitations"><span>Important Mock Service Limitations</span></a></h3>
+<div class="callout callout--warning">
+<strong>Critical: Mock Service Validation Differences</strong>
+<p>The mock service does NOT validate the following security parameters:</p>
+<ul>
+<li><strong>code_challenge</strong> - Value not validated (PKCE bypass)</li>
+<li><strong>code_verifier</strong> - Value not validated (PKCE bypass)</li>
+<li><strong>client_id</strong> - Value not validated (any client_id accepted)</li>
+<li><strong>prompt</strong> - Parameter ignored</li>
+<li><strong>nonce</strong> - Parameter ignored</li>
+<li><strong>JWT claims</strong> - sub, iss, and aud claims not validated in client assertions</li>
+</ul>
+<p>These limitations make the mock service unsuitable for security testing but ideal for functional testing.</p>
+</div>
+<h3 id="mock-service-request-examples" tabindex="-1"><a class="header-anchor" href="#mock-service-request-examples"><span>Mock Service Request Examples</span></a></h3>
+<h4 id="authorisation-request-to-mock-service" tabindex="-1"><a class="header-anchor" href="#authorisation-request-to-mock-service"><span>Authorisation Request to Mock Service</span></a></h4>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Mock service authorisation - no user interaction required</span>
+<span class="token keyword">const</span> mockAuthUrl <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">URL</span><span class="token punctuation">(</span><span class="token string">'https://mock-dis.main.integration.scotaccount.service.gov.scot/v2/authorize'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+mockAuthUrl<span class="token punctuation">.</span>searchParams<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">'client_id'</span><span class="token punctuation">,</span> <span class="token string">'test-client'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Any value accepted</span>
+mockAuthUrl<span class="token punctuation">.</span>searchParams<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">'redirect_uri'</span><span class="token punctuation">,</span> <span class="token string">'https://localhost:3000/callback'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+mockAuthUrl<span class="token punctuation">.</span>searchParams<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">'response_type'</span><span class="token punctuation">,</span> <span class="token string">'code'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+mockAuthUrl<span class="token punctuation">.</span>searchParams<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">'scope'</span><span class="token punctuation">,</span> <span class="token string">'openid gpg-45-medium'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+mockAuthUrl<span class="token punctuation">.</span>searchParams<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">'state'</span><span class="token punctuation">,</span> <span class="token string">'test-state-123'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+mockAuthUrl<span class="token punctuation">.</span>searchParams<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">'nonce'</span><span class="token punctuation">,</span> <span class="token string">'test-nonce-456'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Ignored but include for compatibility</span>
+mockAuthUrl<span class="token punctuation">.</span>searchParams<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">'code_challenge'</span><span class="token punctuation">,</span> <span class="token string">'dummy-challenge'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Not validated</span>
+mockAuthUrl<span class="token punctuation">.</span>searchParams<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">'code_challenge_method'</span><span class="token punctuation">,</span> <span class="token string">'S256'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Mock service returns immediate redirect with auth code</span>
+<span class="token comment">// No user interaction required</span></code></pre>
+<h4 id="token-exchange-with-mock-service" tabindex="-1"><a class="header-anchor" href="#token-exchange-with-mock-service"><span>Token Exchange with Mock Service</span></a></h4>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">getMockToken</span><span class="token punctuation">(</span><span class="token parameter">authCode</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token string">'https://mock-dis.main.integration.scotaccount.service.gov.scot/v2/token'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">method</span><span class="token operator">:</span> <span class="token string">'POST'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">headers</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token string-property property">'Content-Type'</span><span class="token operator">:</span> <span class="token string">'application/x-www-form-urlencoded'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">body</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">URLSearchParams</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token literal-property property">grant_type</span><span class="token operator">:</span> <span class="token string">'authorization_code'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">code</span><span class="token operator">:</span> authCode<span class="token punctuation">,</span>
+      <span class="token literal-property property">redirect_uri</span><span class="token operator">:</span> <span class="token string">'https://localhost:3000/callback'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">client_assertion_type</span><span class="token operator">:</span> <span class="token string">'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">client_assertion</span><span class="token operator">:</span> <span class="token string">'dummy-jwt-assertion'</span><span class="token punctuation">,</span> <span class="token comment">// Not validated</span>
+      <span class="token literal-property property">code_verifier</span><span class="token operator">:</span> <span class="token string">'dummy-verifier'</span> <span class="token comment">// Not validated</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token keyword">return</span> <span class="token keyword">await</span> response<span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="mock-attributes-request" tabindex="-1"><a class="header-anchor" href="#mock-attributes-request"><span>Mock Attributes Request</span></a></h4>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">getMockAttributes</span><span class="token punctuation">(</span><span class="token parameter">accessToken</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token string">'https://mock-dis.main.integration.scotaccount.service.gov.scot/v2/attributes/values'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">method</span><span class="token operator">:</span> <span class="token string">'POST'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">headers</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token string-property property">'Authorization'</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Bearer </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>accessToken<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+      <span class="token string-property property">'DIS-Client-Assertion'</span><span class="token operator">:</span> <span class="token string">'dummy-assertion'</span><span class="token punctuation">,</span> <span class="token comment">// Not validated</span>
+      <span class="token string-property property">'Content-Type'</span><span class="token operator">:</span> <span class="token string">'application/json'</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token keyword">return</span> <span class="token keyword">await</span> response<span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="mock-service-response-examples" tabindex="-1"><a class="header-anchor" href="#mock-service-response-examples"><span>Mock Service Response Examples</span></a></h3>
+<h4 id="mock-id-token-claims" tabindex="-1"><a class="header-anchor" href="#mock-id-token-claims"><span>Mock ID Token Claims</span></a></h4>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"sub"</span><span class="token operator">:</span> <span class="token string">"mock-user-uuid-12345"</span><span class="token punctuation">,</span>
+  <span class="token property">"aud"</span><span class="token operator">:</span> <span class="token string">"test-client"</span><span class="token punctuation">,</span>
+  <span class="token property">"iss"</span><span class="token operator">:</span> <span class="token string">"https://mock-dis.main.integration.scotaccount.service.gov.scot/v2"</span><span class="token punctuation">,</span>
+  <span class="token property">"iat"</span><span class="token operator">:</span> <span class="token number">1676775009</span><span class="token punctuation">,</span>
+  <span class="token property">"exp"</span><span class="token operator">:</span> <span class="token number">1676775909</span><span class="token punctuation">,</span>
+  <span class="token property">"nonce"</span><span class="token operator">:</span> <span class="token string">"test-nonce-456"</span><span class="token punctuation">,</span>
+  <span class="token property">"sid"</span><span class="token operator">:</span> <span class="token string">"mock-session-id"</span>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="mock-verified-attributes-response" tabindex="-1"><a class="header-anchor" href="#mock-verified-attributes-response"><span>Mock Verified Attributes Response</span></a></h4>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"names"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"nameParts"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"GivenName"</span><span class="token punctuation">,</span>
+          <span class="token property">"value"</span><span class="token operator">:</span> <span class="token string">"Test"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"FamilyName"</span><span class="token punctuation">,</span>
+          <span class="token property">"value"</span><span class="token operator">:</span> <span class="token string">"User"</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"validFrom"</span><span class="token operator">:</span> <span class="token string">"2020-01-01"</span><span class="token punctuation">,</span>
+      <span class="token property">"validUntil"</span><span class="token operator">:</span> <span class="token string">"2025-12-31"</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"birthDates"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"value"</span><span class="token operator">:</span> <span class="token string">"1990-01-01"</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"addresses"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"buildingNumber"</span><span class="token operator">:</span> <span class="token string">"1"</span><span class="token punctuation">,</span>
+      <span class="token property">"streetName"</span><span class="token operator">:</span> <span class="token string">"Test Street"</span><span class="token punctuation">,</span>
+      <span class="token property">"addressLocality"</span><span class="token operator">:</span> <span class="token string">"Edinburgh"</span><span class="token punctuation">,</span>
+      <span class="token property">"postalCode"</span><span class="token operator">:</span> <span class="token string">"EH1 1AA"</span><span class="token punctuation">,</span>
+      <span class="token property">"addressCountry"</span><span class="token operator">:</span> <span class="token string">"GB"</span><span class="token punctuation">,</span>
+      <span class="token property">"validFrom"</span><span class="token operator">:</span> <span class="token string">"2020-01-01"</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre>
+<h2 id="demo-relying-party-application" tabindex="-1"><a class="header-anchor" href="#demo-relying-party-application"><span>Demo Relying Party Application</span></a></h2>
+<p>The Demo RP provides a web interface for manual testing of your integration configuration.</p>
+<h3 id="demo-rp-urls" tabindex="-1"><a class="header-anchor" href="#demo-rp-urls"><span>Demo RP URLs</span></a></h3>
+<ul>
+<li><strong>Integration Backend</strong>: <code>https://oidc-private-client.integration.scotaccount.service.gov.scot/integration</code></li>
+<li><strong>Mock Backend</strong>: <code>https://oidc-private-client.integration.scotaccount.service.gov.scot/mock-dis/v2/</code></li>
+</ul>
+<h3 id="using-the-demo-rp" tabindex="-1"><a class="header-anchor" href="#using-the-demo-rp"><span>Using the Demo RP</span></a></h3>
+<ol>
+<li><strong>Access the Demo RP</strong> at the appropriate URL</li>
+<li><strong>Configure your parameters</strong>:
+<ul>
+<li>Client ID (use your registered client_id for integration)</li>
+<li>Redirect URI</li>
+<li>Requested scopes</li>
+</ul>
+</li>
+<li><strong>Initiate authentication flow</strong></li>
+<li><strong>Complete the authentication process</strong></li>
+<li><strong>Review the returned tokens and claims</strong></li>
+</ol>
+<h3 id="demo-rp-features" tabindex="-1"><a class="header-anchor" href="#demo-rp-features"><span>Demo RP Features</span></a></h3>
+<ul>
+<li>Visual flow progression tracking</li>
+<li>Token decoding and display</li>
+<li>Error message display</li>
+<li>Request/response logging</li>
+<li>Scope testing interface</li>
+</ul>
+<h2 id="manual-testing-procedures" tabindex="-1"><a class="header-anchor" href="#manual-testing-procedures"><span>Manual Testing Procedures</span></a></h2>
+<h3 id="authentication-flow-testing" tabindex="-1"><a class="header-anchor" href="#authentication-flow-testing"><span>Authentication Flow Testing</span></a></h3>
+<h4 id="test-case-1-basic-authentication" tabindex="-1"><a class="header-anchor" href="#test-case-1-basic-authentication"><span>Test Case 1: Basic Authentication</span></a></h4>
+<pre class="language-gherkin"><code class="language-gherkin">Given a user with valid ScotAccount credentials
+When the user initiates authentication with scope <span class="token string">"openid"</span>
+Then the user should be redirected to ScotAccount login
+And after successful authentication
+Then an authorisation code should be returned
+And the code should be exchangeable for tokens
+And the ID token should contain a valid sub claim</code></pre>
+<h4 id="test-case-2-verified-attributes-request" tabindex="-1"><a class="header-anchor" href="#test-case-2-verified-attributes-request"><span>Test Case 2: Verified Attributes Request</span></a></h4>
+<pre class="language-gherkin"><code class="language-gherkin">Given a user with verified identity attributes
+When the user requests scope <span class="token string">"openid gpg-45-medium"</span>
+Then the user should see a consent screen
+And after granting consent
+Then verified attributes should be retrievable
+And attributes should match the requested scope</code></pre>
+<h4 id="test-case-3-user-cancellation" tabindex="-1"><a class="header-anchor" href="#test-case-3-user-cancellation"><span>Test Case 3: User Cancellation</span></a></h4>
+<pre class="language-gherkin"><code class="language-gherkin">Given a user at the ScotAccount login screen
+When the user cancels the authentication
+Then the user should be redirected with error <span class="token string">"access_denied"</span>
+And the error_description should indicate cancellation
+And the state parameter should be preserved</code></pre>
+<h3 id="manual-testing-checklist" tabindex="-1"><a class="header-anchor" href="#manual-testing-checklist"><span>Manual Testing Checklist</span></a></h3>
+<ul>
+<li>[ ] <strong>Discovery endpoint accessible</strong></li>
+<li>[ ] <strong>JWKS endpoint returns valid keys</strong></li>
+<li>[ ] <strong>Authentication flow completes successfully</strong></li>
+<li>[ ] <strong>State parameter validated correctly</strong></li>
+<li>[ ] <strong>Nonce claim present in ID token</strong></li>
+<li>[ ] <strong>Session management working (4-hour timeout)</strong></li>
+<li>[ ] <strong>Logout flow completes successfully</strong></li>
+<li>[ ] <strong>Error handling for invalid parameters</strong></li>
+<li>[ ] <strong>Verified attributes retrieval (if applicable)</strong></li>
+<li>[ ] <strong>Token expiration handled correctly</strong></li>
+</ul>
+<h2 id="automated-testing-approaches" tabindex="-1"><a class="header-anchor" href="#automated-testing-approaches"><span>Automated Testing Approaches</span></a></h2>
+<h3 id="unit-testing-pkce-implementation" tabindex="-1"><a class="header-anchor" href="#unit-testing-pkce-implementation"><span>Unit Testing PKCE Implementation</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'PKCE Implementation'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'should generate valid code verifier'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> verifier <span class="token operator">=</span> <span class="token function">generateCodeVerifier</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>verifier<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toMatch</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">^[A-Za-z0-9-._~]{43,128}$</span><span class="token regex-delimiter">/</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'should generate correct code challenge'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> verifier <span class="token operator">=</span> <span class="token string">'test-verifier-string'</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> challenge <span class="token operator">=</span> <span class="token function">generateCodeChallenge</span><span class="token punctuation">(</span>verifier<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Verify SHA256 hash</span>
+    <span class="token keyword">const</span> expected <span class="token operator">=</span> <span class="token function">base64UrlEncode</span><span class="token punctuation">(</span>
+      crypto<span class="token punctuation">.</span><span class="token function">createHash</span><span class="token punctuation">(</span><span class="token string">'sha256'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>verifier<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">digest</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token function">expect</span><span class="token punctuation">(</span>challenge<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span>expected<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'should handle state persistence'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> state <span class="token operator">=</span> <span class="token function">generateState</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    sessionStorage<span class="token punctuation">.</span><span class="token function">setItem</span><span class="token punctuation">(</span><span class="token string">'oauth_state'</span><span class="token punctuation">,</span> state<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Simulate callback</span>
+    <span class="token keyword">const</span> returnedState <span class="token operator">=</span> state<span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">validateState</span><span class="token punctuation">(</span>returnedState<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h3 id="integration-testing-with-mock-service" tabindex="-1"><a class="header-anchor" href="#integration-testing-with-mock-service"><span>Integration Testing with Mock Service</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'ScotAccount Integration'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> mockServiceBase <span class="token operator">=</span> <span class="token string">'https://mock-dis.main.integration.scotaccount.service.gov.scot/v2'</span><span class="token punctuation">;</span>
+  
+  <span class="token function">beforeEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Setup test client</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>client <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ScotAccountClient</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token literal-property property">baseUrl</span><span class="token operator">:</span> mockServiceBase<span class="token punctuation">,</span>
+      <span class="token literal-property property">clientId</span><span class="token operator">:</span> <span class="token string">'test-client'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">redirectUri</span><span class="token operator">:</span> <span class="token string">'http://localhost:3000/callback'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'should complete full authentication flow'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Start authentication</span>
+    <span class="token keyword">const</span> authUrl <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token keyword">this</span><span class="token punctuation">.</span>client<span class="token punctuation">.</span><span class="token function">createAuthUrl</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token literal-property property">scope</span><span class="token operator">:</span> <span class="token string">'openid'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">state</span><span class="token operator">:</span> <span class="token string">'test-state'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">nonce</span><span class="token operator">:</span> <span class="token string">'test-nonce'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token function">expect</span><span class="token punctuation">(</span>authUrl<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toContain</span><span class="token punctuation">(</span><span class="token string">'/authorize'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>authUrl<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toContain</span><span class="token punctuation">(</span><span class="token string">'client_id=test-client'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Simulate authorisation callback</span>
+    <span class="token keyword">const</span> authCode <span class="token operator">=</span> <span class="token string">'mock-auth-code'</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Exchange code for tokens</span>
+    <span class="token keyword">const</span> tokens <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token keyword">this</span><span class="token punctuation">.</span>client<span class="token punctuation">.</span><span class="token function">exchangeCode</span><span class="token punctuation">(</span>authCode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token function">expect</span><span class="token punctuation">(</span>tokens<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveProperty</span><span class="token punctuation">(</span><span class="token string">'access_token'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>tokens<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveProperty</span><span class="token punctuation">(</span><span class="token string">'id_token'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Decode and validate ID token (mock service doesn't sign properly)</span>
+    <span class="token keyword">const</span> idToken <span class="token operator">=</span> <span class="token function">decodeJwt</span><span class="token punctuation">(</span>tokens<span class="token punctuation">.</span>id_token<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>idToken<span class="token punctuation">.</span>sub<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeTruthy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>idToken<span class="token punctuation">.</span>aud<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token string">'test-client'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'should retrieve verified attributes'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Get access token first</span>
+    <span class="token keyword">const</span> tokens <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token keyword">this</span><span class="token punctuation">.</span>client<span class="token punctuation">.</span><span class="token function">authenticate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Request attributes</span>
+    <span class="token keyword">const</span> attributes <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token keyword">this</span><span class="token punctuation">.</span>client<span class="token punctuation">.</span><span class="token function">getAttributes</span><span class="token punctuation">(</span>tokens<span class="token punctuation">.</span>access_token<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token function">expect</span><span class="token punctuation">(</span>attributes<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveProperty</span><span class="token punctuation">(</span><span class="token string">'names'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>attributes<span class="token punctuation">.</span>names<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveProperty</span><span class="token punctuation">(</span><span class="token string">'nameParts'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'should handle errors correctly'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Test with invalid auth code</span>
+    <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>client<span class="token punctuation">.</span><span class="token function">exchangeCode</span><span class="token punctuation">(</span><span class="token string">'invalid-code'</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span><span class="token punctuation">.</span>rejects<span class="token punctuation">.</span><span class="token function">toThrow</span><span class="token punctuation">(</span><span class="token string">'invalid_grant'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h3 id="end-to-end-testing" tabindex="-1"><a class="header-anchor" href="#end-to-end-testing"><span>End-to-End Testing</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'E2E Authentication Flow'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'should complete authentication with real interaction'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> browser <span class="token operator">=</span> <span class="token keyword">await</span> puppeteer<span class="token punctuation">.</span><span class="token function">launch</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> page <span class="token operator">=</span> <span class="token keyword">await</span> browser<span class="token punctuation">.</span><span class="token function">newPage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+      <span class="token comment">// Navigate to your application</span>
+      <span class="token keyword">await</span> page<span class="token punctuation">.</span><span class="token function">goto</span><span class="token punctuation">(</span><span class="token string">'http://localhost:3000'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      
+      <span class="token comment">// Click login button</span>
+      <span class="token keyword">await</span> page<span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token string">'#login-button'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      
+      <span class="token comment">// Wait for redirect to ScotAccount</span>
+      <span class="token keyword">await</span> page<span class="token punctuation">.</span><span class="token function">waitForNavigation</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">expect</span><span class="token punctuation">(</span>page<span class="token punctuation">.</span><span class="token function">url</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toContain</span><span class="token punctuation">(</span><span class="token string">'scotaccount.service.gov.scot'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      
+      <span class="token comment">// For mock service, authentication is automatic</span>
+      <span class="token comment">// For integration environment, you would need test credentials</span>
+      
+      <span class="token comment">// Wait for callback</span>
+      <span class="token keyword">await</span> page<span class="token punctuation">.</span><span class="token function">waitForFunction</span><span class="token punctuation">(</span>
+        <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> window<span class="token punctuation">.</span>location<span class="token punctuation">.</span>pathname <span class="token operator">===</span> <span class="token string">'/callback'</span>
+      <span class="token punctuation">)</span><span class="token punctuation">;</span>
+      
+      <span class="token comment">// Verify successful authentication</span>
+      <span class="token keyword">const</span> userInfo <span class="token operator">=</span> <span class="token keyword">await</span> page<span class="token punctuation">.</span><span class="token function">evaluate</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>localStorage<span class="token punctuation">.</span><span class="token function">getItem</span><span class="token punctuation">(</span><span class="token string">'user'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      
+      <span class="token function">expect</span><span class="token punctuation">(</span>userInfo<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveProperty</span><span class="token punctuation">(</span><span class="token string">'sub'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      
+    <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+      <span class="token keyword">await</span> browser<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h3 id="load-testing" tabindex="-1"><a class="header-anchor" href="#load-testing"><span>Load Testing</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> <span class="token function-variable function">loadTest</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> scenarios <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Authentication Flow'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">weight</span><span class="token operator">:</span> <span class="token number">70</span><span class="token punctuation">,</span> <span class="token comment">// 70% of traffic</span>
+      <span class="token function-variable function">fn</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        <span class="token keyword">await</span> <span class="token function">testAuthenticationFlow</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Token Exchange'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">weight</span><span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span> <span class="token comment">// 20% of traffic</span>
+      <span class="token function-variable function">fn</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        <span class="token keyword">await</span> <span class="token function">testTokenExchange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Attribute Retrieval'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">weight</span><span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token comment">// 10% of traffic</span>
+      <span class="token function-variable function">fn</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        <span class="token keyword">await</span> <span class="token function">testAttributeRetrieval</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">;</span>
+  
+  <span class="token comment">// Run load test</span>
+  <span class="token keyword">const</span> results <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">runLoadTest</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    scenarios<span class="token punctuation">,</span>
+    <span class="token literal-property property">duration</span><span class="token operator">:</span> <span class="token number">300</span><span class="token punctuation">,</span> <span class="token comment">// 5 minutes</span>
+    <span class="token literal-property property">rampUp</span><span class="token operator">:</span> <span class="token number">60</span><span class="token punctuation">,</span> <span class="token comment">// 1 minute ramp-up</span>
+    <span class="token literal-property property">targetRPS</span><span class="token operator">:</span> <span class="token number">10</span> <span class="token comment">// 10 requests per second</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token comment">// Analyse results</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Load Test Results:'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Average response time: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>results<span class="token punctuation">.</span>avgResponseTime<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">ms</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">95th percentile: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>results<span class="token punctuation">.</span>p95<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">ms</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Error rate: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>results<span class="token punctuation">.</span>errorRate<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">%</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
+<h2 id="test-data-management" tabindex="-1"><a class="header-anchor" href="#test-data-management"><span>Test Data Management</span></a></h2>
+<h3 id="mock-user-profiles" tabindex="-1"><a class="header-anchor" href="#mock-user-profiles"><span>Mock User Profiles</span></a></h3>
+<p>The mock service supports different user profiles based on the requested scopes:</p>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Mock Data Returned</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>openid</code></td>
+<td>Basic user identifier only</td>
+</tr>
+<tr>
+<td><code>openid gpg-45-low</code></td>
+<td>Name and date of birth</td>
+</tr>
+<tr>
+<td><code>openid gpg-45-medium</code></td>
+<td>Name, date of birth, and address</td>
+</tr>
+<tr>
+<td><code>openid gpg-45-high</code></td>
+<td>All available attributes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="test-data-examples" tabindex="-1"><a class="header-anchor" href="#test-data-examples"><span>Test Data Examples</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> testUsers <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">basic</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">sub</span><span class="token operator">:</span> <span class="token string">'test-user-001'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Test User'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">verified</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">sub</span><span class="token operator">:</span> <span class="token string">'test-user-002'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Verified User'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">birthDate</span><span class="token operator">:</span> <span class="token string">'1990-01-01'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">address</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">street</span><span class="token operator">:</span> <span class="token string">'1 Test Street'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">city</span><span class="token operator">:</span> <span class="token string">'Edinburgh'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">postcode</span><span class="token operator">:</span> <span class="token string">'EH1 1AA'</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
+<h2 id="security-testing-considerations" tabindex="-1"><a class="header-anchor" href="#security-testing-considerations"><span>Security Testing Considerations</span></a></h2>
+<h3 id="what-the-mock-service-does-not-test" tabindex="-1"><a class="header-anchor" href="#what-the-mock-service-does-not-test"><span>What the Mock Service Does NOT Test</span></a></h3>
+<div class="callout callout--danger">
+<strong>Warning: Security Features Not Tested by Mock Service</strong>
+<p>The mock service cannot be used to test:</p>
+<ul>
+<li>PKCE security (code_challenge/code_verifier validation)</li>
+<li>Client authentication (client_id validation)</li>
+<li>JWT signature validation</li>
+<li>Token expiration</li>
+<li>Rate limiting</li>
+<li>Session security</li>
+<li>Nonce validation</li>
+</ul>
+<p>Always perform security testing against the integration environment with proper validation enabled.</p>
+</div>
+<h3 id="security-test-cases-for-integration-environment" tabindex="-1"><a class="header-anchor" href="#security-test-cases-for-integration-environment"><span>Security Test Cases for Integration Environment</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'Security Tests (Integration Environment)'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'should reject invalid code_verifier'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> validVerifier <span class="token operator">=</span> <span class="token function">generateCodeVerifier</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> validChallenge <span class="token operator">=</span> <span class="token function">generateCodeChallenge</span><span class="token punctuation">(</span>validVerifier<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Get auth code with valid challenge</span>
+    <span class="token keyword">const</span> authCode <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">getAuthCode</span><span class="token punctuation">(</span>validChallenge<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Try to exchange with wrong verifier</span>
+    <span class="token keyword">const</span> wrongVerifier <span class="token operator">=</span> <span class="token string">'wrong-verifier'</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>
+      <span class="token function">exchangeCode</span><span class="token punctuation">(</span>authCode<span class="token punctuation">,</span> wrongVerifier<span class="token punctuation">)</span>
+    <span class="token punctuation">)</span><span class="token punctuation">.</span>rejects<span class="token punctuation">.</span><span class="token function">toThrow</span><span class="token punctuation">(</span><span class="token string">'invalid_grant'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'should reject expired JWT assertions'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> expiredJwt <span class="token operator">=</span> <span class="token function">generateJwt</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token literal-property property">exp</span><span class="token operator">:</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">1000</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">3600</span> <span class="token comment">// Expired 1 hour ago</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">await</span> <span class="token function">expect</span><span class="token punctuation">(</span>
+      <span class="token function">exchangeCodeWithAssertion</span><span class="token punctuation">(</span>authCode<span class="token punctuation">,</span> expiredJwt<span class="token punctuation">)</span>
+    <span class="token punctuation">)</span><span class="token punctuation">.</span>rejects<span class="token punctuation">.</span><span class="token function">toThrow</span><span class="token punctuation">(</span><span class="token string">'invalid_client'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'should enforce nonce validation'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> nonce <span class="token operator">=</span> <span class="token string">'test-nonce-123'</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> tokens <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">authenticateWithNonce</span><span class="token punctuation">(</span>nonce<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">const</span> idToken <span class="token operator">=</span> <span class="token function">decodeAndVerifyJwt</span><span class="token punctuation">(</span>tokens<span class="token punctuation">.</span>id_token<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>idToken<span class="token punctuation">.</span>nonce<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span>nonce<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h2 id="performance-testing" tabindex="-1"><a class="header-anchor" href="#performance-testing"><span>Performance Testing</span></a></h2>
+<h3 id="response-time-benchmarks" tabindex="-1"><a class="header-anchor" href="#response-time-benchmarks"><span>Response Time Benchmarks</span></a></h3>
+<p>Expected response times for integration environment:</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Expected Response Time</th>
+<th>Maximum Acceptable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Discovery</td>
+<td>&lt; 200ms</td>
+<td>500ms</td>
+</tr>
+<tr>
+<td>Authorise (redirect)</td>
+<td>&lt; 300ms</td>
+<td>1000ms</td>
+</tr>
+<tr>
+<td>Token Exchange</td>
+<td>&lt; 500ms</td>
+<td>2000ms</td>
+</tr>
+<tr>
+<td>Attributes</td>
+<td>&lt; 400ms</td>
+<td>1500ms</td>
+</tr>
+</tbody>
+</table>
+<h3 id="performance-test-implementation" tabindex="-1"><a class="header-anchor" href="#performance-test-implementation"><span>Performance Test Implementation</span></a></h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">performanceTest</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> metrics <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">discovery</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">token</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">attributes</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  
+  <span class="token comment">// Test discovery endpoint</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">100</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> start <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token constant">DISCOVERY_URL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    metrics<span class="token punctuation">.</span>discovery<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> start<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token comment">// Calculate statistics</span>
+  <span class="token keyword">const</span> stats <span class="token operator">=</span> <span class="token function">calculateStats</span><span class="token punctuation">(</span>metrics<span class="token punctuation">.</span>discovery<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Discovery Endpoint:</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">  Average: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>stats<span class="token punctuation">.</span>mean<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">ms</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">  P95: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>stats<span class="token punctuation">.</span>p95<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">ms</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">  P99: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>stats<span class="token punctuation">.</span>p99<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">ms</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token comment">// Assert performance requirements</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>stats<span class="token punctuation">.</span>p95<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeLessThan</span><span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h2 id="troubleshooting-common-test-issues" tabindex="-1"><a class="header-anchor" href="#troubleshooting-common-test-issues"><span>Troubleshooting Common Test Issues</span></a></h2>
+<h3 id="mock-service-issues" tabindex="-1"><a class="header-anchor" href="#mock-service-issues"><span>Mock Service Issues</span></a></h3>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Cause</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No auth code returned</td>
+<td>Invalid redirect_uri format</td>
+<td>Ensure redirect_uri is properly URL-encoded</td>
+</tr>
+<tr>
+<td>Token exchange fails</td>
+<td>Malformed request</td>
+<td>Check Content-Type header is <code>application/x-www-form-urlencoded</code></td>
+</tr>
+<tr>
+<td>Attributes return empty</td>
+<td>Wrong endpoint URL</td>
+<td>Verify using <code>/v2/attributes/values</code> endpoint</td>
+</tr>
+<tr>
+<td>CORS errors</td>
+<td>Direct browser requests</td>
+<td>Use server-side requests or proxy</td>
+</tr>
+</tbody>
+</table>
+<h3 id="integration-environment-issues" tabindex="-1"><a class="header-anchor" href="#integration-environment-issues"><span>Integration Environment Issues</span></a></h3>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Cause</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Invalid client error</td>
+<td>Unregistered client_id</td>
+<td>Confirm registration with ScotAccount team</td>
+</tr>
+<tr>
+<td>PKCE validation fails</td>
+<td>Incorrect challenge method</td>
+<td>Ensure using SHA256 (<code>S256</code>) method</td>
+</tr>
+<tr>
+<td>Session timeout</td>
+<td>4-hour limit exceeded</td>
+<td>Implement session refresh logic</td>
+</tr>
+<tr>
+<td>Signature validation fails</td>
+<td>Wrong public key</td>
+<td>Fetch current keys from JWKS endpoint</td>
+</tr>
+</tbody>
+</table>
+<h2 id="test-report-template" tabindex="-1"><a class="header-anchor" href="#test-report-template"><span>Test Report Template</span></a></h2>
+<pre class="language-markdown"><code class="language-markdown"><span class="token title important"><span class="token punctuation">##</span> ScotAccount Integration Test Report</span>
+
+<span class="token bold"><span class="token punctuation">**</span><span class="token content">Date</span><span class="token punctuation">**</span></span>: [Date]
+<span class="token bold"><span class="token punctuation">**</span><span class="token content">Environment</span><span class="token punctuation">**</span></span>: [Mock/Integration]
+<span class="token bold"><span class="token punctuation">**</span><span class="token content">Test Suite Version</span><span class="token punctuation">**</span></span>: [Version]
+
+<span class="token title important"><span class="token punctuation">###</span> Test Summary</span>
+<span class="token list punctuation">-</span> Total Tests: [Number]
+<span class="token list punctuation">-</span> Passed: [Number]
+<span class="token list punctuation">-</span> Failed: [Number]
+<span class="token list punctuation">-</span> Skipped: [Number]
+
+<span class="token title important"><span class="token punctuation">###</span> Functional Tests</span>
+<span class="token list punctuation">-</span> [ ] Discovery endpoint configuration
+<span class="token list punctuation">-</span> [ ] Authentication flow
+<span class="token list punctuation">-</span> [ ] Token exchange
+<span class="token list punctuation">-</span> [ ] ID token validation
+<span class="token list punctuation">-</span> [ ] Attribute retrieval
+<span class="token list punctuation">-</span> [ ] Session management
+<span class="token list punctuation">-</span> [ ] Logout flow
+
+<span class="token title important"><span class="token punctuation">###</span> Security Tests</span>
+<span class="token list punctuation">-</span> [ ] PKCE validation
+<span class="token list punctuation">-</span> [ ] State parameter validation
+<span class="token list punctuation">-</span> [ ] Nonce validation
+<span class="token list punctuation">-</span> [ ] JWT signature verification
+<span class="token list punctuation">-</span> [ ] Token expiration
+<span class="token list punctuation">-</span> [ ] Client authentication
+
+<span class="token title important"><span class="token punctuation">###</span> Performance Tests</span>
+<span class="token list punctuation">-</span> Discovery endpoint: [X]ms average
+<span class="token list punctuation">-</span> Token exchange: [X]ms average
+<span class="token list punctuation">-</span> Attribute retrieval: [X]ms average
+
+<span class="token title important"><span class="token punctuation">###</span> Issues Found</span>
+<span class="token list punctuation">1.</span> [Issue description and severity]
+<span class="token list punctuation">2.</span> [Issue description and severity]
+
+<span class="token title important"><span class="token punctuation">###</span> Recommendations</span>
+<span class="token list punctuation">-</span> [Recommendation 1]
+<span class="token list punctuation">-</span> [Recommendation 2]</code></pre>
+<h2 id="next-steps" tabindex="-1"><a class="header-anchor" href="#next-steps"><span>Next Steps</span></a></h2>
+<p>After completing testing:</p>
+<ol>
+<li><strong>Review test coverage</strong> - Ensure all integration points are tested</li>
+<li><strong>Document test results</strong> - Maintain test reports for audit purposes</li>
+<li><strong>Plan production migration</strong> - Create deployment checklist</li>
+<li><strong>Implement monitoring</strong> - Set up production monitoring based on test metrics</li>
+<li><strong>Schedule security review</strong> - Arrange penetration testing if required</li>
+</ol>
+<h2 id="related-documentation" tabindex="-1"><a class="header-anchor" href="#related-documentation"><span>Related Documentation</span></a></h2>
+<ul>
+<li><a href="/sg-identity-techdocs/getting-started/">Getting Started</a> - Initial setup and configuration</li>
+<li><a href="/sg-identity-techdocs/error-reference/">Error Reference</a> - Complete error code documentation</li>
+<li><a href="/sg-identity-techdocs/scotaccount-guide/">Implementation Guide</a> - Detailed technical implementation</li>
+</ul>
+
+
+      
+      <footer class="content-footer"><p><small>Last updated: 5 September 2025</small></p></footer>
+      
+    </main>
+  </div>
+
+  <footer class="sg-footer" role="contentinfo">
+    <!-- your footer blocks as before -->
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
+  <script src="/sg-identity-techdocs/js/search.js"></script>
+  
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const tocContainer = document.getElementById('page-toc');
+      const main = document.querySelector('.main');
+      
+      if (tocContainer && main) {
+        // Find all h2, h3, and h4 headings with IDs
+        const headings = main.querySelectorAll('h2[id], h3[id], h4[id]');
+        
+        if (headings.length > 0) {
+          const tocList = document.createElement('ul');
+          tocList.className = 'sidebar__nav';
+          
+          headings.forEach(heading => {
+            const level = parseInt(heading.tagName.charAt(1));
+            const listItem = document.createElement('li');
+            listItem.className = 'sidebar__nav-item sidebar__nav-item--level-' + level;
+            
+            const link = document.createElement('a');
+            link.href = '#' + heading.id;
+            link.className = 'sidebar__nav-link';
+            // Get text from the heading, excluding the anchor symbol
+            const headingText = heading.querySelector('span') ? 
+              heading.querySelector('span').textContent : 
+              heading.textContent;
+            link.textContent = headingText.replace('#', '').trim();
+            
+            // Add click handler for smooth scrolling
+            link.addEventListener('click', function(e) {
+              e.preventDefault();
+              heading.scrollIntoView({ behavior: 'smooth' });
+              // Update URL without jumping
+              history.pushState(null, null, '#' + heading.id);
+            });
+            
+            listItem.appendChild(link);
+            tocList.appendChild(listItem);
+          });
+          
+          tocContainer.appendChild(tocList);
+          
+          // Highlight current section on scroll
+          let ticking = false;
+          function updateTOC() {
+            const scrollPosition = window.scrollY + 100;
+            let currentSection = null;
+            
+            headings.forEach(heading => {
+              if (heading.offsetTop <= scrollPosition) {
+                currentSection = heading.id;
+              }
+            });
+            
+            // Update active link
+            tocContainer.querySelectorAll('.sidebar__nav-link').forEach(link => {
+              link.classList.remove('sidebar__nav-link--active');
+              if (currentSection && link.getAttribute('href') === '#' + currentSection) {
+                link.classList.add('sidebar__nav-link--active');
+              }
+            });
+            
+            ticking = false;
+          }
+          
+          window.addEventListener('scroll', function() {
+            if (!ticking) {
+              window.requestAnimationFrame(updateTOC);
+              ticking = true;
+            }
+          });
+          
+          // Initial update
+          updateTOC();
+        } else {
+          // No headings found, hide the sidebar
+          const sidebar = document.querySelector('.sidebar');
+          if (sidebar) {
+            sidebar.style.display = 'none';
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -122,8 +122,15 @@
         
           
           <li class="site-nav__item">
-            <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link">
-              Token Examples
+            <a href="/sg-identity-techdocs/testing-guide/" class="site-nav__link">
+              Testing Guide
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/error-reference/" class="site-nav__link">
+              Error Reference
             </a>
           </li>
         
@@ -131,6 +138,13 @@
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/integration-examples/" class="site-nav__link">
               Integration Examples
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link">
+              Token Validation
             </a>
           </li>
         
@@ -152,19 +166,51 @@
       <p class="lead">Scotland&#39;s centralised digital identity service providing secure user authentication and access to verified personal information for government services</p>
 
       <h2 id="what-scotaccount-provides" tabindex="-1"><a class="header-anchor" href="#what-scotaccount-provides"><span>What ScotAccount Provides</span></a></h2>
-<p>ScotAccount offers two core capabilities for government services:</p>
+<p>ScotAccount offers two distinct and complementary capabilities for government services:</p>
+<h3 id="1-user-authentication" tabindex="-1"><a class="header-anchor" href="#1-user-authentication"><span>1. User Authentication</span></a></h3>
 <ul>
-<li><strong>User Authentication</strong> - Verify users have a ScotAccount and receive a persistent user identifier (UUID)</li>
-<li><strong>Verified Attributes</strong> - Access independently verified identity, address, and email data</li>
+<li><strong>Persistent User Identity</strong>: Each user receives a unique UUID that remains constant across all interactions</li>
+<li><strong>GPG45 Medium Assurance</strong>: High confidence in user identity through comprehensive verification processes</li>
+<li><strong>Single Sign-On</strong>: Users authenticate once and access multiple government services seamlessly</li>
+<li><strong>OpenID Connect Standard</strong>: Built on industry-standard protocols with PKCE for enhanced security</li>
 </ul>
-<p>When a use completes the verification process their identity verified to <strong>GPG45 Medium assurance level</strong> through comprehensive identity verification processes.</p>
-<h2 id="get-started-quickly" tabindex="-1"><a class="header-anchor" href="#get-started-quickly"><span>Get Started Quickly</span></a></h2>
+<h3 id="2-verified-attributes-access" tabindex="-1"><a class="header-anchor" href="#2-verified-attributes-access"><span>2. Verified Attributes Access</span></a></h3>
 <ul>
-<li><strong><a href="/sg-identity-techdocs/getting-started/">Quick Start Guide</a></strong> - Get a working integration quickly</li>
-<li><strong><a href="/sg-identity-techdocs/scotaccount-guide/">Implementation Guide</a></strong> - High level implementation guide</li>
-<li><strong><a href="/sg-identity-techdocs/scotaccount-complete-guide/">Comprehensive Guide</a></strong> - Comprehensive implementation guide detailing the implementation</li>
-<li><strong><a href="/sg-identity-techdocs/scotaccount-token-validation-module/">Token Validation</a></strong> - Secure token handling</li>
-<li><strong><a href="/sg-identity-techdocs/scotaccount-token-validation-module/">Token Validation Module</a></strong> - Secure token verification</li>
+<li><strong>Identity Data</strong>: Independently verified name and date of birth (GPG45 Medium level)</li>
+<li><strong>Address Information</strong>: Current address verified through credit reference agency checks</li>
+<li><strong>Email Verification</strong>: Confirmed email address through verification loops</li>
+<li><strong>Mobile Verification</strong>: Confirmed mobile number through SMS verification</li>
+<li><strong>Cross-Device Support</strong>: Users can start verification on one device and complete on another</li>
+<li><strong>7-Day Flow Persistence</strong>: Verification states persist for up to 7 days for user convenience</li>
+</ul>
+<h3 id="key-distinctions" tabindex="-1"><a class="header-anchor" href="#key-distinctions"><span>Key Distinctions</span></a></h3>
+<p><strong>Authentication vs Verified Attributes</strong>: Authentication establishes who the user is with a persistent UUID. Verified attributes provide additional verified personal information that users explicitly consent to share. Services can use authentication alone or combine it with verified attributes based on their specific needs.</p>
+<p><strong>Session Management</strong>: User sessions last up to 4 hours, with access tokens expiring after 15 minutes. Verification flows remain valid for 7 days to accommodate complex verification processes that may require time to complete.</p>
+<h2 id="quick-access-to-key-resources" tabindex="-1"><a class="header-anchor" href="#quick-access-to-key-resources"><span>Quick Access to Key Resources</span></a></h2>
+<h3 id="new-to-scotaccount" tabindex="-1"><a class="header-anchor" href="#new-to-scotaccount"><span>New to ScotAccount?</span></a></h3>
+<ul>
+<li><strong><a href="/sg-identity-techdocs/getting-started/">Getting Started Guide</a></strong> - Understand the basics and set up your first integration</li>
+<li><strong><a href="/sg-identity-techdocs/architecture/">Architecture Overview</a></strong> - System components and data flows</li>
+<li><strong><a href="/sg-identity-techdocs/scotaccount-currentschema/">Current Data Schema</a></strong> - Complete JSON schema reference for all data structures</li>
+</ul>
+<h3 id="ready-to-integrate" tabindex="-1"><a class="header-anchor" href="#ready-to-integrate"><span>Ready to Integrate?</span></a></h3>
+<ul>
+<li><strong><a href="/sg-identity-techdocs/scotaccount-guide/">Implementation Guide</a></strong> - Step-by-step technical implementation</li>
+<li><strong><a href="/sg-identity-techdocs/scotaccount-complete-guide/">Complete Guide</a></strong> - Comprehensive implementation with detailed explanations</li>
+<li><strong><a href="/sg-identity-techdocs/scotaccount-token-validation-module/">Token Validation Module</a></strong> - Secure token verification patterns</li>
+</ul>
+<h3 id="need-examples" tabindex="-1"><a class="header-anchor" href="#need-examples"><span>Need Examples?</span></a></h3>
+<ul>
+<li><strong><a href="/sg-identity-techdocs/integration-examples/">Integration Examples</a></strong> - Working code examples and implementation patterns</li>
+<li><strong><a href="/sg-identity-techdocs/testing-guide/">Testing Guide</a></strong> - Mock service setup and testing scenarios</li>
+<li><strong><a href="/sg-identity-techdocs/error-reference/">Error Reference</a></strong> - Complete error codes and resolution strategies</li>
+</ul>
+<h3 id="testing-environment-links" tabindex="-1"><a class="header-anchor" href="#testing-environment-links"><span>Testing Environment Links</span></a></h3>
+<ul>
+<li><strong>Integration Environment</strong>: <code>https://integration.scotaccount.service.gov.scot</code></li>
+<li><strong>Mock Service</strong>: <code>https://mock.scotaccount.service.gov.scot</code></li>
+<li><strong>JWKS Endpoint</strong>: <code>https://integration.scotaccount.service.gov.scot/.well-known/jwks.json</code></li>
+<li><strong>OpenID Configuration</strong>: <code>https://integration.scotaccount.service.gov.scot/.well-known/openid_configuration</code></li>
 </ul>
 <h2 id="integration-journey" tabindex="-1"><a class="header-anchor" href="#integration-journey"><span>Integration Journey</span></a></h2>
 <h3 id="phase-1-planning-and-setup" tabindex="-1"><a class="header-anchor" href="#phase-1-planning-and-setup"><span>Phase 1: Planning and Setup</span></a></h3>
@@ -254,21 +300,41 @@
 <li><strong>Testing Tools</strong>: Mock service for rapid development and testing</li>
 <li><strong>Production Support</strong>: Dedicated support for live service operation</li>
 </ul>
-<h2 id="next-steps" tabindex="-1"><a class="header-anchor" href="#next-steps"><span>Next Steps</span></a></h2>
-<p>Choose your path based on your role:</p>
+<h2 id="critical-implementation-reminders" tabindex="-1"><a class="header-anchor" href="#critical-implementation-reminders"><span>Critical Implementation Reminders</span></a></h2>
+<div class="callout callout--warning">
+<strong>Session Timeouts</strong>: User sessions last 4 hours, access tokens expire after 15 minutes, and verification flows remain valid for 7 days. Plan your user experience accordingly.
+</div>
+<div class="callout callout--danger">
+<strong>JWKS Key Rotation</strong>: Always fetch the latest JWKS before starting new flows. Keys rotate regularly for security. See our <a href="/sg-identity-techdocs/scotaccount-complete-guide/#jwks-handling">JWKS handling guide</a>.
+</div>
+<div class="callout callout--info">
+<strong>GPG45 Timeline Warning</strong>: Cross-device verification flows can take minutes to days to complete. Design your service to handle asynchronous verification results appropriately.
+</div>
+<h2 id="next-steps-by-role" tabindex="-1"><a class="header-anchor" href="#next-steps-by-role"><span>Next Steps by Role</span></a></h2>
 <div class="callout callout--info">
 <strong>New to ScotAccount?</strong> Start with our <a href="/sg-identity-techdocs/getting-started/">Getting Started guide</a> to understand the basics and set up your first integration.
 </div>
 <div class="callout callout--success">
-<strong>Ready to implement?</strong> Jump into the <a href="/sg-identity-techdocs/scotaccount-complete-guide/">Complete Implementation Guide</a> for detailed technical instructions.
+<strong>Ready to integrate?</strong> Follow the <a href="/sg-identity-techdocs/scotaccount-guide/">Implementation Guide</a> for step-by-step technical instructions with common pitfalls guidance.
+</div>
+<div class="callout callout--primary">
+<strong>Need examples?</strong> Explore <a href="/sg-identity-techdocs/integration-examples/">working code examples</a> and use our comprehensive <a href="/sg-identity-techdocs/testing-guide/">testing scenarios</a>.
 </div>
 <div class="callout callout--warning">
 <strong>Need architecture details?</strong> Review the <a href="/sg-identity-techdocs/architecture/">Architecture Overview</a> to understand system components and data flows.
 </div>
+<h2 id="business-rules-summary" tabindex="-1"><a class="header-anchor" href="#business-rules-summary"><span>Business Rules Summary</span></a></h2>
+<ul>
+<li><strong>Single Flow Requirement</strong>: Authentication must complete before requesting verified attributes</li>
+<li><strong>User Consent</strong>: Users explicitly consent to each attribute request during the flow</li>
+<li><strong>Data Freshness</strong>: Attribute data reflects verification status at time of request - not stored permanently</li>
+<li><strong>DIS-Client-Assertion</strong>: Required header for all attribute requests - see <a href="/sg-identity-techdocs/scotaccount-complete-guide/#client-assertion">implementation details</a></li>
+<li><strong>State Persistence</strong>: Maintain state for 7 days to support cross-device verification flows</li>
+</ul>
 
 
       
-      <footer class="content-footer"><p><small>Last updated: 27 August 2025</small></p></footer>
+      <footer class="content-footer"><p><small>Last updated: 5 September 2025</small></p></footer>
       
     </main>
   </div>

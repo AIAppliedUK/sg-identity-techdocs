@@ -122,8 +122,15 @@
         
           
           <li class="site-nav__item">
-            <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link">
-              Token Examples
+            <a href="/sg-identity-techdocs/testing-guide/" class="site-nav__link">
+              Testing Guide
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/error-reference/" class="site-nav__link">
+              Error Reference
             </a>
           </li>
         
@@ -131,6 +138,13 @@
           <li class="site-nav__item">
             <a href="/sg-identity-techdocs/integration-examples/" class="site-nav__link">
               Integration Examples
+            </a>
+          </li>
+        
+          
+          <li class="site-nav__item">
+            <a href="/sg-identity-techdocs/scotaccount-token-validation-module/" class="site-nav__link">
+              Token Validation
             </a>
           </li>
         
@@ -217,7 +231,7 @@ openssl ec <span class="token parameter variable">-in</span> ec_private_key.pem 
 <p><strong>Example Discovery Response:</strong></p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
   <span class="token property">"issuer"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot"</span><span class="token punctuation">,</span>
-  <span class="token property">"authorization_endpoint"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/authorize"</span><span class="token punctuation">,</span>
+  <span class="token property">"authorisation_endpoint"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/authorize"</span><span class="token punctuation">,</span>
   <span class="token property">"token_endpoint"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/token"</span><span class="token punctuation">,</span>
   <span class="token property">"jwks_uri"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/jwks.json"</span><span class="token punctuation">,</span>
   <span class="token property">"registration_endpoint"</span><span class="token operator">:</span> <span class="token string">"https://authz.integration.scotaccount.service.gov.scot/register"</span><span class="token punctuation">,</span>
@@ -229,7 +243,7 @@ openssl ec <span class="token parameter variable">-in</span> ec_private_key.pem 
   <span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token property">"response_types_supported"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"code"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token property">"response_modes_supported"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"query"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token property">"grant_types_supported"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"authorization_code"</span><span class="token punctuation">,</span> <span class="token string">"refresh_token"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"grant_types_supported"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"authorisation_code"</span><span class="token punctuation">,</span> <span class="token string">"refresh_token"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token property">"subject_types_supported"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"pairwise"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token property">"id_token_signing_alg_values_supported"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"RS256"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token property">"token_endpoint_auth_methods_supported"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"private_key_jwt"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
@@ -238,7 +252,7 @@ openssl ec <span class="token parameter variable">-in</span> ec_private_key.pem 
 <span class="token punctuation">}</span></code></pre>
 <p><strong>Key configuration values</strong>:</p>
 <ul>
-<li><code>authorization_endpoint</code> - Where to send authentication requests</li>
+<li><code>authorisation_endpoint</code> - Where to send authentication requests</li>
 <li><code>token_endpoint</code> - Where to exchange codes for tokens</li>
 <li><code>jwks_uri</code> - Public keys for token validation</li>
 </ul>
@@ -275,15 +289,19 @@ openssl ec <span class="token parameter variable">-in</span> ec_private_key.pem 
 <ul>
 <li><strong>client_id</strong>: Your unique identifier assigned during registration</li>
 <li><strong>redirect_uri</strong>: Where ScotAccount sends users after authentication</li>
-<li><strong>response_type</strong>: Always <code>code</code> for the authorization code flow</li>
+<li><strong>response_type</strong>: Always <code>code</code> for the authorisation code flow</li>
 <li><strong>scope</strong>: Space-separated list of requested permissions</li>
-<li><strong>state</strong>: Random value for CSRF protection</li>
+<li><strong>state</strong>: Random value for CSRF protection (⚠️ MUST be persisted - authentication flows remain valid for 7 days)</li>
 <li><strong>nonce</strong>: Random value for replay protection</li>
 <li><strong>code_challenge</strong>: SHA256 hash of your code verifier, base64url encoded</li>
 <li><strong>code_challenge_method</strong>: Always <code>S256</code> for SHA256</li>
 </ul>
+<div class="callout callout--warning">
+<strong>⚠️ Critical: 7-Day Authentication Flow Validity</strong><br>
+Authentication flows remain valid for 7 days - you MUST persist state parameters and PKCE verifiers securely. Users may begin authentication and return days later to complete it. Your application must handle this extended validity period.
+</div>
 <div class="callout callout--info">
-<strong>Implementation needed?</strong> See the <a href="/sg-identity-techdocs/integration-examples/#authorization-request-builder">Authorization Request Builder</a> example for code implementation.
+<strong>Implementation needed?</strong> See the <a href="/sg-identity-techdocs/integration-examples/#authorisation-request-builder">Authorization Request Builder</a> example for code implementation.
 </div>
 <h3 id="callback-handler" tabindex="-1"><a class="header-anchor" href="#callback-handler"><span>Callback Handler</span></a></h3>
 <p>Process the authentication response from ScotAccount:</p>
@@ -294,7 +312,7 @@ openssl ec <span class="token parameter variable">-in</span> ec_private_key.pem 
 </code></pre>
 <p>Your application must:</p>
 <ol>
-<li>Extract the authorization code and state parameter</li>
+<li>Extract the authorisation code and state parameter</li>
 <li>Validate the state parameter matches your stored value</li>
 <li>Handle any error responses appropriately</li>
 </ol>
@@ -319,7 +337,7 @@ openssl ec <span class="token parameter variable">-in</span> ec_private_key.pem 
 <strong>Implementation needed?</strong> See the <a href="/sg-identity-techdocs/integration-examples/#jwt-client-assertion">JWT Client Assertion</a> example for code implementation.
 </div>
 <h3 id="token-exchange" tabindex="-1"><a class="header-anchor" href="#token-exchange"><span>Token Exchange</span></a></h3>
-<p>Exchange authorization code for tokens:</p>
+<p>Exchange authorisation code for tokens:</p>
 <p><strong>Token Endpoint URL:</strong></p>
 <pre><code>https://authz.integration.scotaccount.service.gov.scot/token
 </code></pre>
@@ -328,7 +346,7 @@ openssl ec <span class="token parameter variable">-in</span> ec_private_key.pem 
 <span class="token header"><span class="token header-name keyword">Host</span><span class="token punctuation">:</span> <span class="token header-value">authz.integration.scotaccount.service.gov.scot</span></span>
 <span class="token header"><span class="token header-name keyword">Content-Type</span><span class="token punctuation">:</span> <span class="token header-value">application/x-www-form-urlencoded</span></span>
 
-grant_type=authorization_code&amp;
+grant_type=authorisation_code&amp;
 code=SplxlOBeZQQYbYS6WxSbIA&amp;
 redirect_uri=https://yourservice.gov.scot/auth/callback&amp;
 client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&amp;
@@ -416,7 +434,7 @@ code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk</code></pre>
         <span class="token property">"confidence_level"</span><span class="token operator">:</span> <span class="token string">"medium"</span><span class="token punctuation">,</span>
         <span class="token property">"time"</span><span class="token operator">:</span> <span class="token string">"2024-03-15T14:30:00Z"</span><span class="token punctuation">,</span>
         <span class="token property">"verifier"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-          <span class="token property">"organization"</span><span class="token operator">:</span> <span class="token string">"ScotAccount"</span><span class="token punctuation">,</span>
+          <span class="token property">"organisation"</span><span class="token operator">:</span> <span class="token string">"ScotAccount"</span><span class="token punctuation">,</span>
           <span class="token property">"txn"</span><span class="token operator">:</span> <span class="token string">"a4dbe877-df63-4608-95b0-3a7fe3a4d751"</span>
         <span class="token punctuation">}</span>
       <span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -434,7 +452,7 @@ code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk</code></pre>
         <span class="token property">"validation_method"</span><span class="token operator">:</span> <span class="token string">"credit_reference_agency"</span><span class="token punctuation">,</span>
         <span class="token property">"time"</span><span class="token operator">:</span> <span class="token string">"2024-03-15T14:30:00Z"</span><span class="token punctuation">,</span>
         <span class="token property">"verifier"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-          <span class="token property">"organization"</span><span class="token operator">:</span> <span class="token string">"ScotAccount"</span><span class="token punctuation">,</span>
+          <span class="token property">"organisation"</span><span class="token operator">:</span> <span class="token string">"ScotAccount"</span><span class="token punctuation">,</span>
           <span class="token property">"txn"</span><span class="token operator">:</span> <span class="token string">"b5ece988-eg74-5719-a6c1-4b8gf4b5e862"</span>
         <span class="token punctuation">}</span>
       <span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -452,6 +470,657 @@ code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk</code></pre>
 <div class="callout callout--info">
 <strong>Implementation needed?</strong> See the <a href="/sg-identity-techdocs/integration-examples/#phase-3-verified-attributes-examples">Verified Attributes Examples</a> for code implementation.
 </div>
+<h2 id="common-pitfalls-and-critical-considerations" tabindex="-1"><a class="header-anchor" href="#common-pitfalls-and-critical-considerations"><span>Common Pitfalls and Critical Considerations</span></a></h2>
+<p>Understanding these common implementation mistakes will save significant development time and prevent production issues.</p>
+<h3 id="1-state-persistence-requirements" tabindex="-1"><a class="header-anchor" href="#1-state-persistence-requirements"><span>1. State Persistence Requirements</span></a></h3>
+<div class="callout callout--danger">
+<strong>Critical:</strong> You must persist state for at least 7 days to support cross-device verification flows.
+</div>
+<p><strong>The Problem</strong>: Many developers implement state storage with short expiry times (e.g., 1 hour session timeout), not realising that GPG45 verification can take days to complete.</p>
+<p><strong>Why This Matters</strong>: Users may start identity verification on desktop but need to complete document upload on mobile. If your state expires, users lose their progress and must restart verification.</p>
+<p><strong>Correct Implementation</strong>:</p>
+<p>See the <a href="/sg-identity-techdocs/integration-examples/#state-expiry-issues">State Expiry Issues example</a> for proper session management patterns that support 7-day verification flows.</p>
+<p><strong>Reference</strong>: <a href="/sg-identity-techdocs/testing-guide/#cross-device-testing">Testing Guide - Cross-Device Scenarios</a></p>
+<h3 id="2-gpg45-cross-device-flow-assumptions" tabindex="-1"><a class="header-anchor" href="#2-gpg45-cross-device-flow-assumptions"><span>2. GPG45 Cross-Device Flow Assumptions</span></a></h3>
+<div class="callout callout--warning">
+<strong>Warning:</strong> Never assume verification completes immediately or on the same device.
+</div>
+<p><strong>The Problem</strong>: Developers often design flows expecting users to complete verification in a single session on one device.</p>
+<p><strong>Reality</strong>: GPG45 Medium verification frequently requires:</p>
+<ul>
+<li>Document photo capture (better on mobile)</li>
+<li>Liveness detection (requires mobile camera)</li>
+<li>Address verification (may need time to gather documents)</li>
+<li>Credit reference checks (can take hours to process)</li>
+</ul>
+<p><strong>Design Patterns for Cross-Device Support</strong>:</p>
+<p>See the <a href="/sg-identity-techdocs/integration-examples/#cross-device-flow-support">Cross-Device Flow Support example</a> for implementing resumable verification flows.</p>
+<p><strong>Reference</strong>: <a href="/sg-identity-techdocs/architecture/#cross-device-support">Architecture Overview - Cross-Device Flows</a></p>
+<h3 id="3-long-lived-attribute-token-misconceptions" tabindex="-1"><a class="header-anchor" href="#3-long-lived-attribute-token-misconceptions"><span>3. Long-Lived Attribute Token Misconceptions</span></a></h3>
+<div class="callout callout--danger">
+<strong>Critical:</strong> ScotAccount does NOT provide long-lived attribute tokens. While user sessions last 4 hours, access tokens expire after 15 minutes.
+</div>
+<p><strong>The Problem</strong>: Developers assume they can store attribute access tokens for later use, similar to some API services.</p>
+<p><strong>Reality</strong>:</p>
+<ul>
+<li>User sessions last up to 4 hours</li>
+<li>Access tokens expire after 15 minutes</li>
+<li>Access tokens expire with the session</li>
+<li>No refresh tokens are provided for attribute access</li>
+<li>Attributes must be requested while user is present and consents</li>
+</ul>
+<p><strong>Correct Approach - Request Attributes When Needed</strong>:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// BAD - Storing access token for later use</span>
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">storeUserAttributes</span><span class="token punctuation">(</span><span class="token parameter">accessToken</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// This access token will expire after 15 minutes (session lasts 4 hours)!</span>
+  <span class="token keyword">await</span> database<span class="token punctuation">.</span><span class="token function">save</span><span class="token punctuation">(</span><span class="token punctuation">{</span> userId<span class="token punctuation">,</span> accessToken<span class="token punctuation">,</span> <span class="token literal-property property">storedAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// GOOD - Request attributes during active user session</span>
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">getUserAttributes</span><span class="token punctuation">(</span><span class="token parameter">currentSession</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>currentSession<span class="token punctuation">.</span><span class="token function">isActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'User must re-authenticate to access attributes'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> attributes <span class="token operator">=</span> <span class="token keyword">await</span> scotAccountClient<span class="token punctuation">.</span><span class="token function">fetchAttributes</span><span class="token punctuation">(</span>
+      currentSession<span class="token punctuation">.</span>accessToken
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Store the attribute values, not the token</span>
+    <span class="token keyword">await</span> database<span class="token punctuation">.</span><span class="token function">saveUserData</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token literal-property property">userId</span><span class="token operator">:</span> currentSession<span class="token punctuation">.</span>userId<span class="token punctuation">,</span>
+      <span class="token literal-property property">verifiedName</span><span class="token operator">:</span> attributes<span class="token punctuation">.</span>given_name <span class="token operator">+</span> <span class="token string">' '</span> <span class="token operator">+</span> attributes<span class="token punctuation">.</span>family_name<span class="token punctuation">,</span>
+      <span class="token literal-property property">verifiedDOB</span><span class="token operator">:</span> attributes<span class="token punctuation">.</span>birth_date<span class="token punctuation">,</span>
+      <span class="token literal-property property">verifiedEmail</span><span class="token operator">:</span> attributes<span class="token punctuation">.</span>email<span class="token punctuation">,</span>
+      <span class="token literal-property property">verificationTimestamp</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">return</span> attributes<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>error<span class="token punctuation">.</span>code <span class="token operator">===</span> <span class="token number">401</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// Token expired - user must re-authenticate</span>
+      <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'Session expired. Please log in again.'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">throw</span> error<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p><strong>Reference</strong>: <a href="/sg-identity-techdocs/scotaccount-complete-guide/#token-lifecycle">Complete Guide - Token Lifecycle</a></p>
+<h3 id="4-missing-dis-client-assertion-header" tabindex="-1"><a class="header-anchor" href="#4-missing-dis-client-assertion-header"><span>4. Missing DIS-Client-Assertion Header</span></a></h3>
+<div class="callout callout--danger">
+<strong>Critical:</strong> The DIS-Client-Assertion header is mandatory for all attribute requests.
+</div>
+<p><strong>The Problem</strong>: Developers successfully implement authentication but forget the additional client assertion header required for attribute requests.</p>
+<p><strong>Symptom</strong>: Authentication works, but attribute requests return 401 Unauthorized errors.</p>
+<p><strong>Solution</strong>:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Generate client assertion for attribute requests</span>
+<span class="token keyword">function</span> <span class="token function">generateDISClientAssertion</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> now <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token keyword">const</span> payload <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">iss</span><span class="token operator">:</span> <span class="token constant">CLIENT_ID</span><span class="token punctuation">,</span> <span class="token comment">// Your registered client ID</span>
+    <span class="token literal-property property">sub</span><span class="token operator">:</span> <span class="token constant">CLIENT_ID</span><span class="token punctuation">,</span> <span class="token comment">// Same as issuer for client credentials</span>
+    <span class="token literal-property property">aud</span><span class="token operator">:</span> <span class="token string">'https://issuer.main.scotaccount.service.gov.scot'</span><span class="token punctuation">,</span> <span class="token comment">// Attribute service audience</span>
+    <span class="token literal-property property">iat</span><span class="token operator">:</span> now<span class="token punctuation">,</span>
+    <span class="token literal-property property">exp</span><span class="token operator">:</span> now <span class="token operator">+</span> <span class="token number">300</span><span class="token punctuation">,</span> <span class="token comment">// 5 minute expiry</span>
+    <span class="token literal-property property">jti</span><span class="token operator">:</span> <span class="token function">generateUniqueId</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// Prevent replay attacks</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  
+  <span class="token comment">// Sign with your private key (same key used for token endpoint)</span>
+  <span class="token keyword">return</span> jwt<span class="token punctuation">.</span><span class="token function">sign</span><span class="token punctuation">(</span>payload<span class="token punctuation">,</span> <span class="token constant">PRIVATE_KEY</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> 
+    <span class="token literal-property property">algorithm</span><span class="token operator">:</span> <span class="token string">'ES256'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">keyid</span><span class="token operator">:</span> <span class="token constant">KEY_ID</span> <span class="token comment">// Your key identifier</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Use in attribute requests</span>
+<span class="token keyword">const</span> attributeResponse <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token constant">ATTRIBUTES_ENDPOINT</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">method</span><span class="token operator">:</span> <span class="token string">'POST'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">headers</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token string-property property">'Authorization'</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Bearer </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>accessToken<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+    <span class="token string-property property">'DIS-Client-Assertion'</span><span class="token operator">:</span> <span class="token function">generateDISClientAssertion</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment">// Required!</span>
+    <span class="token string-property property">'Content-Type'</span><span class="token operator">:</span> <span class="token string">'application/json'</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p><strong>Reference</strong>: <a href="/sg-identity-techdocs/scotaccount-complete-guide/#dis-client-assertion">Complete Guide - DIS-Client-Assertion</a></p>
+<h3 id="5-jwks-refresh-failures" tabindex="-1"><a class="header-anchor" href="#5-jwks-refresh-failures"><span>5. JWKS Refresh Failures</span></a></h3>
+<div class="callout callout--warning">
+<strong>Warning:</strong> Always fetch fresh JWKS before starting new authentication flows.
+</div>
+<p><strong>The Problem</strong>: Developers cache JWKS indefinitely or assume keys never change, causing token validation failures when ScotAccount rotates keys.</p>
+<p><strong>Impact</strong>: Suddenly all token validations fail when keys rotate, breaking authentication for all users.</p>
+<p><strong>Robust JWKS Handling</strong>:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">class</span> <span class="token class-name">JWKSManager</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>cache <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Map</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>cacheExpiry <span class="token operator">=</span> <span class="token number">5</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">;</span> <span class="token comment">// 5 minutes</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>jwksUrl <span class="token operator">=</span> process<span class="token punctuation">.</span>env<span class="token punctuation">.</span><span class="token constant">JWKS_ENDPOINT</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token keyword">async</span> <span class="token function">getSigningKey</span><span class="token punctuation">(</span><span class="token parameter">keyId</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> cached <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>cache<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'jwks'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> now <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Always fetch fresh JWKS if cache expired or key not found</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>cached <span class="token operator">||</span> cached<span class="token punctuation">.</span>expiresAt <span class="token operator">&lt;</span> now <span class="token operator">||</span> <span class="token operator">!</span>cached<span class="token punctuation">.</span>keys<span class="token punctuation">[</span>keyId<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Refreshing JWKS cache...'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">await</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">refreshJWKS</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    
+    <span class="token keyword">const</span> jwks <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>cache<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'jwks'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>jwks<span class="token punctuation">.</span>keys<span class="token punctuation">[</span>keyId<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// Try one more refresh in case keys rotated recently</span>
+      <span class="token keyword">await</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">refreshJWKS</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> freshJwks <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>cache<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'jwks'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>freshJwks<span class="token punctuation">.</span>keys<span class="token punctuation">[</span>keyId<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Signing key </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>keyId<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> not found in JWKS</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">return</span> freshJwks<span class="token punctuation">.</span>keys<span class="token punctuation">[</span>keyId<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    
+    <span class="token keyword">return</span> jwks<span class="token punctuation">.</span>keys<span class="token punctuation">[</span>keyId<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token keyword">async</span> <span class="token function">refreshJWKS</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>jwksUrl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> jwksData <span class="token operator">=</span> <span class="token keyword">await</span> response<span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      
+      <span class="token comment">// Index keys by kid for fast lookup</span>
+      <span class="token keyword">const</span> keyMap <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+      jwksData<span class="token punctuation">.</span>keys<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token parameter">key</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        keyMap<span class="token punctuation">[</span>key<span class="token punctuation">.</span>kid<span class="token punctuation">]</span> <span class="token operator">=</span> key<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      
+      <span class="token keyword">this</span><span class="token punctuation">.</span>cache<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'jwks'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        <span class="token literal-property property">keys</span><span class="token operator">:</span> keyMap<span class="token punctuation">,</span>
+        <span class="token literal-property property">expiresAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token keyword">this</span><span class="token punctuation">.</span>cacheExpiry
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">'Failed to refresh JWKS:'</span><span class="token punctuation">,</span> error<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'Unable to fetch signing keys'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token comment">// Force refresh - call before starting new auth flows</span>
+  <span class="token keyword">async</span> <span class="token function">forceRefresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>cache<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span><span class="token string">'jwks'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">await</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">refreshJWKS</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Use before starting auth flows</span>
+<span class="token keyword">const</span> jwksManager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">JWKSManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+app<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'/auth/start'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token comment">// Ensure we have fresh keys before starting auth</span>
+  <span class="token keyword">await</span> jwksManager<span class="token punctuation">.</span><span class="token function">forceRefresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token comment">// Proceed with auth flow</span>
+  <span class="token keyword">const</span> authUrl <span class="token operator">=</span> <span class="token function">buildAuthUrl</span><span class="token punctuation">(</span>req<span class="token punctuation">.</span>session<span class="token punctuation">.</span>state<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  res<span class="token punctuation">.</span><span class="token function">redirect</span><span class="token punctuation">(</span>authUrl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p><strong>Reference</strong>: <a href="/sg-identity-techdocs/scotaccount-complete-guide/#jwks-management">Complete Guide - JWKS Management</a></p>
+<h3 id="6-error-handling-best-practices" tabindex="-1"><a class="header-anchor" href="#6-error-handling-best-practices"><span>6. Error Handling Best Practices</span></a></h3>
+<p><strong>Always Handle ScotAccount-Specific Error Patterns</strong>:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Comprehensive error handling for ScotAccount flows</span>
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">handleScotAccountError</span><span class="token punctuation">(</span><span class="token parameter">error<span class="token punctuation">,</span> context</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Log for debugging (remove sensitive data)</span>
+  console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">ScotAccount </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>context<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> error:</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">code</span><span class="token operator">:</span> error<span class="token punctuation">.</span>code<span class="token punctuation">,</span>
+    <span class="token literal-property property">message</span><span class="token operator">:</span> error<span class="token punctuation">.</span>message<span class="token punctuation">,</span>
+    <span class="token literal-property property">timestamp</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toISOString</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token keyword">switch</span> <span class="token punctuation">(</span>error<span class="token punctuation">.</span>code<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">case</span> <span class="token string">'session_expired'</span><span class="token operator">:</span>
+      <span class="token comment">// 4-hour session limit reached</span>
+      <span class="token keyword">return</span> <span class="token function">redirect</span><span class="token punctuation">(</span><span class="token string">'/login?reason=session_expired'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      
+    <span class="token keyword">case</span> <span class="token string">'verification_pending'</span><span class="token operator">:</span>
+      <span class="token comment">// User verification still in progress</span>
+      <span class="token keyword">return</span> <span class="token function">showPendingStatus</span><span class="token punctuation">(</span>error<span class="token punctuation">.</span>resumeUrl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      
+    <span class="token keyword">case</span> <span class="token string">'insufficient_verification'</span><span class="token operator">:</span>
+      <span class="token comment">// User didn't complete GPG45 verification</span>
+      <span class="token keyword">return</span> <span class="token function">showVerificationRequired</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      
+    <span class="token keyword">case</span> <span class="token string">'invalid_scope'</span><span class="token operator">:</span>
+      <span class="token comment">// Configuration error - alert developers</span>
+      <span class="token keyword">await</span> <span class="token function">alertDevelopmentTeam</span><span class="token punctuation">(</span><span class="token string">'Invalid scope configuration'</span><span class="token punctuation">,</span> error<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> <span class="token function">showConfigurationError</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      
+    <span class="token keyword">default</span><span class="token operator">:</span>
+      <span class="token comment">// See error reference for complete list</span>
+      <span class="token keyword">return</span> <span class="token function">showGenericError</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p><strong>Reference</strong>: <a href="/sg-identity-techdocs/error-reference/">Error Reference - Complete Error Codes</a> and <a href="/sg-identity-techdocs/testing-guide/#error-testing">Testing Guide - Error Scenarios</a></p>
+<h3 id="quick-prevention-checklist" tabindex="-1"><a class="header-anchor" href="#quick-prevention-checklist"><span>Quick Prevention Checklist</span></a></h3>
+<p>Before deploying to production, verify:</p>
+<ul>
+<li>[ ] State persistence configured for 7+ days</li>
+<li>[ ] Cross-device user experience designed and tested</li>
+<li>[ ] No long-lived attribute token storage</li>
+<li>[ ] DIS-Client-Assertion header implemented for attribute requests</li>
+<li>[ ] JWKS refresh logic implemented with force refresh before auth</li>
+<li>[ ] Comprehensive error handling for all ScotAccount error codes</li>
+<li>[ ] Session timeout warnings displayed to users</li>
+<li>[ ] Graceful handling of verification pending states</li>
+</ul>
+<p><strong>Reference</strong>: <a href="/sg-identity-techdocs/testing-guide/#production-checklist">Testing Guide - Pre-Production Checklist</a></p>
+<h2 id="troubleshooting-guide" tabindex="-1"><a class="header-anchor" href="#troubleshooting-guide"><span>Troubleshooting Guide</span></a></h2>
+<h3 id="why-is-my-state-parameter-invalid-after-a-few-days" tabindex="-1"><a class="header-anchor" href="#why-is-my-state-parameter-invalid-after-a-few-days"><span>“Why is my state parameter invalid after a few days?”</span></a></h3>
+<p><strong>Issue</strong>: Your application is rejecting valid state parameters from users returning after several days.</p>
+<p><strong>Root Cause</strong>: ScotAccount authentication flows remain valid for <strong>7 days</strong>, but many applications only store state parameters for short periods (1-4 hours).</p>
+<p><strong>Solution</strong>:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Extend state storage to support 7-day validity</span>
+<span class="token keyword">const</span> stateExpiry <span class="token operator">=</span> <span class="token number">7</span> <span class="token operator">*</span> <span class="token number">24</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">;</span> <span class="token comment">// 7 days in milliseconds</span>
+
+<span class="token comment">// Store state with extended expiry</span>
+<span class="token keyword">const</span> stateData <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">codeVerifier</span><span class="token operator">:</span> pkceVerifier<span class="token punctuation">,</span>
+  <span class="token literal-property property">nonce</span><span class="token operator">:</span> nonceValue<span class="token punctuation">,</span>
+  <span class="token literal-property property">scopes</span><span class="token operator">:</span> requestedScopes<span class="token punctuation">,</span>
+  <span class="token literal-property property">createdAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">expiresAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> stateExpiry
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">await</span> stateStore<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>stateValue<span class="token punctuation">,</span> stateData<span class="token punctuation">,</span> stateExpiry<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p><strong>Prevention</strong>: Always design state storage to support the full 7-day authentication flow validity period.</p>
+<h3 id="why-cant-i-get-long-lived-tokens-for-attributes" tabindex="-1"><a class="header-anchor" href="#why-cant-i-get-long-lived-tokens-for-attributes"><span>“Why can’t I get long-lived tokens for attributes?”</span></a></h3>
+<p><strong>Issue</strong>: Your application expects to store access tokens for later attribute retrieval, but tokens expire quickly.</p>
+<p><strong>Root Cause</strong>: ScotAccount implements a <strong>“per-flow” token model</strong> - there are no long-lived tokens for attribute access.</p>
+<p><strong>Key Facts</strong>:</p>
+<ul>
+<li>Access tokens expire after <strong>15 minutes</strong></li>
+<li>Refresh tokens also expire after <strong>15 minutes</strong></li>
+<li>ScotAccount sessions last <strong>4 hours</strong></li>
+<li>Access tokens expire after <strong>15 minutes</strong></li>
+<li>Attributes must be requested while the user is present and has an active session</li>
+</ul>
+<p><strong>Solution</strong>:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Request attributes during active user session only</span>
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">getVerifiedAttributes</span><span class="token punctuation">(</span><span class="token parameter">activeSession</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Check if user session is still valid</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>activeSession <span class="token operator">||</span> activeSession<span class="token punctuation">.</span>expiresAt <span class="token operator">&lt;</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">SessionExpiredError</span><span class="token punctuation">(</span><span class="token string">'User must re-authenticate for attribute access'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token comment">// Use current access token immediately</span>
+    <span class="token keyword">const</span> attributes <span class="token operator">=</span> <span class="token keyword">await</span> scotAccountClient<span class="token punctuation">.</span><span class="token function">fetchAttributes</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token literal-property property">accessToken</span><span class="token operator">:</span> activeSession<span class="token punctuation">.</span>accessToken<span class="token punctuation">,</span>
+      <span class="token literal-property property">clientAssertion</span><span class="token operator">:</span> <span class="token function">generateDISAssertion</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// Store the attribute values (not the token)</span>
+    <span class="token keyword">await</span> database<span class="token punctuation">.</span><span class="token function">saveVerifiedData</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token literal-property property">userId</span><span class="token operator">:</span> activeSession<span class="token punctuation">.</span>userId<span class="token punctuation">,</span>
+      <span class="token literal-property property">attributes</span><span class="token operator">:</span> attributes<span class="token punctuation">.</span>verified_claims<span class="token punctuation">,</span>
+      <span class="token literal-property property">retrievedAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">verificationTransactions</span><span class="token operator">:</span> <span class="token function">extractTransactionIds</span><span class="token punctuation">(</span>attributes<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">return</span> attributes<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>error<span class="token punctuation">.</span>status <span class="token operator">===</span> <span class="token number">401</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">SessionExpiredError</span><span class="token punctuation">(</span><span class="token string">'Access token expired - user must re-authenticate'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">throw</span> error<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p><strong>Prevention</strong>: Design your application to request and store attribute <strong>values</strong>, not access tokens.</p>
+<h3 id="why-is-my-gpg45-verification-taking-so-long" tabindex="-1"><a class="header-anchor" href="#why-is-my-gpg45-verification-taking-so-long"><span>“Why is my GPG45 verification taking so long?”</span></a></h3>
+<p><strong>Issue</strong>: Users report that identity verification is “stuck” or takes unexpectedly long.</p>
+<p><strong>Root Cause</strong>: GPG45 Medium verification is a <strong>user-driven process</strong> that can take days or weeks to complete.</p>
+<p><strong>Reality of GPG45 Verification</strong>:</p>
+<ul>
+<li>Document capture may require specific lighting/angle conditions</li>
+<li>Liveness detection can fail multiple times requiring retries</li>
+<li>Address verification may need additional documentation from users</li>
+<li>Credit reference checks can take 24-48 hours to process</li>
+<li>Users often start on desktop but need mobile for document capture</li>
+<li>Verification can span multiple sessions across different devices</li>
+</ul>
+<p><strong>Solution - Design for Extended Timelines</strong>:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Handle verification pending status gracefully</span>
+app<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'/auth/callback'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>req<span class="token punctuation">.</span>query<span class="token punctuation">.</span>error <span class="token operator">===</span> <span class="token string">'verification_pending'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// Show user-friendly status page</span>
+    <span class="token keyword">return</span> res<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span><span class="token string">'verification-in-progress'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">message</span><span class="token operator">:</span> <span class="token string">'Your identity verification is being processed.'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">estimatedTime</span><span class="token operator">:</span> <span class="token string">'24-48 hours'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">supportContact</span><span class="token operator">:</span> <span class="token string">'help@yourservice.gov.scot'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">statusCheckUrl</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">/verification/status/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>req<span class="token punctuation">.</span>query<span class="token punctuation">.</span>state<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>req<span class="token punctuation">.</span>query<span class="token punctuation">.</span>error <span class="token operator">===</span> <span class="token string">'verification_failed'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> res<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span><span class="token string">'verification-failed'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">message</span><span class="token operator">:</span> <span class="token string">'Identity verification was not successful.'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">retryUrl</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">/verify/retry/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>req<span class="token punctuation">.</span>query<span class="token punctuation">.</span>state<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+      <span class="token literal-property property">supportGuidance</span><span class="token operator">:</span> <span class="token string">'Please ensure documents are clear and well-lit.'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token comment">// Handle successful verification</span>
+  <span class="token comment">// ...</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Provide status checking endpoint</span>
+app<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'/verification/status/:state'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> stateData <span class="token operator">=</span> <span class="token keyword">await</span> stateStore<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>req<span class="token punctuation">.</span>params<span class="token punctuation">.</span>state<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>stateData<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> res<span class="token punctuation">.</span><span class="token function">redirect</span><span class="token punctuation">(</span><span class="token string">'/verification/expired'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token comment">// Check if verification completed since last check</span>
+  <span class="token keyword">const</span> authUrl <span class="token operator">=</span> <span class="token function">buildResumeAuthUrl</span><span class="token punctuation">(</span>req<span class="token punctuation">.</span>params<span class="token punctuation">.</span>state<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  res<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span><span class="token string">'verification-status'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">continueUrl</span><span class="token operator">:</span> authUrl<span class="token punctuation">,</span>
+    <span class="token literal-property property">estimatedTime</span><span class="token operator">:</span> <span class="token function">calculateEstimatedCompletion</span><span class="token punctuation">(</span>stateData<span class="token punctuation">.</span>createdAt<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">tips</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token string">'Ensure good lighting when taking document photos'</span><span class="token punctuation">,</span>
+      <span class="token string">'Use a mobile device for better document capture'</span><span class="token punctuation">,</span>
+      <span class="token string">'Have proof of address documents ready if required'</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p><strong>Prevention</strong>: Set user expectations early that verification can take 24-48 hours and may require multiple attempts.</p>
+<h3 id="why-does-my-logout-not-work" tabindex="-1"><a class="header-anchor" href="#why-does-my-logout-not-work"><span>“Why does my logout not work?”</span></a></h3>
+<p><strong>Issue</strong>: Users are not properly logged out from ScotAccount when they log out from your application.</p>
+<p><strong>Root Cause</strong>: ScotAccount logout requires the <strong><code>id_token_hint</code></strong> parameter to identify the user session.</p>
+<p><strong>Common Mistakes</strong>:</p>
+<ul>
+<li>Not including <code>id_token_hint</code> parameter</li>
+<li>Using access token instead of ID token</li>
+<li>Not storing ID token during initial authentication</li>
+</ul>
+<p><strong>Solution</strong>:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Store ID token during authentication for later logout</span>
+app<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span><span class="token string">'/auth/token-exchange'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> tokenResponse <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">exchangeCodeForTokens</span><span class="token punctuation">(</span>req<span class="token punctuation">.</span>body<span class="token punctuation">.</span>code<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token comment">// Store ID token in session for logout</span>
+  req<span class="token punctuation">.</span>session<span class="token punctuation">.</span>userAuth <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">userId</span><span class="token operator">:</span> tokenResponse<span class="token punctuation">.</span>idToken<span class="token punctuation">.</span>sub<span class="token punctuation">,</span>
+    <span class="token literal-property property">sessionId</span><span class="token operator">:</span> tokenResponse<span class="token punctuation">.</span>idToken<span class="token punctuation">.</span>sid<span class="token punctuation">,</span>
+    <span class="token literal-property property">accessToken</span><span class="token operator">:</span> tokenResponse<span class="token punctuation">.</span>access_token<span class="token punctuation">,</span>
+    <span class="token literal-property property">idToken</span><span class="token operator">:</span> tokenResponse<span class="token punctuation">.</span>id_token<span class="token punctuation">,</span> <span class="token comment">// Store for logout</span>
+    <span class="token literal-property property">expiresAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">4</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">)</span> <span class="token comment">// 4-hour session</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  
+  res<span class="token punctuation">.</span><span class="token function">redirect</span><span class="token punctuation">(</span><span class="token string">'/dashboard'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Implement proper logout with id_token_hint</span>
+app<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span><span class="token string">'/logout'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> userAuth <span class="token operator">=</span> req<span class="token punctuation">.</span>session<span class="token punctuation">.</span>userAuth<span class="token punctuation">;</span>
+  
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>userAuth <span class="token operator">||</span> <span class="token operator">!</span>userAuth<span class="token punctuation">.</span>idToken<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// Local logout only if no ScotAccount session info</span>
+    req<span class="token punctuation">.</span>session<span class="token punctuation">.</span><span class="token function">destroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> res<span class="token punctuation">.</span><span class="token function">redirect</span><span class="token punctuation">(</span><span class="token string">'/logged-out'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token comment">// Build ScotAccount logout URL with required parameters</span>
+  <span class="token keyword">const</span> logoutUrl <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">URL</span><span class="token punctuation">(</span>scotAccountConfig<span class="token punctuation">.</span>logoutEndpoint<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  logoutUrl<span class="token punctuation">.</span>searchParams<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'id_token_hint'</span><span class="token punctuation">,</span> userAuth<span class="token punctuation">.</span>idToken<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  logoutUrl<span class="token punctuation">.</span>searchParams<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'post_logout_redirect_uri'</span><span class="token punctuation">,</span> 
+    <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>process<span class="token punctuation">.</span>env<span class="token punctuation">.</span><span class="token constant">BASE_URL</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/logout-complete</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  logoutUrl<span class="token punctuation">.</span>searchParams<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'state'</span><span class="token punctuation">,</span> <span class="token function">generateSecureState</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token comment">// Clear local session</span>
+  req<span class="token punctuation">.</span>session<span class="token punctuation">.</span><span class="token function">destroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token comment">// Redirect to ScotAccount logout</span>
+  res<span class="token punctuation">.</span><span class="token function">redirect</span><span class="token punctuation">(</span>logoutUrl<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Handle post-logout callback</span>
+app<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'/logout-complete'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  res<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span><span class="token string">'logout-success'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">message</span><span class="token operator">:</span> <span class="token string">'You have been successfully logged out of ScotAccount.'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p><strong>Prevention</strong>: Always store the ID token during authentication and include <code>id_token_hint</code> in logout requests.</p>
+<h3 id="why-are-my-tokens-expiring-so-quickly" tabindex="-1"><a class="header-anchor" href="#why-are-my-tokens-expiring-so-quickly"><span>“Why are my tokens expiring so quickly?”</span></a></h3>
+<p><strong>Issue</strong>: Your application experiences frequent authentication failures due to expired tokens.</p>
+<p><strong>Root Cause</strong>: ScotAccount uses <strong>short-lived tokens</strong> (15 minutes) by design for security.</p>
+<p><strong>ScotAccount Token Lifetimes</strong>:</p>
+<ul>
+<li><strong>Access tokens</strong>: 15 minutes (non-renewable)</li>
+<li><strong>Refresh tokens</strong>: 15 minutes (non-renewable)</li>
+<li><strong>ID tokens</strong>: 15 minutes (for reference only)</li>
+<li><strong>Authorization codes</strong>: Short-lived and single-use (exact lifetime pending confirmation from ScotAccount team)</li>
+</ul>
+<p>This is <strong>intentional security design</strong> - tokens are not meant to be long-lived.</p>
+<p><strong>Solution - Design for Short Token Lifetimes</strong>:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Handle token expiry gracefully</span>
+<span class="token keyword">class</span> <span class="token class-name">ScotAccountSession</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">tokenData</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>accessToken <span class="token operator">=</span> tokenData<span class="token punctuation">.</span>access_token<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>refreshToken <span class="token operator">=</span> tokenData<span class="token punctuation">.</span>refresh_token<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>idToken <span class="token operator">=</span> tokenData<span class="token punctuation">.</span>id_token<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>expiresAt <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span>tokenData<span class="token punctuation">.</span>expires_in <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>sessionExpiresAt <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">4</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 4-hour session</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token function">isTokenValid</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>expiresAt<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token function">isSessionValid</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>sessionExpiresAt<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token keyword">async</span> <span class="token function">refreshIfNeeded</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">isTokenValid</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span> <span class="token comment">// Token still valid</span>
+    <span class="token punctuation">}</span>
+    
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">isSessionValid</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">SessionExpiredError</span><span class="token punctuation">(</span><span class="token string">'4-hour session expired - user must re-authenticate'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+      <span class="token comment">// Try to refresh token</span>
+      <span class="token keyword">const</span> refreshedTokens <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">refresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">updateTokens</span><span class="token punctuation">(</span>refreshedTokens<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>error<span class="token punctuation">.</span>code <span class="token operator">===</span> <span class="token string">'invalid_grant'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">SessionExpiredError</span><span class="token punctuation">(</span><span class="token string">'Session expired - user must re-authenticate'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">throw</span> error<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Use session management in API calls</span>
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">makeScotAccountRequest</span><span class="token punctuation">(</span><span class="token parameter">endpoint<span class="token punctuation">,</span> session</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Check if we need to refresh tokens</span>
+  <span class="token keyword">await</span> session<span class="token punctuation">.</span><span class="token function">refreshIfNeeded</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span>endpoint<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">headers</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token string-property property">'Authorization'</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Bearer </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>session<span class="token punctuation">.</span>accessToken<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+      <span class="token string-property property">'DIS-Client-Assertion'</span><span class="token operator">:</span> <span class="token function">generateClientAssertion</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>response<span class="token punctuation">.</span>status <span class="token operator">===</span> <span class="token number">401</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// Token expired despite refresh - session is done</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">SessionExpiredError</span><span class="token punctuation">(</span><span class="token string">'Authentication expired - please log in again'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token keyword">return</span> response<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p><strong>Prevention</strong>: Design your application around 15-minute token lifetimes and 4-hour session limits. Never assume tokens will last longer.</p>
+<h2 id="implementation-checklist" tabindex="-1"><a class="header-anchor" href="#implementation-checklist"><span>Implementation Checklist</span></a></h2>
+<h3 id="pre-development-setup" tabindex="-1"><a class="header-anchor" href="#pre-development-setup"><span>Pre-Development Setup</span></a></h3>
+<p><strong>Cryptographic Requirements</strong>:</p>
+<ul>
+<li>[ ] <strong>Generated EC P-256 or RSA key pair</strong> using OpenSSL or equivalent</li>
+<li>[ ] <strong>Stored private key securely</strong> in secrets manager (AWS Secrets Manager, Azure Key Vault, etc.)</li>
+<li>[ ] <strong>Public key extracted</strong> and ready for registration submission</li>
+<li>[ ] <strong>Key rotation strategy</strong> planned for production</li>
+</ul>
+<p><strong>Registration and Access</strong>:</p>
+<ul>
+<li>[ ] <strong>Obtained client_id</strong> from ScotAccount team after registration</li>
+<li>[ ] <strong>Received integration environment access</strong> credentials</li>
+<li>[ ] <strong>Confirmed redirect URIs</strong> are registered and match your application</li>
+<li>[ ] <strong>Confirmed post-logout redirect URIs</strong> are registered</li>
+<li>[ ] <strong>Identified required scopes</strong> based on your application needs</li>
+<li>[ ] <strong>Production IP addresses</strong> provided to ScotAccount team for security</li>
+</ul>
+<p><strong>Development Environment</strong>:</p>
+<ul>
+<li>[ ] <strong>Set up test environment</strong> with HTTPS capability</li>
+<li>[ ] <strong>Configured mock service access</strong> for automated testing</li>
+<li>[ ] <strong>Demo RP access</strong> confirmed for manual testing</li>
+<li>[ ] <strong>Local HTTPS setup</strong> completed (required for redirect URIs)</li>
+</ul>
+<h3 id="development-implementation" tabindex="-1"><a class="header-anchor" href="#development-implementation"><span>Development Implementation</span></a></h3>
+<p><strong>Core Authentication Flow</strong>:</p>
+<ul>
+<li>[ ] <strong>Implemented PKCE flow</strong> with SHA256 code challenge generation</li>
+<li>[ ] <strong>Added discovery endpoint integration</strong> to fetch current configuration</li>
+<li>[ ] <strong>Built authorization request</strong> with all required parameters</li>
+<li>[ ] <strong>Implemented callback handler</strong> with state validation</li>
+<li>[ ] <strong>Created JWT client assertion</strong> signing with your private key</li>
+<li>[ ] <strong>Implemented token exchange</strong> with proper error handling</li>
+<li>[ ] <strong>Added ID token validation</strong> including signature verification</li>
+</ul>
+<p><strong>State and Session Management</strong>:</p>
+<ul>
+<li>[ ] <strong>Added 7-day state persistence</strong> using database or cache</li>
+<li>[ ] <strong>Implemented session management</strong> with 4-hour timeout</li>
+<li>[ ] <strong>Added PKCE verifier storage</strong> linked to state parameters</li>
+<li>[ ] <strong>Implemented state cleanup</strong> for expired authentication flows</li>
+<li>[ ] <strong>Added cross-device support</strong> for resumable authentication flows</li>
+</ul>
+<p><strong>Advanced Features</strong>:</p>
+<ul>
+<li>[ ] <strong>Implemented JWKS rotation handling</strong> with force refresh capability</li>
+<li>[ ] <strong>Added DIS-Client-Assertion header</strong> for all attribute requests</li>
+<li>[ ] <strong>Implemented dual-flow pattern</strong> for verified attributes</li>
+<li>[ ] <strong>Added logout functionality</strong> with id_token_hint parameter</li>
+<li>[ ] <strong>Created attribute validation</strong> and secure storage</li>
+</ul>
+<p><strong>Error Handling and Resilience</strong>:</p>
+<ul>
+<li>[ ] <strong>Added comprehensive error handling</strong> for all ScotAccount error codes</li>
+<li>[ ] <strong>Implemented graceful token expiry handling</strong> with user messaging</li>
+<li>[ ] <strong>Added verification pending status</strong> handling for GPG45 flows</li>
+<li>[ ] <strong>Created session timeout warnings</strong> for users</li>
+<li>[ ] <strong>Added retry logic</strong> for transient failures</li>
+</ul>
+<h3 id="testing-and-validation" tabindex="-1"><a class="header-anchor" href="#testing-and-validation"><span>Testing and Validation</span></a></h3>
+<p><strong>Mock Service Testing</strong>:</p>
+<ul>
+<li>[ ] <strong>Tested basic authentication flow</strong> using mock service</li>
+<li>[ ] <strong>Verified PKCE implementation</strong> works correctly</li>
+<li>[ ] <strong>Tested state parameter handling</strong> across multiple requests</li>
+<li>[ ] <strong>Validated token parsing</strong> and user data extraction</li>
+<li>[ ] <strong>Tested error scenarios</strong> using mock service error responses</li>
+</ul>
+<p><strong>Integration Environment Testing</strong>:</p>
+<ul>
+<li>[ ] <strong>Tested with Demo RP</strong> for manual flow verification</li>
+<li>[ ] <strong>Completed full authentication flow</strong> with real user interaction</li>
+<li>[ ] <strong>Tested GPG45 verification flow</strong> end-to-end</li>
+<li>[ ] <strong>Validated cross-device scenarios</strong> with mobile document capture</li>
+<li>[ ] <strong>Tested logout functionality</strong> with proper cleanup</li>
+</ul>
+<p><strong>Error Scenario Testing</strong>:</p>
+<ul>
+<li>[ ] <strong>Handled all error scenarios</strong> from error reference documentation</li>
+<li>[ ] <strong>Tested expired state handling</strong> after extended periods</li>
+<li>[ ] <strong>Validated token expiry handling</strong> with appropriate user messaging</li>
+<li>[ ] <strong>Tested network failure scenarios</strong> with retry logic</li>
+<li>[ ] <strong>Verified verification pending status</strong> handling</li>
+</ul>
+<p><strong>Security and Performance Testing</strong>:</p>
+<ul>
+<li>[ ] <strong>Tested cross-device GPG45 flow</strong> with different browsers/devices</li>
+<li>[ ] <strong>Validated JWKS key rotation</strong> handling with forced refresh</li>
+<li>[ ] <strong>Tested concurrent user sessions</strong> for scalability</li>
+<li>[ ] <strong>Performed security review</strong> of token handling and storage</li>
+<li>[ ] <strong>Validated HTTPS enforcement</strong> across all endpoints</li>
+</ul>
+<h3 id="production-deployment" tabindex="-1"><a class="header-anchor" href="#production-deployment"><span>Production Deployment</span></a></h3>
+<p><strong>Environment Configuration</strong>:</p>
+<ul>
+<li>[ ] <strong>Updated all endpoints</strong> to production URLs</li>
+<li>[ ] <strong>Confirmed production IP addresses</strong> are whitelisted</li>
+<li>[ ] <strong>Switched to production discovery endpoint</strong> for configuration</li>
+<li>[ ] <strong>Updated JWKS endpoint</strong> to production URL</li>
+<li>[ ] <strong>Configured production secrets manager</strong> access</li>
+</ul>
+<p><strong>Monitoring and Logging</strong>:</p>
+<ul>
+<li>[ ] <strong>Implemented monitoring</strong> for authentication success/failure rates</li>
+<li>[ ] <strong>Added logging</strong> for all authentication events (without sensitive data)</li>
+<li>[ ] <strong>Set up alerts</strong> for high error rates or system failures</li>
+<li>[ ] <strong>Configured performance monitoring</strong> for authentication latency</li>
+<li>[ ] <strong>Added audit logging</strong> for verified attribute access</li>
+</ul>
+<p><strong>Security and Compliance</strong>:</p>
+<ul>
+<li>[ ] <strong>Tested with production credentials</strong> in staging environment</li>
+<li>[ ] <strong>Completed security penetration testing</strong> of authentication flows</li>
+<li>[ ] <strong>Reviewed all error messages</strong> to ensure no sensitive data exposure</li>
+<li>[ ] <strong>Validated GDPR compliance</strong> for user data handling</li>
+<li>[ ] <strong>Documented data retention policies</strong> for verified attributes</li>
+</ul>
+<p><strong>User Experience</strong>:</p>
+<ul>
+<li>[ ] <strong>Added user-friendly error messages</strong> for all failure scenarios</li>
+<li>[ ] <strong>Implemented progress indicators</strong> for long-running verification</li>
+<li>[ ] <strong>Created help documentation</strong> for common user issues</li>
+<li>[ ] <strong>Added session timeout warnings</strong> with extend session options</li>
+<li>[ ] <strong>Tested accessibility</strong> of authentication flow interfaces</li>
+</ul>
+<h3 id="post-deployment-validation" tabindex="-1"><a class="header-anchor" href="#post-deployment-validation"><span>Post-Deployment Validation</span></a></h3>
+<p><strong>Operational Readiness</strong>:</p>
+<ul>
+<li>[ ] <strong>Verified production authentication flow</strong> with test users</li>
+<li>[ ] <strong>Confirmed monitoring and alerting</strong> are working correctly</li>
+<li>[ ] <strong>Tested incident response procedures</strong> for authentication failures</li>
+<li>[ ] <strong>Validated backup and recovery</strong> procedures for key material</li>
+<li>[ ] <strong>Documented operational runbook</strong> for common issues</li>
+</ul>
+<p><strong>Ongoing Maintenance</strong>:</p>
+<ul>
+<li>[ ] <strong>Scheduled regular JWKS refresh</strong> verification</li>
+<li>[ ] <strong>Planned key rotation procedures</strong> for ongoing security</li>
+<li>[ ] <strong>Set up regular security reviews</strong> of authentication implementation</li>
+<li>[ ] <strong>Established process</strong> for ScotAccount service updates</li>
+<li>[ ] <strong>Created user feedback channels</strong> for authentication issues</li>
+</ul>
+<h2 id="production-readiness-assessment" tabindex="-1"><a class="header-anchor" href="#production-readiness-assessment"><span>Production Readiness Assessment</span></a></h2>
+<p><strong>Before moving to production, validate all checklist items above are complete. Pay particular attention to:</strong></p>
+<ul>
+<li><strong>State persistence</strong> must support 7-day authentication flows</li>
+<li><strong>Token lifecycle</strong> handling must account for 15-minute expiry times</li>
+<li><strong>Cross-device flows</strong> must work seamlessly for GPG45 verification</li>
+<li><strong>Error handling</strong> must cover all ScotAccount-specific error scenarios</li>
+<li><strong>Security</strong> implementation must follow all private_key_jwt requirements</li>
+</ul>
+<p><strong>Critical Success Criteria</strong>:</p>
+<ol>
+<li>Mock service integration tests pass consistently</li>
+<li>Demo RP manual testing completes successfully</li>
+<li>All error scenarios handled gracefully with user-friendly messages</li>
+<li>Cross-device GPG45 verification tested and working</li>
+<li>Production endpoints configured and tested in staging</li>
+</ol>
 <h2 id="phase-4-production-deployment" tabindex="-1"><a class="header-anchor" href="#phase-4-production-deployment"><span>Phase 4: Production Deployment</span></a></h2>
 <h3 id="environment-configuration" tabindex="-1"><a class="header-anchor" href="#environment-configuration"><span>Environment Configuration</span></a></h3>
 <p>Update endpoints for production:</p>
@@ -492,6 +1161,114 @@ code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk</code></pre>
 <div class="callout callout--info">
 <strong>Implementation needed?</strong> See the <a href="/sg-identity-techdocs/integration-examples/#complete-example-implementation">Complete Example Implementation</a> for a full working example.
 </div>
+<h2 id="scotaccount-specific-oidc-implementation" tabindex="-1"><a class="header-anchor" href="#scotaccount-specific-oidc-implementation"><span>ScotAccount-Specific OIDC Implementation</span></a></h2>
+<p>ScotAccount implements OpenID Connect with several critical requirements that differ from standard OIDC implementations. Understanding these specifics is essential for successful integration.</p>
+<h3 id="dis-client-assertion-header-requirement" tabindex="-1"><a class="header-anchor" href="#dis-client-assertion-header-requirement"><span>DIS-Client-Assertion Header Requirement</span></a></h3>
+<p><strong>⚠️ CRITICAL</strong>: ScotAccount requires a custom <code>DIS-Client-Assertion</code> header in addition to standard client authentication.</p>
+<p>When making requests to the token endpoint, you MUST include:</p>
+<ul>
+<li>Standard <code>client_assertion</code> in the request body</li>
+<li>Custom <code>DIS-Client-Assertion</code> header with the same JWT value</li>
+</ul>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span>tokenEndpoint<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">method</span><span class="token operator">:</span> <span class="token string">'POST'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">headers</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token string-property property">'Content-Type'</span><span class="token operator">:</span> <span class="token string">'application/x-www-form-urlencoded'</span><span class="token punctuation">,</span>
+    <span class="token string-property property">'DIS-Client-Assertion'</span><span class="token operator">:</span> clientAssertionJwt <span class="token comment">// Required by ScotAccount</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">body</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">URLSearchParams</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token literal-property property">grant_type</span><span class="token operator">:</span> <span class="token string">'authorisation_code'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">code</span><span class="token operator">:</span> authorisationCode<span class="token punctuation">,</span>
+    <span class="token literal-property property">redirect_uri</span><span class="token operator">:</span> redirectUri<span class="token punctuation">,</span>
+    <span class="token literal-property property">client_id</span><span class="token operator">:</span> clientId<span class="token punctuation">,</span>
+    <span class="token literal-property property">client_assertion_type</span><span class="token operator">:</span> <span class="token string">'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">client_assertion</span><span class="token operator">:</span> clientAssertionJwt<span class="token punctuation">,</span>
+    <span class="token literal-property property">code_verifier</span><span class="token operator">:</span> codeVerifier
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h3 id="dual-flow-requirement-for-verified-attributes" tabindex="-1"><a class="header-anchor" href="#dual-flow-requirement-for-verified-attributes"><span>Dual-Flow Requirement for Verified Attributes</span></a></h3>
+<p>ScotAccount enforces strict separation between authentication and verified attribute retrieval:</p>
+<ol>
+<li><strong>Authentication Flow</strong>: Returns only the persistent user UUID (sub claim)</li>
+<li><strong>Attribute Flow</strong>: Requires separate API call with valid access token</li>
+</ol>
+<p><strong>Important</strong>: There are no long-lived attribute tokens. Access tokens expire after 15 minutes and refresh tokens also have a 15-minute validity period.</p>
+<h3 id="private-key-jwt-authentication-method" tabindex="-1"><a class="header-anchor" href="#private-key-jwt-authentication-method"><span>private_key_jwt Authentication Method</span></a></h3>
+<p>ScotAccount exclusively uses the <code>private_key_jwt</code> authentication method. This means:</p>
+<ul>
+<li>You MUST generate and securely store EC or RSA key pairs</li>
+<li>Client secrets are NOT supported</li>
+<li>Every token request requires a signed JWT assertion</li>
+</ul>
+<p><strong>JWT Assertion Requirements</strong>:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> clientAssertion <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">iss</span><span class="token operator">:</span> clientId<span class="token punctuation">,</span>
+  <span class="token literal-property property">sub</span><span class="token operator">:</span> clientId<span class="token punctuation">,</span>
+  <span class="token literal-property property">aud</span><span class="token operator">:</span> tokenEndpoint<span class="token punctuation">,</span>
+  <span class="token literal-property property">jti</span><span class="token operator">:</span> crypto<span class="token punctuation">.</span><span class="token function">randomUUID</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">exp</span><span class="token operator">:</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">1000</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">300</span><span class="token punctuation">,</span> <span class="token comment">// 5 minutes</span>
+  <span class="token literal-property property">iat</span><span class="token operator">:</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">1000</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
+<h3 id="token-lifecycle-considerations" tabindex="-1"><a class="header-anchor" href="#token-lifecycle-considerations"><span>Token Lifecycle Considerations</span></a></h3>
+<p><strong>Critical Timing Information</strong>:</p>
+<ul>
+<li><strong>Authentication flows</strong>: Valid for 7 days (requires persistent state storage)</li>
+<li><strong>ScotAccount sessions</strong>: 4-hour timeout</li>
+<li><strong>Access tokens</strong>: 15-minute validity</li>
+<li><strong>Refresh tokens</strong>: 15-minute validity</li>
+<li><strong>Authorisation codes</strong>: 10-minute validity, single-use only</li>
+</ul>
+<h3 id="state-persistence-requirements" tabindex="-1"><a class="header-anchor" href="#state-persistence-requirements"><span>State Persistence Requirements</span></a></h3>
+<p>Due to the 7-day validity of authentication flows, your application MUST:</p>
+<ol>
+<li>Persist state parameters in a database or cache</li>
+<li>Persist PKCE code verifiers alongside state</li>
+<li>Implement cleanup for expired state data</li>
+<li>Handle users returning days after initiating authentication</li>
+</ol>
+<p><strong>Example State Storage</strong>:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Store when initiating authentication</span>
+<span class="token keyword">await</span> stateStore<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>stateValue<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">codeVerifier</span><span class="token operator">:</span> pkceVerifier<span class="token punctuation">,</span>
+  <span class="token literal-property property">nonce</span><span class="token operator">:</span> nonceValue<span class="token punctuation">,</span>
+  <span class="token literal-property property">initiatedAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">expiresAt</span><span class="token operator">:</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">7</span> <span class="token operator">*</span> <span class="token number">24</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">)</span> <span class="token comment">// 7 days</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Retrieve when handling callback</span>
+<span class="token keyword">const</span> stateData <span class="token operator">=</span> <span class="token keyword">await</span> stateStore<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>receivedState<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>stateData <span class="token operator">||</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> stateData<span class="token punctuation">.</span>expiresAt<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'Invalid or expired state'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="no-implicit-or-hybrid-flows" tabindex="-1"><a class="header-anchor" href="#no-implicit-or-hybrid-flows"><span>No Implicit or Hybrid Flows</span></a></h3>
+<p>ScotAccount supports ONLY the authorisation code flow with PKCE. The following are NOT supported:</p>
+<ul>
+<li>Implicit flow</li>
+<li>Hybrid flow</li>
+<li>Resource Owner Password Credentials flow</li>
+<li>Client Credentials flow</li>
+</ul>
+<h3 id="verification-metadata" tabindex="-1"><a class="header-anchor" href="#verification-metadata"><span>Verification Metadata</span></a></h3>
+<p>When retrieving verified attributes, each claim includes comprehensive verification metadata:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"verification"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"outcome"</span><span class="token operator">:</span> <span class="token string">"VERIFIED_SUCCESSFULLY"</span><span class="token punctuation">,</span>
+    <span class="token property">"trust_framework"</span><span class="token operator">:</span> <span class="token string">"uk_tfida"</span><span class="token punctuation">,</span>
+    <span class="token property">"confidence_level"</span><span class="token operator">:</span> <span class="token string">"medium"</span><span class="token punctuation">,</span>
+    <span class="token property">"validation_method"</span><span class="token operator">:</span> <span class="token string">"credit_reference_agency"</span><span class="token punctuation">,</span>
+    <span class="token property">"time"</span><span class="token operator">:</span> <span class="token string">"2024-03-15T14:30:00Z"</span><span class="token punctuation">,</span>
+    <span class="token property">"verifier"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"organisation"</span><span class="token operator">:</span> <span class="token string">"ScotAccount"</span><span class="token punctuation">,</span>
+      <span class="token property">"txn"</span><span class="token operator">:</span> <span class="token string">"unique-transaction-id"</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Your application should:</p>
+<ul>
+<li>Check the <code>outcome</code> field before trusting claims</li>
+<li>Store the <code>txn</code> for audit purposes</li>
+<li>Consider the <code>confidence_level</code> for risk assessment</li>
+</ul>
 <h2 id="troubleshooting-common-issues" tabindex="-1"><a class="header-anchor" href="#troubleshooting-common-issues"><span>Troubleshooting Common Issues</span></a></h2>
 <h3 id="invalid-client-assertion" tabindex="-1"><a class="header-anchor" href="#invalid-client-assertion"><span>Invalid Client Assertion</span></a></h3>
 <p><strong>Symptom</strong>: <code>invalid_client</code> error during token exchange<br>
@@ -518,7 +1295,7 @@ code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk</code></pre>
 
 
       
-      <footer class="content-footer"><p><small>Last updated: 27 August 2025</small></p></footer>
+      <footer class="content-footer"><p><small>Last updated: 5 September 2025</small></p></footer>
       
     </main>
   </div>
